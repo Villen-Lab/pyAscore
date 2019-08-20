@@ -1,7 +1,7 @@
-cdef extern from "lib/Spectra.cpp":
+cdef extern from "cpp/Spectra.cpp":
     pass
 
-cdef extern from "lib/Spectra.h" namespace "ptmscoring":
+cdef extern from "cpp/Spectra.h" namespace "ptmscoring":
     cdef cppclass BinnedSpectra:
         BinnedSpectra(float, float, float, int) except +
         void consumeSpectra(const double *, const double *, int)

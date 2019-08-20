@@ -1,7 +1,7 @@
-cdef extern from "lib/Ascore.cpp":
+cdef extern from "cpp/Ascore.cpp":
     pass
 
-cdef extern from "lib/Ascore.h" namespace "ptmscoring":
+cdef extern from "cpp/Ascore.h" namespace "ptmscoring":
     cdef cppclass Ascore:
         Ascore() except +
         Ascore(float) except +

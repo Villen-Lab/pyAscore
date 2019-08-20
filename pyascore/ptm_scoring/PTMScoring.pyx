@@ -2,3 +2,4 @@
 
 include "Spectra.pyx"
 include "ModifiedPeptide.pyx"
+include "Ascore.pyx"
