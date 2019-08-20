@@ -20,7 +20,7 @@ namespace ptmscoring {
         std::unordered_map<float, std::vector<size_t>> fragment_scores;
 
         void initializeResidues();
-        void applyAuxMods(const size_t*, const float*, size_t);
+        void applyAuxMods(const size_t* = NULL, const float* = NULL, size_t = 0);
         void initializeFragments();
         public:
             ModifiedPeptide(std::string, float);
@@ -28,8 +28,6 @@ namespace ptmscoring {
 
             void consumePeptide(std::string, size_t, const size_t * = NULL, const float * = NULL, size_t = 0);
             void consumePeak(Peak, size_t);
-
-            void printInternals();
 
             std::string getModGroups(size_t) const;
             float getModMass(size_t) const;

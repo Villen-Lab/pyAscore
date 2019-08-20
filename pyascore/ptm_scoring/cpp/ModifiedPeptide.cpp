@@ -32,9 +32,9 @@ namespace ptmscoring {
 
     }
 
-    void ModifiedPeptide::applyAuxMods (const size_t * aux_mod_pos = NULL,
-                                        const float * aux_mod_mass = NULL,
-                                        size_t n_aux_mods = 0) {
+    void ModifiedPeptide::applyAuxMods (const size_t * aux_mod_pos,
+                                        const float * aux_mod_mass,
+                                        size_t n_aux_mods) {
 
         for (size_t ind = 0; ind < n_aux_mods; ind++) {
             // A residue with an aux mod is not allowed to have more than 1 mod
@@ -54,17 +54,6 @@ namespace ptmscoring {
         initializeResidues();
         applyAuxMods(aux_mod_pos, aux_mod_mass, n_aux_mods);
 
-    }
-
-    void ModifiedPeptide::printInternals () {
-        std::cout << std::endl << "Internal State:" << std::endl;
-        for (size_t i = 0; i < residues.size(); i++) {
-            std::cout << peptide[i];
-            for (size_t j = 0; j < residues[i].size(); j++) {
-                std::cout << "    " << residues[i][j];
-            }
-            std::cout << std::endl;
-        }
     }
 
 }

@@ -22,6 +22,3 @@ cdef class PyModifiedPeptide:
                         np.ndarray[float, ndim=1, mode="c"] aux_mod_mass = None):
 
         self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
-
-    def print_internals(self):
-        self.modified_peptide_ptr[0].printInternals()
