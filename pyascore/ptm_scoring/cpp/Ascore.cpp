@@ -1,17 +1,15 @@
 #include <iostream>
 #include "Ascore.h"
+#include "Spectra.h"
+#include "ModifiedPeptide.h"
 
 namespace ptmscoring {
 
     Ascore::Ascore () {}
 
-    Ascore::Ascore (float window_size) {
-        this->window_size = window_size;
-    }
-
     Ascore::~Ascore () {}
 
-    void Ascore::getWindowSize () {
-        std::cout << window_size << std::endl;
+    void Ascore::score (const BinnedSpectra & spectra, const ModifiedPeptide & peptide) {
+        std::cout << std::endl << "Scoring not implemented yet" << std::endl;
     }
 }
