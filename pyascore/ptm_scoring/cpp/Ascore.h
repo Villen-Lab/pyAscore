@@ -1,15 +1,19 @@
 #ifndef ASCORE_H
 #define ASCORE_H
 
+#include "Spectra.h"
+#include "ModifiedPeptide.h"
+
 namespace ptmscoring {
+
     class Ascore {
         public:
-            float window_size;
             Ascore();
-            Ascore(float);
             ~Ascore();
-            void getWindowSize();
+
+            void score(const BinnedSpectra &, const ModifiedPeptide &);
     };
+
 }
 
 #endif

@@ -24,14 +24,45 @@ cdef class PyModifiedPeptide:
 
         self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
 
-    def reset_iterator(self, char fragment_type):
-        self.modified_peptide_ptr[0].resetIterator(fragment_type)
+    def get_fragment_graph(self, str fragment_type, size_t charge_state):
+        return PyFragmentGraph(self, fragment_type.encode("utf8")[0], charge_state)
+
+cdef class PyFragmentGraph:
+    cdef ModifiedPeptide.FragmentGraph * fragment_graph_ptr
+
+    def __cinit__(self, PyModifiedPeptide peptide, char fragment_type, size_t charge_state):
+        self.fragment_graph_ptr = new ModifiedPeptide.FragmentGraph(
+            peptide.modified_peptide_ptr, fragment_type, charge_state
+        )
+
+    def __dealloc__(self):
+        del self.fragment_graph_ptr
+
+    @property
+    def fragment_type(self):
+        return self.fragment_graph_ptr[0].getFragmentType()
+
+    @property
+    def charge_state(self):
+        return self.fragment_graph_ptr[0].getChargeState()
+
+    def reset_iterator(self):
+        return self.fragment_graph_ptr[0].resetIterator()
 
     def incr_signature(self):
-        return self.modified_peptide_ptr[0].incrSignature()
+        return self.fragment_graph_ptr[0].incrSignature()
+
+    def is_signature_end(self):
+        return self.fragment_graph_ptr[0].isSignatureEnd()
+
+    def incr_fragment(self):
+        return self.fragment_graph_ptr[0].incrFragment()
+
+    def is_fragment_end(self):
+        return self.fragment_graph_ptr[0].isFragmentEnd()
 
     def get_signature(self):
-        cdef vector[size_t] signature_vector = self.modified_peptide_ptr[0].getSignature()
+        cdef vector[size_t] signature_vector = self.fragment_graph_ptr[0].getSignature()
         signature_array = np.zeros(signature_vector.size(), dtype=np.uint64)
 
         cdef size_t i = 0
@@ -39,17 +70,12 @@ cdef class PyModifiedPeptide:
             signature_array[i] = signature_vector[i]
         return signature_array
 
-    def incr_fragment(self):
-        return self.modified_peptide_ptr[0].incrFragment()
-
-    def get_fragment_type(self):
-        return self.modified_peptide_ptr[0].getFragmentType()
-
-    def get_fragment_mz(self, size_t charge):
-        return self.modified_peptide_ptr[0].getFragmentMZ(charge)
+    def get_fragment_mz(self):
+        return self.fragment_graph_ptr[0].getFragmentMZ()
 
     def get_fragment_size(self):
-        return self.modified_peptide_ptr[0].getFragmentSize()
+        return self.fragment_graph_ptr[0].getFragmentSize()
 
     def get_fragment_seq(self):
-        return self.modified_peptide_ptr[0].getFragmentSeq().decode('utf8')
+        return self.fragment_graph_ptr[0].getFragmentSeq().decode('utf8')
+
