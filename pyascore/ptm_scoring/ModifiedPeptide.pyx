@@ -53,3 +53,59 @@ cdef class PyModifiedPeptide:
 
     def get_fragment_seq(self):
         return self.modified_peptide_ptr[0].getFragmentSeq().decode('utf8')
+
+    def get_fragment_graph(self, str fragment_type, size_t charge_state):
+        return PyFragmentGraph(self, fragment_type.encode("utf8")[0], charge_state)
+
+cdef class PyFragmentGraph:
+    cdef ModifiedPeptide.FragmentGraph * fragment_graph_ptr
+
+    def __cinit__(self, PyModifiedPeptide peptide, char fragment_type, size_t charge_state):
+        self.fragment_graph_ptr = new ModifiedPeptide.FragmentGraph(
+            peptide.modified_peptide_ptr, fragment_type, charge_state
+        )
+
+    def __dealloc__(self):
+        del self.fragment_graph_ptr
+
+    @property
+    def fragment_type(self):
+        return self.fragment_graph_ptr[0].getFragmentType()
+
+    @property
+    def charge_state(self):
+        return self.fragment_graph_ptr[0].getChargeState()
+
+    def reset_iterator(self):
+        return self.fragment_graph_ptr[0].resetIterator()
+
+    def incr_signature(self):
+        return self.fragment_graph_ptr[0].incrSignature()
+
+    def is_signature_end(self):
+        return self.fragment_graph_ptr[0].isSignatureEnd()
+
+    def incr_fragment(self):
+        return self.fragment_graph_ptr[0].incrFragment()
+
+    def is_fragment_end(self):
+        return self.fragment_graph_ptr[0].isFragmentEnd()
+
+    def get_signature(self):
+        cdef vector[size_t] signature_vector = self.fragment_graph_ptr[0].getSignature()
+        signature_array = np.zeros(signature_vector.size(), dtype=np.uint64)
+
+        cdef size_t i = 0
+        for i in range(signature_vector.size()):
+            signature_array[i] = signature_vector[i]
+        return signature_array
+
+    def get_fragment_mz(self):
+        return self.fragment_graph_ptr[0].getFragmentMZ()
+
+    def get_fragment_size(self):
+        return self.fragment_graph_ptr[0].getFragmentSize()
+
+    def get_fragment_seq(self):
+        return self.fragment_graph_ptr[0].getFragmentSeq().decode('utf8')
+

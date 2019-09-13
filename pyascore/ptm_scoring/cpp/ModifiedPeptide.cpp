@@ -47,6 +47,20 @@ namespace ptmscoring {
 
     }
 
+    void ModifiedPeptide::initializeFragments () {
+        size_t continue_iter = resetIterator('b');
+        while(continue_iter){
+            fragments.push_back(getFragmentMZ(1));
+
+            continue_iter = incrFragment();
+            if ( !continue_iter ) {
+                continue_iter = incrSignature();
+            }
+        }
+
+        std::sort(fragments.begin(), fragments.end());
+    }
+
     void ModifiedPeptide::consumePeptide (std::string peptide, size_t n_of_mod,
                                           const size_t * aux_mod_pos,
                                           const float * aux_mod_mass,
@@ -54,13 +68,46 @@ namespace ptmscoring {
 
         this->peptide = peptide;
         this->n_of_mod = n_of_mod;
+
         initializeResidues();
         applyAuxMods(aux_mod_pos, aux_mod_mass, n_aux_mods);
+
+        fragment_scores.clear();
+        fragments.clear();
+        initializeFragments();
+
         resetIterator('b');
 
     }
+
+    void ModifiedPeptide::consumePeak (float mz, size_t rank) {
+
+        std::vector<float>::iterator it;
+        it = lower_bound(fragments.begin(), fragments.end(), mz);
+
+        float ppm_low;
+        float ppm_high;
+        for(; it < fragments.end(); it++) {
+            ppm_low = *it - *it * 1e-6;
+            ppm_high = *it + *it * 1e-6;
+            if (mz > ppm_low and mz < ppm_high) {
+                fragment_scores[mz].push_back(rank);
+                //if ( fragment_scores.count(mz) ) {fragment_scores.at(mz).push_back(rank);}
+                //else {fragment_scores.emplace(mz, rank);}
+            } else if (mz < ppm_low) {break;}
+        }
+
+    }
     
-    void ModifiedPeptide::resetIterator (char fragment_type){
+    std::string ModifiedPeptide::getModGroup() const {
+        return mod_group;
+    }
+
+    float ModifiedPeptide::getModMass() const { 
+        return mod_mass;
+    } 
+
+    size_t ModifiedPeptide::resetIterator (char fragment_type){
         // Fragment type can only be changed with reinitialization
         this->fragment_type = fragment_type;
 
@@ -91,7 +138,7 @@ namespace ptmscoring {
 
         // Set to first fragment
         fragment_ind = -1;
-        incrFragment();
+        return incrFragment();
     }
 
     size_t ModifiedPeptide::incrSignature () {
@@ -125,8 +172,7 @@ namespace ptmscoring {
             running_sum.resize(final_index + 1);
             running_sequence.resize(final_index);
             fragment_ind = final_index - 1;
-            incrFragment();
-            return 1;
+            return incrFragment();
        }
     }
 
@@ -185,4 +231,192 @@ namespace ptmscoring {
         return running_sequence;
     }
 
+    ////////////////////////////////////////
+    // Start FragmentGraph Implementation //
+    ////////////////////////////////////////
+
+    ModifiedPeptide::FragmentGraph ModifiedPeptide::getFragmentGraph (char fragment_type, size_t charge_state) {
+        return ModifiedPeptide::FragmentGraph(this, fragment_type, charge_state);
+    }
+
+    ModifiedPeptide::FragmentGraph::FragmentGraph (const ModifiedPeptide * modified_peptide, char fragment_type, size_t charge_state) {
+        this->modified_peptide = modified_peptide;
+        this->fragment_type = fragment_type;
+        this->charge_state = charge_state;
+        resetIterator();
+    }
+
+    ModifiedPeptide::FragmentGraph::~FragmentGraph () {}
+
+    char ModifiedPeptide::FragmentGraph::getFragmentType () { return fragment_type; }
+
+    size_t ModifiedPeptide::FragmentGraph::getChargeState () { return charge_state; }
+
+    void ModifiedPeptide::FragmentGraph::resetResidueInd () {
+        if ( fragment_type == 'b' ) {
+            residue_ind = 0;
+        } else if ( fragment_type == 'y' ) {
+            residue_ind = modified_peptide->residues.size() - 1;
+        } else { throw 30; }
+    }
+
+    void ModifiedPeptide::FragmentGraph::incrResidueInd () {
+        if ( fragment_type == 'b' ) {
+            residue_ind++;
+        } else if ( fragment_type == 'y' ) {
+            residue_ind--;
+        } else { throw 30; }
+    }
+
+    bool ModifiedPeptide::FragmentGraph::isResidueEnd () {
+        if ( fragment_type == 'b' ) {
+            return residue_ind == modified_peptide->residues.size();
+        } else if ( fragment_type == 'y' ) {
+            return residue_ind == SIZE_MAX;
+        } else { throw 30; }
+    }
+
+    size_t ModifiedPeptide::FragmentGraph::getResidueDistance () {
+        if ( fragment_type == 'b' ) {
+            return residue_ind;
+        } else if ( fragment_type == 'y' ) {
+            return modified_peptide->residues.size() - residue_ind - 1;
+        } else { throw 30; }
+    }
+
+    void ModifiedPeptide::FragmentGraph::calculateFragment () {
+        size_t mod_state = 0;
+        if ( signature.count(residue_ind) ) {
+            mod_state = signature.at(residue_ind);
+        }
+
+        float new_fragment_mz = modified_peptide->residues[residue_ind][mod_state];
+        if (running_sum.size() != 0) {
+            new_fragment_mz += running_sum.back();
+        }
+        running_sum.push_back(new_fragment_mz);
+
+        running_sequence.push_back( (modified_peptide->peptide)[residue_ind] );
+    }
+
+    void ModifiedPeptide::FragmentGraph::resetIterator () {
+        // Intialize running state trackers
+        // Makes sure enough space is available and
+        // clears away any old data.
+        size_t peptide_size = (modified_peptide->peptide).size();
+        running_sum.reserve(peptide_size);
+        running_sum.clear();
+
+        running_sequence.reserve(peptide_size);
+        running_sequence.clear();
+
+        modifiable.clear();
+        signature.clear();
+
+        n_mods_outstanding = modified_peptide->n_of_mod;
+        for (resetResidueInd(); !isResidueEnd(); incrResidueInd()) {
+            if ( (modified_peptide->residues[residue_ind]).size() > 1 ) {
+                modifiable.push_back(residue_ind);
+                if ( n_mods_outstanding ) {
+                    n_mods_outstanding--;
+                    signature[modifiable.back()] = 1;
+                } else {
+                    signature[modifiable.back()] = 0;
+                }
+            }
+        }
+
+        // Reset to first step
+        resetResidueInd();
+        calculateFragment();
+    }
+
+    void ModifiedPeptide::FragmentGraph::incrSignature () {
+        // Don't attempt to increment if signature end
+        if (isSignatureEnd()) {throw 40;}
+        
+        // Otherwise, one mod is outstanding to start
+        n_mods_outstanding = 1;
+        size_t final_index = (modified_peptide->residues).size();
+        for (std::vector<size_t>::iterator it = --modifiable.end();
+             it >= modifiable.begin() and n_mods_outstanding; 
+             it--) {
+            if ( signature.at(*it) > 0 ) {
+                final_index = *it;
+                signature.at(*it) = 0;
+
+                size_t n_pos_until_end = modifiable.end() - it;
+                if (  n_mods_outstanding == n_pos_until_end ) {
+                    n_mods_outstanding++;
+                    continue;
+                }
+
+                for (; n_mods_outstanding; n_mods_outstanding--) {
+                    signature.at(*++it)++;
+                }
+
+            }
+        }
+
+        if (!isSignatureEnd()) {
+            residue_ind = final_index;
+            running_sum.resize(getResidueDistance());
+            running_sequence.resize(getResidueDistance());
+            calculateFragment();
+       }
+    }
+
+    bool ModifiedPeptide::FragmentGraph::isSignatureEnd () {
+        return n_mods_outstanding > 0;
+    }
+
+    void ModifiedPeptide::FragmentGraph::incrFragment () {
+        // Don't increment if fragment end or signature end
+        if (isSignatureEnd() or isFragmentEnd()) {throw 40;}
+
+        // Otherwise, increment the residue ind
+        incrResidueInd();
+        if (!isFragmentEnd()) {calculateFragment();};
+    }
+
+    bool ModifiedPeptide::FragmentGraph::isFragmentEnd () {
+        return isResidueEnd();
+    }
+
+    std::vector<size_t> ModifiedPeptide::FragmentGraph::getSignature () {
+        std::vector<size_t> signature_vector;
+        for ( size_t it : modifiable ) {
+            signature_vector.push_back(signature.at(it));
+        }
+
+        // For efficiency's sake, y fragment signatures are always backwards
+        if (fragment_type == 'y') {
+            std::reverse(signature_vector.begin(), signature_vector.end());
+        }
+
+        return signature_vector;
+    }
+
+    float ModifiedPeptide::FragmentGraph::getFragmentMZ () {
+
+        double fragment_mz = running_sum.back();
+        if (fragment_type == 'y') {
+            fragment_mz += 18.01528;
+        }
+
+        if (charge_state > 0) {
+            fragment_mz = (fragment_mz + charge_state) / charge_state;
+        }
+
+        return fragment_mz;
+
+    }
+
+    size_t ModifiedPeptide::FragmentGraph::getFragmentSize () {
+        return running_sequence.size();
+    }
+
+    std::string ModifiedPeptide::FragmentGraph::getFragmentSeq () {
+        return running_sequence;
+    }
 }

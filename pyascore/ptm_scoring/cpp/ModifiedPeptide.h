@@ -38,12 +38,12 @@ namespace ptmscoring {
                                 const size_t * = NULL, 
                                 const float * = NULL, 
                                 size_t = 0);
-            void consumePeak(const Peak &, size_t);
+            void consumePeak(float, size_t);
 
-            std::string getModGroup(size_t) const;
-            float getModMass(size_t) const;
+            std::string getModGroup() const;
+            float getModMass() const;
 
-            void resetIterator(char);
+            size_t resetIterator(char);
             size_t incrSignature();
             std::vector<size_t> getSignature();
             size_t incrFragment();
@@ -52,7 +52,49 @@ namespace ptmscoring {
             size_t getFragmentSize();
             std::string getFragmentSeq();
 
+            class FragmentGraph;
+            FragmentGraph getFragmentGraph(char, size_t);
     };
+
+    class ModifiedPeptide::FragmentGraph {
+        // Information that is abstracted away from user
+        const ModifiedPeptide * modified_peptide;
+        size_t residue_ind;
+        void resetResidueInd();
+        void incrResidueInd();
+        bool isResidueEnd();
+        size_t getResidueDistance();
+
+        // Information made public
+        char fragment_type;
+        size_t charge_state;
+
+        size_t n_mods_outstanding;
+        std::vector<size_t> modifiable;
+        std::unordered_map<size_t, size_t> signature;
+
+        std::vector<float> running_sum;
+        std::string running_sequence;
+        void calculateFragment();
+        public:
+            FragmentGraph(const ModifiedPeptide *, char, size_t);
+            ~FragmentGraph();
+
+            char getFragmentType();
+            size_t getChargeState();
+
+            void resetIterator();
+            void incrSignature();
+            bool isSignatureEnd();
+            void incrFragment();
+            bool isFragmentEnd();
+
+            std::vector<size_t> getSignature();
+            float getFragmentMZ();
+            size_t getFragmentSize();
+            std::string getFragmentSeq();
+    };
+
 
 }
 
