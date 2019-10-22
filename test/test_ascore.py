@@ -7,10 +7,10 @@ from pyascore import PyAscore
 
 class TestPyAscore(unittest.TestCase):
     def test_single_spectrum_score(self):
-        with open(os.path.join("test", "match_spectra_pairs", "velos_matches_1_mods.pkl"), "rb") as src:
+        with open(os.path.join("test", "match_spectra_pairs", "velos_matches_3_mods.pkl"), "rb") as src:
             match_list = pickle.load(src)
 
-        with open(os.path.join("test", "match_spectra_pairs", "velos_spectra_1_mods.pkl"), "rb") as src:
+        with open(os.path.join("test", "match_spectra_pairs", "velos_spectra_3_mods.pkl"), "rb") as src:
             spectra_list = pickle.load(src)
 
         n = 0

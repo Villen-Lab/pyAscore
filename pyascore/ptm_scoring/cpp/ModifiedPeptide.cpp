@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <tuple>
 #include <string>
 #include <algorithm>
 #include <unordered_map>
@@ -81,20 +82,29 @@ namespace ptmscoring {
     }
 
     void ModifiedPeptide::consumePeak (float mz, size_t rank) {
-
         std::vector<float>::iterator it;
-        it = lower_bound(fragments.begin(), fragments.end(), mz);
+        it = lower_bound(fragments.begin(), fragments.end(), mz - .5);
 
         float ppm_low;
         float ppm_high;
         for(; it < fragments.end(); it++) {
-            ppm_low = *it - *it * 1e-6;
-            ppm_high = *it + *it * 1e-6;
+            ppm_low = *it - .5;
+            ppm_high = *it + .5;
             if (mz > ppm_low and mz < ppm_high) {
-                fragment_scores[mz].push_back(rank);
+                if (!fragment_scores.count(*it) or std::get<1>(fragment_scores.at(*it)) > rank) {
+                    fragment_scores[*it] = {mz, rank}; // The theoretical mz needs to be the key
+                }
             } else if (mz < ppm_low) {break;}
         }
 
+    }
+
+    bool ModifiedPeptide::hasMatch (float mz) const {
+        return fragment_scores.count(mz);
+    }
+
+    std::tuple<float, size_t> ModifiedPeptide::getMatch (float mz) const {
+        return fragment_scores.at(mz);
     }
     
     std::string ModifiedPeptide::getModGroup() const {
@@ -105,7 +115,11 @@ namespace ptmscoring {
         return mod_mass;
     } 
 
-    ModifiedPeptide::FragmentGraph ModifiedPeptide::getFragmentGraph (char fragment_type, size_t charge_state) {
+    std::string ModifiedPeptide::getPeptide() const {
+        return peptide;
+    }
+
+    ModifiedPeptide::FragmentGraph ModifiedPeptide::getFragmentGraph (char fragment_type, size_t charge_state) const {
         return ModifiedPeptide::FragmentGraph(this, fragment_type, charge_state);
     }
 
@@ -197,7 +211,7 @@ namespace ptmscoring {
 
         n_mods_outstanding = modified_peptide->n_of_mod;
         for (resetResidueInd(); !isResidueEnd(); incrResidueInd()) {
-            if ( (modified_peptide->residues[residue_ind]).size() > 1 ) {
+            if ( isPositionModifiable() ) {
                 modifiable.push_back(residue_ind);
                 if ( n_mods_outstanding ) {
                     n_mods_outstanding--;
@@ -301,4 +315,15 @@ namespace ptmscoring {
     std::string ModifiedPeptide::FragmentGraph::getFragmentSeq () {
         return running_sequence;
     }
+
+    bool ModifiedPeptide::FragmentGraph::isPositionModifiable () {
+        return modified_peptide->residues[residue_ind].size() > 1;
+    }
+
+    bool ModifiedPeptide::FragmentGraph::isPositionModified () {
+        if ( signature.count(residue_ind) ) {
+            return signature.at(residue_ind);
+        } else { return false; }
+    }
+
 }
