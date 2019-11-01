@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stack>
+#include <string>
 #include "Spectra.h"
 #include "ModifiedPeptide.h"
 #include "Util.h"
@@ -20,14 +21,21 @@ namespace ptmscoring {
         std::vector<float> score_weights;
         std::vector<BinomialDist> scoring_distributions;
 
-        std::stack<std::vector<size_t>> count_stack;
-        void accumulate_counts();
-        void calculate_full_scores();
+        std::vector<size_t> best_signature;
+        float best_weighted_score;
+
+        void resetInternalState();
+        bool isUnambiguous();
+        void accumulateCounts();
+        void calculateFullScores();
+        void findBestPeptide();
         public:
             Ascore();
             ~Ascore();
 
             void score(const BinnedSpectra &, const ModifiedPeptide &);
+            std::string getBestSequence();
+            float getBestScore();
     };
 
 }
