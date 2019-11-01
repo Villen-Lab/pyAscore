@@ -1,9 +1,11 @@
 #include <iostream>
+#include <cstdio>
 #include <vector>
 #include <tuple>
 #include <string>
 #include <algorithm>
 #include <unordered_map>
+#include <cmath>
 #include "Types.h"
 #include "ModifiedPeptide.h"
 
@@ -34,16 +36,14 @@ namespace ptmscoring {
 
     }
 
-    void ModifiedPeptide::applyAuxMods (const size_t * aux_mod_pos,
+    void ModifiedPeptide::applyAuxMods (const unsigned int * aux_mod_pos,
                                         const float * aux_mod_mass,
                                         size_t n_aux_mods) {
 
         for (size_t ind = 0; ind < n_aux_mods; ind++) {
             residues[aux_mod_pos[ind]].front() += aux_mod_mass[ind];
-            if ( residues[aux_mod_pos[ind]].size() > 1) {
-                // A residue with an aux mod is not allowed to have more than 1 mod
-                residues[aux_mod_pos[ind]].resize(1);
-            }
+            // A residue with an aux mod is not allowed to have more than 1 mod
+            residues[aux_mod_pos[ind]].resize(1);
         }
 
     }
@@ -65,7 +65,7 @@ namespace ptmscoring {
     }
 
     void ModifiedPeptide::consumePeptide (std::string peptide, size_t n_of_mod,
-                                          const size_t * aux_mod_pos,
+                                          const unsigned int * aux_mod_pos,
                                           const float * aux_mod_mass,
                                           size_t n_aux_mods) {
 
@@ -107,16 +107,42 @@ namespace ptmscoring {
         return fragment_scores.at(mz);
     }
     
-    std::string ModifiedPeptide::getModGroup() const {
+    std::string ModifiedPeptide::getModGroup () const {
         return mod_group;
     }
 
-    float ModifiedPeptide::getModMass() const { 
+    float ModifiedPeptide::getModMass () const { 
         return mod_mass;
-    } 
+    }
 
-    std::string ModifiedPeptide::getPeptide() const {
-        return peptide;
+    size_t ModifiedPeptide::getNumberOfMods () const {
+        return n_of_mod;
+    }
+
+    size_t ModifiedPeptide::getNumberModifiable () const {
+        size_t n_modifiable = 0;
+        for (const std::vector<float> & res_it : residues) {
+            if (res_it.size() > 1) {n_modifiable += 1;} 
+        }
+        return n_modifiable;
+    }
+
+    std::string ModifiedPeptide::getPeptide(std::vector<size_t> signature) const {
+        if ( signature.size() == 0 ) {
+            return peptide;
+        } else {
+            std::string mod_peptide = "";
+            auto sig_iter = signature.begin();
+            char mod_buffer[10];
+            std::sprintf(mod_buffer, "[%d]", (int) std::round(mod_mass));
+            for (char aa : peptide) {
+                mod_peptide += aa;
+                if (mod_group.find(aa) != std::string::npos and sig_iter != signature.end() and  *sig_iter++ == 1){
+                    mod_peptide += mod_buffer;
+                }
+            }
+            return mod_peptide;
+        }
     }
 
     ModifiedPeptide::FragmentGraph ModifiedPeptide::getFragmentGraph (char fragment_type, size_t charge_state) const {

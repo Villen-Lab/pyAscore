@@ -1,3 +1,5 @@
+import numpy as np
+cimport numpy as np
 from libcpp.vector cimport vector
 from libcpp.string cimport string
 
@@ -8,6 +10,10 @@ cdef extern from "cpp/ModifiedPeptide.cpp" namespace "ptmscoring":
     cdef cppclass ModifiedPeptide:
         ModifiedPeptide(string, float);
         void consumePeptide(string, size_t)
+        void consumePeptide(string, size_t, 
+                            const unsigned int *, 
+                            const float *,
+                            size_t)
         void consumePeak(float, size_t);
 
         cppclass FragmentGraph:
