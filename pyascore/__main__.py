@@ -28,8 +28,9 @@ def build_identification_parser(arg_ref):
 
 
 def build_ascore(arg_ref):
-    return PyAscore(min_mz=500., max_mz=1500., bin_size=100., n_top=10,
-                    mod_group=arg_ref.residues, mod_mass=arg_ref.mod_mass)
+    return PyAscore(bin_size=100., n_top=10,
+                    mod_group=arg_ref.residues,
+                    mod_mass=arg_ref.mod_mass)
 
 def process_mods(arg_ref, positions, masses):
     variable_mod_count = 0

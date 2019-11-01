@@ -3,7 +3,7 @@ cdef extern from "cpp/Spectra.cpp":
 
 cdef extern from "cpp/Spectra.h" namespace "ptmscoring":
     cdef cppclass BinnedSpectra:
-        BinnedSpectra(float, float, float, int) except +
+        BinnedSpectra(float, int) except +
         void consumeSpectra(const double *, const double *, int)
 
         const double & getMZ()

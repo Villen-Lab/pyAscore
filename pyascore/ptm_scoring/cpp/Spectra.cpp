@@ -7,14 +7,13 @@
 
 namespace ptmscoring {
 
-    BinnedSpectra::BinnedSpectra (float min_mz, float max_mz, float bin_size, size_t n_top) {
-        this->min_mz = min_mz;
-        this->max_mz = max_mz;
+    BinnedSpectra::BinnedSpectra (float bin_size, size_t n_top) {
         this->bin_size = bin_size;
-
-        this->n_bins = std::ceil( (max_mz - min_mz) / bin_size );
-        this->spec_bins.resize(n_bins);
         this->n_top = n_top;
+
+        this->min_mz = 0.;
+        this->max_mz = std::numeric_limits<float>::infinity();
+        this->n_bins = -1;
 
         resetBin();
         resetRank();
@@ -43,13 +42,21 @@ namespace ptmscoring {
 
     void BinnedSpectra::consumeSpectra (const double * mz_arr, const double * int_arr, size_t n_peaks) {
 
+        // Decide on bounds and reset internal state
+        min_mz = std::floor( *std::min_element(mz_arr, mz_arr + n_peaks) / 100.) * 100.;
+        max_mz = std::ceil( *std::max_element(mz_arr, mz_arr + n_peaks) / 100.) * 100.;
+        n_bins = std::ceil( (max_mz - min_mz) / bin_size );
+        spec_bins.clear();
+        spec_bins.resize(n_bins);
+
         // Copy peaks to bins
         int target_bin;
         for (size_t ind = 0; ind < n_peaks; ind++){
-            target_bin = std::floor( ( mz_arr[ind] - min_mz ) / bin_size );
-            if (mz_arr[ind] >= min_mz and mz_arr[ind] < max_mz) {
-                spec_bins[target_bin].push_back({mz_arr[ind], int_arr[ind]});
-            }
+            target_bin = std::min( 
+                (size_t) std::floor( ( mz_arr[ind] - min_mz ) / bin_size ), 
+                n_bins-1
+            );
+            spec_bins[target_bin].push_back({mz_arr[ind], int_arr[ind]});
         }
 
         // Find and maintain only top peaks
