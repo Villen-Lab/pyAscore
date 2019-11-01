@@ -38,5 +38,10 @@ setup(
     packages=PACKAGES,
     install_requires=REQUIRES,
     python_requires='>=3.5',
-    ext_modules=cythonize(EXT, compiler_directives={'language_level' : "3"})
+    ext_modules=cythonize(EXT, compiler_directives={'language_level' : "3"}),
+    entry_points={
+          'console_scripts': [
+              'pyascore = pyascore.__main__:main'
+          ]
+    }
 ) 

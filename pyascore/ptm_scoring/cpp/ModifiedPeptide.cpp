@@ -1,8 +1,11 @@
 #include <iostream>
+#include <cstdio>
 #include <vector>
+#include <tuple>
 #include <string>
 #include <algorithm>
 #include <unordered_map>
+#include <cmath>
 #include "Types.h"
 #include "ModifiedPeptide.h"
 
@@ -33,16 +36,14 @@ namespace ptmscoring {
 
     }
 
-    void ModifiedPeptide::applyAuxMods (const size_t * aux_mod_pos,
+    void ModifiedPeptide::applyAuxMods (const unsigned int * aux_mod_pos,
                                         const float * aux_mod_mass,
                                         size_t n_aux_mods) {
 
         for (size_t ind = 0; ind < n_aux_mods; ind++) {
             residues[aux_mod_pos[ind]].front() += aux_mod_mass[ind];
-            if ( residues[aux_mod_pos[ind]].size() > 1) {
-                // A residue with an aux mod is not allowed to have more than 1 mod
-                residues[aux_mod_pos[ind]].resize(1);
-            }
+            // A residue with an aux mod is not allowed to have more than 1 mod
+            residues[aux_mod_pos[ind]].resize(1);
         }
 
     }
@@ -64,7 +65,7 @@ namespace ptmscoring {
     }
 
     void ModifiedPeptide::consumePeptide (std::string peptide, size_t n_of_mod,
-                                          const size_t * aux_mod_pos,
+                                          const unsigned int * aux_mod_pos,
                                           const float * aux_mod_mass,
                                           size_t n_aux_mods) {
 
@@ -81,31 +82,70 @@ namespace ptmscoring {
     }
 
     void ModifiedPeptide::consumePeak (float mz, size_t rank) {
-
         std::vector<float>::iterator it;
-        it = lower_bound(fragments.begin(), fragments.end(), mz);
+        it = lower_bound(fragments.begin(), fragments.end(), mz - .5);
 
         float ppm_low;
         float ppm_high;
         for(; it < fragments.end(); it++) {
-            ppm_low = *it - *it * 1e-6;
-            ppm_high = *it + *it * 1e-6;
+            ppm_low = *it - .5;
+            ppm_high = *it + .5;
             if (mz > ppm_low and mz < ppm_high) {
-                fragment_scores[mz].push_back(rank);
+                if (!fragment_scores.count(*it) or std::get<1>(fragment_scores.at(*it)) > rank) {
+                    fragment_scores[*it] = {mz, rank}; // The theoretical mz needs to be the key
+                }
             } else if (mz < ppm_low) {break;}
         }
 
     }
+
+    bool ModifiedPeptide::hasMatch (float mz) const {
+        return fragment_scores.count(mz);
+    }
+
+    std::tuple<float, size_t> ModifiedPeptide::getMatch (float mz) const {
+        return fragment_scores.at(mz);
+    }
     
-    std::string ModifiedPeptide::getModGroup() const {
+    std::string ModifiedPeptide::getModGroup () const {
         return mod_group;
     }
 
-    float ModifiedPeptide::getModMass() const { 
+    float ModifiedPeptide::getModMass () const { 
         return mod_mass;
-    } 
+    }
 
-    ModifiedPeptide::FragmentGraph ModifiedPeptide::getFragmentGraph (char fragment_type, size_t charge_state) {
+    size_t ModifiedPeptide::getNumberOfMods () const {
+        return n_of_mod;
+    }
+
+    size_t ModifiedPeptide::getNumberModifiable () const {
+        size_t n_modifiable = 0;
+        for (const std::vector<float> & res_it : residues) {
+            if (res_it.size() > 1) {n_modifiable += 1;} 
+        }
+        return n_modifiable;
+    }
+
+    std::string ModifiedPeptide::getPeptide(std::vector<size_t> signature) const {
+        if ( signature.size() == 0 ) {
+            return peptide;
+        } else {
+            std::string mod_peptide = "";
+            auto sig_iter = signature.begin();
+            char mod_buffer[10];
+            std::sprintf(mod_buffer, "[%d]", (int) std::round(mod_mass));
+            for (char aa : peptide) {
+                mod_peptide += aa;
+                if (mod_group.find(aa) != std::string::npos and sig_iter != signature.end() and  *sig_iter++ == 1){
+                    mod_peptide += mod_buffer;
+                }
+            }
+            return mod_peptide;
+        }
+    }
+
+    ModifiedPeptide::FragmentGraph ModifiedPeptide::getFragmentGraph (char fragment_type, size_t charge_state) const {
         return ModifiedPeptide::FragmentGraph(this, fragment_type, charge_state);
     }
 
@@ -197,7 +237,7 @@ namespace ptmscoring {
 
         n_mods_outstanding = modified_peptide->n_of_mod;
         for (resetResidueInd(); !isResidueEnd(); incrResidueInd()) {
-            if ( (modified_peptide->residues[residue_ind]).size() > 1 ) {
+            if ( isPositionModifiable() ) {
                 modifiable.push_back(residue_ind);
                 if ( n_mods_outstanding ) {
                     n_mods_outstanding--;
@@ -301,4 +341,15 @@ namespace ptmscoring {
     std::string ModifiedPeptide::FragmentGraph::getFragmentSeq () {
         return running_sequence;
     }
+
+    bool ModifiedPeptide::FragmentGraph::isPositionModifiable () {
+        return modified_peptide->residues[residue_ind].size() > 1;
+    }
+
+    bool ModifiedPeptide::FragmentGraph::isPositionModified () {
+        if ( signature.count(residue_ind) ) {
+            return signature.at(residue_ind);
+        } else { return false; }
+    }
+
 }

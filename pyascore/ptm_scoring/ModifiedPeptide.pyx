@@ -19,10 +19,14 @@ cdef class PyModifiedPeptide:
     @cython.boundscheck(False)
     @cython.wraparound(False)
     def consume_peptide(self, str peptide, size_t n_of_mod, 
-                        np.ndarray[size_t, ndim=1, mode="c"] aux_mod_pos = None, 
+                        np.ndarray[unsigned int, ndim=1, mode="c"] aux_mod_pos = None, 
                         np.ndarray[float, ndim=1, mode="c"] aux_mod_mass = None):
-
-        self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
+        if aux_mod_pos is not None and aux_mod_mass is not None:
+            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,
+                                                        &aux_mod_pos[0], &aux_mod_mass[0], 
+                                                        aux_mod_pos.size)
+        else:
+            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
 
     def get_fragment_graph(self, str fragment_type, size_t charge_state):
         return PyFragmentGraph(self, fragment_type.encode("utf8")[0], charge_state)

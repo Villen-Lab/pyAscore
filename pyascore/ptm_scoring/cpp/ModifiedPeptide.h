@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <tuple>
 #include <unordered_map>
 #include "Types.h"
 
@@ -17,26 +18,31 @@ namespace ptmscoring {
 
         std::vector<std::vector<float>> residues;
         std::vector<float> fragments;
-        std::unordered_map<float, std::vector<size_t>> fragment_scores;
+        std::unordered_map<float, std::tuple<float, size_t>> fragment_scores;
 
         void initializeResidues();
-        void applyAuxMods(const size_t * = NULL, const float * = NULL, size_t = 0);
+        void applyAuxMods(const unsigned int * = NULL, const float * = NULL, size_t = 0);
         void initializeFragments();
         public:
             ModifiedPeptide(std::string, float);
             ~ModifiedPeptide();
 
             void consumePeptide(std::string, size_t, 
-                                const size_t * = NULL, 
+                                const unsigned int * = NULL, 
                                 const float * = NULL, 
                                 size_t = 0);
             void consumePeak(float, size_t);
+            bool hasMatch(float) const;
+            std::tuple<float, size_t> getMatch(float) const;
 
             std::string getModGroup() const;
             float getModMass() const;
+            size_t getNumberOfMods() const;
+            size_t getNumberModifiable() const;
+            std::string getPeptide(std::vector<size_t> = {}) const;
 
             class FragmentGraph;
-            FragmentGraph getFragmentGraph(char, size_t);
+            FragmentGraph getFragmentGraph(char, size_t) const;
     };
 
     class ModifiedPeptide::FragmentGraph {
@@ -77,6 +83,9 @@ namespace ptmscoring {
             float getFragmentMZ();
             size_t getFragmentSize();
             std::string getFragmentSeq();
+
+            bool isPositionModifiable();
+            bool isPositionModified();
     };
 
 

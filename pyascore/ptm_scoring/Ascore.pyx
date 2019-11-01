@@ -28,12 +28,21 @@ cdef class PyAscore:
     @cython.wraparound(False)
     def score(self, np.ndarray[double, ndim=1, mode="c"] mz_arr not None, 
                     np.ndarray[double, ndim=1, mode="c"] int_arr not None,
-                    str peptide, size_t n_of_mod):
-        cdef size_t m_len, i_len
-        m_len, i_len = mz_arr.size, int_arr.size
-        self.binned_spectra_ptr[0].consumeSpectra(&mz_arr[0], &int_arr[0], m_len)
+                    str peptide, size_t n_of_mod,
+                    np.ndarray[np.uint32_t, ndim=1, mode="c"] aux_mod_pos = None,
+                    np.ndarray[np.float32_t, ndim=1, mode="c"] aux_mod_mass = None):
+        # Consume spectra and bin
+        self.binned_spectra_ptr[0].consumeSpectra(&mz_arr[0], &int_arr[0], mz_arr.size)
 
-        self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
+        # Build modified peptide with or without constant mods
+        if aux_mod_pos is not None and aux_mod_mass is not None:
+            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,
+                                                        &aux_mod_pos[0], &aux_mod_mass[0],
+                                                        aux_mod_pos.size)
+        else:
+            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
+        
+        # Allow modified peptide to consume peaks from binned spectra
         while (self.binned_spectra_ptr[0].getBin() < self.binned_spectra_ptr[0].getNBins()):
 
             self.binned_spectra_ptr[0].resetRank()
@@ -45,3 +54,11 @@ cdef class PyAscore:
             self.binned_spectra_ptr[0].nextBin()
 
         self.ascore_ptr[0].score(self.binned_spectra_ptr[0], self.modified_peptide_ptr[0])
+
+    @property
+    def best_sequence(self):
+        return self.ascore_ptr[0].getBestSequence().decode("utf8")
+
+    @property
+    def best_score(self):
+        return self.ascore_ptr[0].getBestScore()

@@ -54,6 +54,10 @@ namespace ptmscoring {
 
         // Find and maintain only top peaks
         sortTopSpectra();
+
+        // Reset iterator
+        resetBin();
+        resetRank();
     }
 
     // This class is setup so that you if you accidently
