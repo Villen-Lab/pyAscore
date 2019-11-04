@@ -21,7 +21,7 @@ namespace ptmscoring {
     void ModifiedPeptide::initializeResidues () {
 
         // Dealloc if already full
-        residues.resize(0); 
+        residues.clear(); 
 
         // Iterate through characters of peptide
         for (char res : peptide) {
@@ -49,6 +49,8 @@ namespace ptmscoring {
     }
 
     void ModifiedPeptide::initializeFragments () {
+        fragment_scores.clear();
+        fragments.clear();
         std::vector<char> fragment_types = {'b', 'y'};
         for (char t : fragment_types){
             // Only supporting charge 1 for now
@@ -74,9 +76,6 @@ namespace ptmscoring {
 
         initializeResidues();
         applyAuxMods(aux_mod_pos, aux_mod_mass, n_aux_mods);
-
-        fragment_scores.clear();
-        fragments.clear();
         initializeFragments();
 
     }
@@ -327,7 +326,7 @@ namespace ptmscoring {
         }
 
         if (charge_state > 0) {
-            fragment_mz = (fragment_mz + charge_state) / charge_state;
+            fragment_mz = (fragment_mz + charge_state * 1.00727647) / charge_state;
         }
 
         return fragment_mz;

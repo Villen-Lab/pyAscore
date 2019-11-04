@@ -70,7 +70,7 @@ class TestPyModifiedPeptide(unittest.TestCase):
         
         def test(graph, charge, neutral_masses):
             for m in neutral_masses:
-                m = (m + charge) / max(1, charge)
+                m = (m + charge * 1.00727647) / max(1, charge)
                 #print(graph.get_fragment_mz(), m)
                 self.assertTrue(
                     np.isclose(graph.get_fragment_mz(), m, rtol=1e-6, atol=0)
@@ -130,3 +130,30 @@ class TestPyModifiedPeptide(unittest.TestCase):
             y_graph.reset_iterator()
             y_graph.incr_signature()
             test(y_graph, c, np.array([146.11024, 247.15792, 394.193325, 561.191686, 632.228796]))
+
+        pep.consume_peptide("ASMECTK", 1, np.array([2, 4]).astype(np.uint32), np.array([15.994915, 57.021464]).astype(np.float32))
+        max_charge = 3
+        for c in range(max_charge + 1):
+            b_graph = pep.get_fragment_graph("b", c)
+            # First signature all the way through
+            test(b_graph, c, np.array([71.03711, 238.035471, 385.070876, 514.113466, 674.14412, 775.1918, 903.28676]))
+            self.assertTrue(b_graph.is_fragment_end())
+            # Second signature, picking up from common node
+            b_graph.incr_signature()
+            test(b_graph, c, np.array([158.06914, 305.104545, 434.147135, 594.177789, 775.1918, 903.28676]))
+            # Second signature, from beginning
+            b_graph.reset_iterator()
+            b_graph.incr_signature()
+            test(b_graph, c, np.array([71.03711, 158.06914, 305.104545, 434.147135, 594.177789, 775.1918, 903.28676]))
+
+            y_graph = pep.get_fragment_graph("y", c)
+            # First signature all the way through
+            test(y_graph, c, np.array([146.11024, 327.124251, 487.154905, 616.197495, 763.2329, 850.26493, 921.30204]))
+            self.assertTrue(y_graph.is_fragment_end())
+            # Second signature, picking up from common node
+            y_graph.incr_signature()
+            test(y_graph, c, np.array([247.15792, 407.1885734, 536.231164, 683.266569, 850.26493, 921.30204]))
+            # Second signature, from beginning
+            y_graph.reset_iterator()
+            y_graph.incr_signature()
+            test(y_graph, c, np.array([146.11024, 247.15792, 407.1885734, 536.231164, 683.266569, 850.26493, 921.30204]))
