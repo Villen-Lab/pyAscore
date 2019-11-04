@@ -10,3 +10,4 @@ cdef extern from "cpp/Util.cpp" namespace "ptmscoring":
         BinomialDist(float);
         float log_pmf(size_t, size_t);
         float log_pvalue(size_t, size_t);
+        float log10_pvalue(size_t, size_t);

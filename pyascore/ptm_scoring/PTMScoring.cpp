@@ -2132,8 +2132,9 @@ static int __pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist___cinit__(struct __
 static void __pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_2__dealloc__(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_4log_pmf(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self, size_t __pyx_v_successes, size_t __pyx_v_trials); /* proto */
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_6log_pvalue(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self, size_t __pyx_v_successes, size_t __pyx_v_trials); /* proto */
-static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_8log10_pvalue(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self, size_t __pyx_v_successes, size_t __pyx_v_trials); /* proto */
+static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static PyObject *__pyx_tp_new_8pyascore_11ptm_scoring_PyBinnedSpectra(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -6717,6 +6718,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_4log_pmf(stru
  * 
  *     def log_pvalue(self, size_t successes, size_t trials):             # <<<<<<<<<<<<<<
  *         return self.binomial_dist_ptr[0].log_pvalue(successes, trials)
+ * 
  */
 
 /* Python wrapper */
@@ -6790,6 +6792,8 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_6log_pvalue(s
  * 
  *     def log_pvalue(self, size_t successes, size_t trials):
  *         return self.binomial_dist_ptr[0].log_pvalue(successes, trials)             # <<<<<<<<<<<<<<
+ * 
+ *     def log10_pvalue(self, size_t successes, size_t trials):
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->binomial_dist_ptr[0]).log_pvalue(__pyx_v_successes, __pyx_v_trials)); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 34, __pyx_L1_error)
@@ -6803,12 +6807,120 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_6log_pvalue(s
  * 
  *     def log_pvalue(self, size_t successes, size_t trials):             # <<<<<<<<<<<<<<
  *         return self.binomial_dist_ptr[0].log_pvalue(successes, trials)
+ * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("pyascore.ptm_scoring.PyBinomialDist.log_pvalue", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "pyascore/ptm_scoring/Util.pyx":36
+ *         return self.binomial_dist_ptr[0].log_pvalue(successes, trials)
+ * 
+ *     def log10_pvalue(self, size_t successes, size_t trials):             # <<<<<<<<<<<<<<
+ *         return self.binomial_dist_ptr[0].log10_pvalue(successes, trials)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_9log10_pvalue(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_9log10_pvalue(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  size_t __pyx_v_successes;
+  size_t __pyx_v_trials;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("log10_pvalue (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_successes,&__pyx_n_s_trials,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_successes)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_trials)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("log10_pvalue", 1, 2, 2, 1); __PYX_ERR(4, 36, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "log10_pvalue") < 0)) __PYX_ERR(4, 36, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_successes = __Pyx_PyInt_As_size_t(values[0]); if (unlikely((__pyx_v_successes == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(4, 36, __pyx_L3_error)
+    __pyx_v_trials = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_trials == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(4, 36, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("log10_pvalue", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(4, 36, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("pyascore.ptm_scoring.PyBinomialDist.log10_pvalue", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_8log10_pvalue(((struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *)__pyx_v_self), __pyx_v_successes, __pyx_v_trials);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_8log10_pvalue(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self, size_t __pyx_v_successes, size_t __pyx_v_trials) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("log10_pvalue", 0);
+
+  /* "pyascore/ptm_scoring/Util.pyx":37
+ * 
+ *     def log10_pvalue(self, size_t successes, size_t trials):
+ *         return self.binomial_dist_ptr[0].log10_pvalue(successes, trials)             # <<<<<<<<<<<<<<
+ * 
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->binomial_dist_ptr[0]).log10_pvalue(__pyx_v_successes, __pyx_v_trials)); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 37, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "pyascore/ptm_scoring/Util.pyx":36
+ *         return self.binomial_dist_ptr[0].log_pvalue(successes, trials)
+ * 
+ *     def log10_pvalue(self, size_t successes, size_t trials):             # <<<<<<<<<<<<<<
+ *         return self.binomial_dist_ptr[0].log10_pvalue(successes, trials)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("pyascore.ptm_scoring.PyBinomialDist.log10_pvalue", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -6823,19 +6935,19 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_6log_pvalue(s
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_11__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_11__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_8__reduce_cython__(((struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *)__pyx_v_self));
+  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_10__reduce_cython__(((struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self) {
+static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -6877,19 +6989,19 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_8__reduce_cyt
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_13__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_13__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_10__setstate_cython__(((struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_12__setstate_cython__(((struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_8pyascore_11ptm_scoring_14PyBinomialDist_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyBinomialDist *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -10274,8 +10386,9 @@ static void __pyx_tp_dealloc_8pyascore_11ptm_scoring_PyBinomialDist(PyObject *o)
 static PyMethodDef __pyx_methods_8pyascore_11ptm_scoring_PyBinomialDist[] = {
   {"log_pmf", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_5log_pmf, METH_VARARGS|METH_KEYWORDS, 0},
   {"log_pvalue", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_7log_pvalue, METH_VARARGS|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_9__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_11__setstate_cython__, METH_O, 0},
+  {"log10_pvalue", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_9log10_pvalue, METH_VARARGS|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_11__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_8pyascore_11ptm_scoring_14PyBinomialDist_13__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
