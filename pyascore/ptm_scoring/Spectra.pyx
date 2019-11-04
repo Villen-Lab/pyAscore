@@ -8,8 +8,8 @@ from Spectra cimport BinnedSpectra
 cdef class PyBinnedSpectra:
     cdef BinnedSpectra * binned_spectra_ptr
 
-    def __cinit__(self, float min_mz, float max_mz, float bin_size, size_t n_top):
-        self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)
+    def __cinit__(self, float bin_size, size_t n_top):
+        self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
 
     def __dealloc__(self):
         del self.binned_spectra_ptr

@@ -1978,8 +1978,6 @@ static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_zeros[] = "zeros";
 static const char __pyx_k_import[] = "__import__";
-static const char __pyx_k_max_mz[] = "max_mz";
-static const char __pyx_k_min_mz[] = "min_mz";
 static const char __pyx_k_mz_arr[] = "mz_arr";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_trials[] = "trials";
@@ -2047,8 +2045,6 @@ static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_int_arr;
 static PyObject *__pyx_n_s_k;
 static PyObject *__pyx_n_s_main;
-static PyObject *__pyx_n_s_max_mz;
-static PyObject *__pyx_n_s_min_mz;
 static PyObject *__pyx_n_s_mod_group;
 static PyObject *__pyx_n_s_mod_mass;
 static PyObject *__pyx_n_s_mz_arr;
@@ -2078,7 +2074,7 @@ static PyObject *__pyx_n_s_trials;
 static PyObject *__pyx_n_s_uint64;
 static PyObject *__pyx_kp_u_unknown_dtype_code_in_numpy_pxd;
 static PyObject *__pyx_n_s_zeros;
-static int __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *__pyx_v_self, float __pyx_v_min_mz, float __pyx_v_max_mz, float __pyx_v_bin_size, size_t __pyx_v_n_top); /* proto */
+static int __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *__pyx_v_self, float __pyx_v_bin_size, size_t __pyx_v_n_top); /* proto */
 static void __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra_2__dealloc__(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra_4consume_spectra(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *__pyx_v_self, PyArrayObject *__pyx_v_mz_arr, PyArrayObject *__pyx_v_int_arr); /* proto */
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra_2mz___get__(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *__pyx_v_self); /* proto */
@@ -2119,7 +2115,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_15PyFragmentGraph_18get_fragme
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_15PyFragmentGraph_20get_fragment_seq(struct __pyx_obj_8pyascore_11ptm_scoring_PyFragmentGraph *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_15PyFragmentGraph_22__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyFragmentGraph *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_15PyFragmentGraph_24__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8pyascore_11ptm_scoring_PyFragmentGraph *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *__pyx_v_self, float __pyx_v_min_mz, float __pyx_v_max_mz, float __pyx_v_bin_size, size_t __pyx_v_n_top, PyObject *__pyx_v_mod_group, float __pyx_v_mod_mass); /* proto */
+static int __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *__pyx_v_self, float __pyx_v_bin_size, size_t __pyx_v_n_top, PyObject *__pyx_v_mod_group, float __pyx_v_mod_mass); /* proto */
 static void __pyx_pf_8pyascore_11ptm_scoring_8PyAscore_2__dealloc__(struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *__pyx_v_self, PyArrayObject *__pyx_v_mz_arr, PyArrayObject *__pyx_v_int_arr, PyObject *__pyx_v_peptide, size_t __pyx_v_n_of_mod, PyArrayObject *__pyx_v_aux_mod_pos, PyArrayObject *__pyx_v_aux_mod_mass); /* proto */
 static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_13best_sequence___get__(struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *__pyx_v_self); /* proto */
@@ -2170,32 +2166,26 @@ static PyObject *__pyx_tuple__19;
 /* "pyascore/ptm_scoring/Spectra.pyx":11
  *     cdef BinnedSpectra * binned_spectra_ptr
  * 
- *     def __cinit__(self, float min_mz, float max_mz, float bin_size, size_t n_top):             # <<<<<<<<<<<<<<
- *         self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)
+ *     def __cinit__(self, float bin_size, size_t n_top):             # <<<<<<<<<<<<<<
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
  * 
  */
 
 /* Python wrapper */
 static int __pyx_pw_8pyascore_11ptm_scoring_15PyBinnedSpectra_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static int __pyx_pw_8pyascore_11ptm_scoring_15PyBinnedSpectra_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  float __pyx_v_min_mz;
-  float __pyx_v_max_mz;
   float __pyx_v_bin_size;
   size_t __pyx_v_n_top;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_min_mz,&__pyx_n_s_max_mz,&__pyx_n_s_bin_size,&__pyx_n_s_n_top,0};
-    PyObject* values[4] = {0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_bin_size,&__pyx_n_s_n_top,0};
+    PyObject* values[2] = {0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
         CYTHON_FALLTHROUGH;
         case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -2206,59 +2196,43 @@ static int __pyx_pw_8pyascore_11ptm_scoring_15PyBinnedSpectra_1__cinit__(PyObjec
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_min_mz)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_bin_size)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_mz)) != 0)) kw_args--;
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n_top)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 4, 4, 1); __PYX_ERR(2, 11, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_bin_size)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 4, 4, 2); __PYX_ERR(2, 11, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n_top)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 4, 4, 3); __PYX_ERR(2, 11, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, 1); __PYX_ERR(2, 11, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(2, 11, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
     }
-    __pyx_v_min_mz = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_min_mz == (float)-1) && PyErr_Occurred())) __PYX_ERR(2, 11, __pyx_L3_error)
-    __pyx_v_max_mz = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_max_mz == (float)-1) && PyErr_Occurred())) __PYX_ERR(2, 11, __pyx_L3_error)
-    __pyx_v_bin_size = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_bin_size == (float)-1) && PyErr_Occurred())) __PYX_ERR(2, 11, __pyx_L3_error)
-    __pyx_v_n_top = __Pyx_PyInt_As_size_t(values[3]); if (unlikely((__pyx_v_n_top == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(2, 11, __pyx_L3_error)
+    __pyx_v_bin_size = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_bin_size == (float)-1) && PyErr_Occurred())) __PYX_ERR(2, 11, __pyx_L3_error)
+    __pyx_v_n_top = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_top == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(2, 11, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(2, 11, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(2, 11, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pyascore.ptm_scoring.PyBinnedSpectra.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(((struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *)__pyx_v_self), __pyx_v_min_mz, __pyx_v_max_mz, __pyx_v_bin_size, __pyx_v_n_top);
+  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(((struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *)__pyx_v_self), __pyx_v_bin_size, __pyx_v_n_top);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *__pyx_v_self, float __pyx_v_min_mz, float __pyx_v_max_mz, float __pyx_v_bin_size, size_t __pyx_v_n_top) {
+static int __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(struct __pyx_obj_8pyascore_11ptm_scoring_PyBinnedSpectra *__pyx_v_self, float __pyx_v_bin_size, size_t __pyx_v_n_top) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   ptmscoring::BinnedSpectra *__pyx_t_1;
@@ -2266,13 +2240,13 @@ static int __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(struct _
 
   /* "pyascore/ptm_scoring/Spectra.pyx":12
  * 
- *     def __cinit__(self, float min_mz, float max_mz, float bin_size, size_t n_top):
- *         self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)             # <<<<<<<<<<<<<<
+ *     def __cinit__(self, float bin_size, size_t n_top):
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)             # <<<<<<<<<<<<<<
  * 
  *     def __dealloc__(self):
  */
   try {
-    __pyx_t_1 = new ptmscoring::BinnedSpectra(__pyx_v_min_mz, __pyx_v_max_mz, __pyx_v_bin_size, __pyx_v_n_top);
+    __pyx_t_1 = new ptmscoring::BinnedSpectra(__pyx_v_bin_size, __pyx_v_n_top);
   } catch(...) {
     __Pyx_CppExn2PyErr();
     __PYX_ERR(2, 12, __pyx_L1_error)
@@ -2282,8 +2256,8 @@ static int __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(struct _
   /* "pyascore/ptm_scoring/Spectra.pyx":11
  *     cdef BinnedSpectra * binned_spectra_ptr
  * 
- *     def __cinit__(self, float min_mz, float max_mz, float bin_size, size_t n_top):             # <<<<<<<<<<<<<<
- *         self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)
+ *     def __cinit__(self, float bin_size, size_t n_top):             # <<<<<<<<<<<<<<
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
  * 
  */
 
@@ -2299,7 +2273,7 @@ static int __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra___cinit__(struct _
 }
 
 /* "pyascore/ptm_scoring/Spectra.pyx":14
- *         self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  *         del self.binned_spectra_ptr
@@ -2331,7 +2305,7 @@ static void __pyx_pf_8pyascore_11ptm_scoring_15PyBinnedSpectra_2__dealloc__(stru
   delete __pyx_v_self->binned_spectra_ptr;
 
   /* "pyascore/ptm_scoring/Spectra.pyx":14
- *         self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  *         del self.binned_spectra_ptr
@@ -5186,16 +5160,14 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_15PyFragmentGraph_24__setstate
 /* "pyascore/ptm_scoring/Ascore.pyx":15
  *     cdef BinnedSpectra * binned_spectra_ptr
  * 
- *     def __cinit__(self, float min_mz, float max_mz,             # <<<<<<<<<<<<<<
- *                         float bin_size, size_t n_top,
+ *     def __cinit__(self, float bin_size, size_t n_top,             # <<<<<<<<<<<<<<
  *                         str mod_group, float mod_mass):
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
  */
 
 /* Python wrapper */
 static int __pyx_pw_8pyascore_11ptm_scoring_8PyAscore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static int __pyx_pw_8pyascore_11ptm_scoring_8PyAscore_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  float __pyx_v_min_mz;
-  float __pyx_v_max_mz;
   float __pyx_v_bin_size;
   size_t __pyx_v_n_top;
   PyObject *__pyx_v_mod_group = 0;
@@ -5204,16 +5176,12 @@ static int __pyx_pw_8pyascore_11ptm_scoring_8PyAscore_1__cinit__(PyObject *__pyx
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_min_mz,&__pyx_n_s_max_mz,&__pyx_n_s_bin_size,&__pyx_n_s_n_top,&__pyx_n_s_mod_group,&__pyx_n_s_mod_mass,0};
-    PyObject* values[6] = {0,0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_bin_size,&__pyx_n_s_n_top,&__pyx_n_s_mod_group,&__pyx_n_s_mod_mass,0};
+    PyObject* values[4] = {0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
-        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-        CYTHON_FALLTHROUGH;
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
@@ -5228,69 +5196,53 @@ static int __pyx_pw_8pyascore_11ptm_scoring_8PyAscore_1__cinit__(PyObject *__pyx
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_min_mz)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_bin_size)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_mz)) != 0)) kw_args--;
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n_top)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 1); __PYX_ERR(3, 15, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 4, 4, 1); __PYX_ERR(3, 15, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_bin_size)) != 0)) kw_args--;
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mod_group)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 2); __PYX_ERR(3, 15, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 4, 4, 2); __PYX_ERR(3, 15, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n_top)) != 0)) kw_args--;
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mod_mass)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 3); __PYX_ERR(3, 15, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mod_group)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 4); __PYX_ERR(3, 15, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mod_mass)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 5); __PYX_ERR(3, 15, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 4, 4, 3); __PYX_ERR(3, 15, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(3, 15, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
     }
-    __pyx_v_min_mz = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_min_mz == (float)-1) && PyErr_Occurred())) __PYX_ERR(3, 15, __pyx_L3_error)
-    __pyx_v_max_mz = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_max_mz == (float)-1) && PyErr_Occurred())) __PYX_ERR(3, 15, __pyx_L3_error)
-    __pyx_v_bin_size = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_bin_size == (float)-1) && PyErr_Occurred())) __PYX_ERR(3, 16, __pyx_L3_error)
-    __pyx_v_n_top = __Pyx_PyInt_As_size_t(values[3]); if (unlikely((__pyx_v_n_top == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(3, 16, __pyx_L3_error)
-    __pyx_v_mod_group = ((PyObject*)values[4]);
-    __pyx_v_mod_mass = __pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_mod_mass == (float)-1) && PyErr_Occurred())) __PYX_ERR(3, 17, __pyx_L3_error)
+    __pyx_v_bin_size = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_bin_size == (float)-1) && PyErr_Occurred())) __PYX_ERR(3, 15, __pyx_L3_error)
+    __pyx_v_n_top = __Pyx_PyInt_As_size_t(values[1]); if (unlikely((__pyx_v_n_top == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(3, 15, __pyx_L3_error)
+    __pyx_v_mod_group = ((PyObject*)values[2]);
+    __pyx_v_mod_mass = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_mod_mass == (float)-1) && PyErr_Occurred())) __PYX_ERR(3, 16, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(3, 15, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(3, 15, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pyascore.ptm_scoring.PyAscore.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_mod_group), (&PyUnicode_Type), 1, "mod_group", 1))) __PYX_ERR(3, 17, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(((struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *)__pyx_v_self), __pyx_v_min_mz, __pyx_v_max_mz, __pyx_v_bin_size, __pyx_v_n_top, __pyx_v_mod_group, __pyx_v_mod_mass);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_mod_group), (&PyUnicode_Type), 1, "mod_group", 1))) __PYX_ERR(3, 16, __pyx_L1_error)
+  __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(((struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *)__pyx_v_self), __pyx_v_bin_size, __pyx_v_n_top, __pyx_v_mod_group, __pyx_v_mod_mass);
 
   /* function exit code */
   goto __pyx_L0;
@@ -5301,7 +5253,7 @@ static int __pyx_pw_8pyascore_11ptm_scoring_8PyAscore_1__cinit__(PyObject *__pyx
   return __pyx_r;
 }
 
-static int __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *__pyx_v_self, float __pyx_v_min_mz, float __pyx_v_max_mz, float __pyx_v_bin_size, size_t __pyx_v_n_top, PyObject *__pyx_v_mod_group, float __pyx_v_mod_mass) {
+static int __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *__pyx_v_self, float __pyx_v_bin_size, size_t __pyx_v_n_top, PyObject *__pyx_v_mod_group, float __pyx_v_mod_mass) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   ptmscoring::BinnedSpectra *__pyx_t_1;
@@ -5310,40 +5262,40 @@ static int __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(struct __pyx_obj
   ptmscoring::Ascore *__pyx_t_4;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":18
- *                         float bin_size, size_t n_top,
+  /* "pyascore/ptm_scoring/Ascore.pyx":17
+ *     def __cinit__(self, float bin_size, size_t n_top,
  *                         str mod_group, float mod_mass):
- *         self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)             # <<<<<<<<<<<<<<
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)             # <<<<<<<<<<<<<<
  *         self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), mod_mass)
  *         self.ascore_ptr = new Ascore()
  */
   try {
-    __pyx_t_1 = new ptmscoring::BinnedSpectra(__pyx_v_min_mz, __pyx_v_max_mz, __pyx_v_bin_size, __pyx_v_n_top);
+    __pyx_t_1 = new ptmscoring::BinnedSpectra(__pyx_v_bin_size, __pyx_v_n_top);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(3, 18, __pyx_L1_error)
+    __PYX_ERR(3, 17, __pyx_L1_error)
   }
   __pyx_v_self->binned_spectra_ptr = __pyx_t_1;
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":19
+  /* "pyascore/ptm_scoring/Ascore.pyx":18
  *                         str mod_group, float mod_mass):
- *         self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
  *         self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), mod_mass)             # <<<<<<<<<<<<<<
  *         self.ascore_ptr = new Ascore()
  * 
  */
   if (unlikely(__pyx_v_mod_group == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
-    __PYX_ERR(3, 19, __pyx_L1_error)
+    __PYX_ERR(3, 18, __pyx_L1_error)
   }
-  __pyx_t_2 = PyUnicode_AsUTF8String(__pyx_v_mod_group); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 19, __pyx_L1_error)
+  __pyx_t_2 = PyUnicode_AsUTF8String(__pyx_v_mod_group); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __pyx_convert_string_from_py_std__in_string(__pyx_t_2); if (unlikely(PyErr_Occurred())) __PYX_ERR(3, 19, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_string_from_py_std__in_string(__pyx_t_2); if (unlikely(PyErr_Occurred())) __PYX_ERR(3, 18, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_self->modified_peptide_ptr = new ptmscoring::ModifiedPeptide(__pyx_t_3, __pyx_v_mod_mass);
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":20
- *         self.binned_spectra_ptr = new BinnedSpectra(min_mz, max_mz, bin_size, n_top)
+  /* "pyascore/ptm_scoring/Ascore.pyx":19
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
  *         self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), mod_mass)
  *         self.ascore_ptr = new Ascore()             # <<<<<<<<<<<<<<
  * 
@@ -5353,16 +5305,16 @@ static int __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(struct __pyx_obj
     __pyx_t_4 = new ptmscoring::Ascore();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(3, 20, __pyx_L1_error)
+    __PYX_ERR(3, 19, __pyx_L1_error)
   }
   __pyx_v_self->ascore_ptr = __pyx_t_4;
 
   /* "pyascore/ptm_scoring/Ascore.pyx":15
  *     cdef BinnedSpectra * binned_spectra_ptr
  * 
- *     def __cinit__(self, float min_mz, float max_mz,             # <<<<<<<<<<<<<<
- *                         float bin_size, size_t n_top,
+ *     def __cinit__(self, float bin_size, size_t n_top,             # <<<<<<<<<<<<<<
  *                         str mod_group, float mod_mass):
+ *         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
  */
 
   /* function exit code */
@@ -5377,7 +5329,7 @@ static int __pyx_pf_8pyascore_11ptm_scoring_8PyAscore___cinit__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "pyascore/ptm_scoring/Ascore.pyx":22
+/* "pyascore/ptm_scoring/Ascore.pyx":21
  *         self.ascore_ptr = new Ascore()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -5400,7 +5352,7 @@ static void __pyx_pf_8pyascore_11ptm_scoring_8PyAscore_2__dealloc__(struct __pyx
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":23
+  /* "pyascore/ptm_scoring/Ascore.pyx":22
  * 
  *     def __dealloc__(self):
  *         del self.binned_spectra_ptr             # <<<<<<<<<<<<<<
@@ -5409,7 +5361,7 @@ static void __pyx_pf_8pyascore_11ptm_scoring_8PyAscore_2__dealloc__(struct __pyx
  */
   delete __pyx_v_self->binned_spectra_ptr;
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":24
+  /* "pyascore/ptm_scoring/Ascore.pyx":23
  *     def __dealloc__(self):
  *         del self.binned_spectra_ptr
  *         del self.modified_peptide_ptr             # <<<<<<<<<<<<<<
@@ -5418,7 +5370,7 @@ static void __pyx_pf_8pyascore_11ptm_scoring_8PyAscore_2__dealloc__(struct __pyx
  */
   delete __pyx_v_self->modified_peptide_ptr;
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":25
+  /* "pyascore/ptm_scoring/Ascore.pyx":24
  *         del self.binned_spectra_ptr
  *         del self.modified_peptide_ptr
  *         del self.ascore_ptr             # <<<<<<<<<<<<<<
@@ -5427,7 +5379,7 @@ static void __pyx_pf_8pyascore_11ptm_scoring_8PyAscore_2__dealloc__(struct __pyx
  */
   delete __pyx_v_self->ascore_ptr;
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":22
+  /* "pyascore/ptm_scoring/Ascore.pyx":21
  *         self.ascore_ptr = new Ascore()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -5439,7 +5391,7 @@ static void __pyx_pf_8pyascore_11ptm_scoring_8PyAscore_2__dealloc__(struct __pyx
   __Pyx_RefNannyFinishContext();
 }
 
-/* "pyascore/ptm_scoring/Ascore.pyx":29
+/* "pyascore/ptm_scoring/Ascore.pyx":28
  *     @cython.boundscheck(False)
  *     @cython.wraparound(False)
  *     def score(self, np.ndarray[double, ndim=1, mode="c"] mz_arr not None,             # <<<<<<<<<<<<<<
@@ -5463,7 +5415,7 @@ static PyObject *__pyx_pw_8pyascore_11ptm_scoring_8PyAscore_5score(PyObject *__p
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_mz_arr,&__pyx_n_s_int_arr,&__pyx_n_s_peptide,&__pyx_n_s_n_of_mod,&__pyx_n_s_aux_mod_pos,&__pyx_n_s_aux_mod_mass,0};
     PyObject* values[6] = {0,0,0,0,0,0};
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":32
+    /* "pyascore/ptm_scoring/Ascore.pyx":31
  *                     np.ndarray[double, ndim=1, mode="c"] int_arr not None,
  *                     str peptide, size_t n_of_mod,
  *                     np.ndarray[np.uint32_t, ndim=1, mode="c"] aux_mod_pos = None,             # <<<<<<<<<<<<<<
@@ -5472,7 +5424,7 @@ static PyObject *__pyx_pw_8pyascore_11ptm_scoring_8PyAscore_5score(PyObject *__p
  */
     values[4] = (PyObject *)((PyArrayObject *)Py_None);
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":33
+    /* "pyascore/ptm_scoring/Ascore.pyx":32
  *                     str peptide, size_t n_of_mod,
  *                     np.ndarray[np.uint32_t, ndim=1, mode="c"] aux_mod_pos = None,
  *                     np.ndarray[np.float32_t, ndim=1, mode="c"] aux_mod_mass = None):             # <<<<<<<<<<<<<<
@@ -5508,19 +5460,19 @@ static PyObject *__pyx_pw_8pyascore_11ptm_scoring_8PyAscore_5score(PyObject *__p
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_int_arr)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("score", 0, 4, 6, 1); __PYX_ERR(3, 29, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("score", 0, 4, 6, 1); __PYX_ERR(3, 28, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_peptide)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("score", 0, 4, 6, 2); __PYX_ERR(3, 29, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("score", 0, 4, 6, 2); __PYX_ERR(3, 28, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n_of_mod)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("score", 0, 4, 6, 3); __PYX_ERR(3, 29, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("score", 0, 4, 6, 3); __PYX_ERR(3, 28, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
@@ -5536,7 +5488,7 @@ static PyObject *__pyx_pw_8pyascore_11ptm_scoring_8PyAscore_5score(PyObject *__p
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "score") < 0)) __PYX_ERR(3, 29, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "score") < 0)) __PYX_ERR(3, 28, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -5555,26 +5507,26 @@ static PyObject *__pyx_pw_8pyascore_11ptm_scoring_8PyAscore_5score(PyObject *__p
     __pyx_v_mz_arr = ((PyArrayObject *)values[0]);
     __pyx_v_int_arr = ((PyArrayObject *)values[1]);
     __pyx_v_peptide = ((PyObject*)values[2]);
-    __pyx_v_n_of_mod = __Pyx_PyInt_As_size_t(values[3]); if (unlikely((__pyx_v_n_of_mod == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(3, 31, __pyx_L3_error)
+    __pyx_v_n_of_mod = __Pyx_PyInt_As_size_t(values[3]); if (unlikely((__pyx_v_n_of_mod == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(3, 30, __pyx_L3_error)
     __pyx_v_aux_mod_pos = ((PyArrayObject *)values[4]);
     __pyx_v_aux_mod_mass = ((PyArrayObject *)values[5]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("score", 0, 4, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(3, 29, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("score", 0, 4, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(3, 28, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pyascore.ptm_scoring.PyAscore.score", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_mz_arr), __pyx_ptype_5numpy_ndarray, 0, "mz_arr", 0))) __PYX_ERR(3, 29, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_int_arr), __pyx_ptype_5numpy_ndarray, 0, "int_arr", 0))) __PYX_ERR(3, 30, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_peptide), (&PyUnicode_Type), 1, "peptide", 1))) __PYX_ERR(3, 31, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aux_mod_pos), __pyx_ptype_5numpy_ndarray, 1, "aux_mod_pos", 0))) __PYX_ERR(3, 32, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aux_mod_mass), __pyx_ptype_5numpy_ndarray, 1, "aux_mod_mass", 0))) __PYX_ERR(3, 33, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_mz_arr), __pyx_ptype_5numpy_ndarray, 0, "mz_arr", 0))) __PYX_ERR(3, 28, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_int_arr), __pyx_ptype_5numpy_ndarray, 0, "int_arr", 0))) __PYX_ERR(3, 29, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_peptide), (&PyUnicode_Type), 1, "peptide", 1))) __PYX_ERR(3, 30, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aux_mod_pos), __pyx_ptype_5numpy_ndarray, 1, "aux_mod_pos", 0))) __PYX_ERR(3, 31, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aux_mod_mass), __pyx_ptype_5numpy_ndarray, 1, "aux_mod_mass", 0))) __PYX_ERR(3, 32, __pyx_L1_error)
   __pyx_r = __pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(((struct __pyx_obj_8pyascore_11ptm_scoring_PyAscore *)__pyx_v_self), __pyx_v_mz_arr, __pyx_v_int_arr, __pyx_v_peptide, __pyx_v_n_of_mod, __pyx_v_aux_mod_pos, __pyx_v_aux_mod_mass);
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":29
+  /* "pyascore/ptm_scoring/Ascore.pyx":28
  *     @cython.boundscheck(False)
  *     @cython.wraparound(False)
  *     def score(self, np.ndarray[double, ndim=1, mode="c"] mz_arr not None,             # <<<<<<<<<<<<<<
@@ -5632,26 +5584,26 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
   __pyx_pybuffernd_aux_mod_mass.rcbuffer = &__pyx_pybuffer_aux_mod_mass;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_mz_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_mz_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(3, 29, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_mz_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_mz_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(3, 28, __pyx_L1_error)
   }
   __pyx_pybuffernd_mz_arr.diminfo[0].strides = __pyx_pybuffernd_mz_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_mz_arr.diminfo[0].shape = __pyx_pybuffernd_mz_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_int_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_int_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(3, 29, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_int_arr.rcbuffer->pybuffer, (PyObject*)__pyx_v_int_arr, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(3, 28, __pyx_L1_error)
   }
   __pyx_pybuffernd_int_arr.diminfo[0].strides = __pyx_pybuffernd_int_arr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_int_arr.diminfo[0].shape = __pyx_pybuffernd_int_arr.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aux_mod_pos.rcbuffer->pybuffer, (PyObject*)__pyx_v_aux_mod_pos, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint32_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(3, 29, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aux_mod_pos.rcbuffer->pybuffer, (PyObject*)__pyx_v_aux_mod_pos, &__Pyx_TypeInfo_nn___pyx_t_5numpy_uint32_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(3, 28, __pyx_L1_error)
   }
   __pyx_pybuffernd_aux_mod_pos.diminfo[0].strides = __pyx_pybuffernd_aux_mod_pos.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_aux_mod_pos.diminfo[0].shape = __pyx_pybuffernd_aux_mod_pos.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aux_mod_mass.rcbuffer->pybuffer, (PyObject*)__pyx_v_aux_mod_mass, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(3, 29, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aux_mod_mass.rcbuffer->pybuffer, (PyObject*)__pyx_v_aux_mod_mass, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(3, 28, __pyx_L1_error)
   }
   __pyx_pybuffernd_aux_mod_mass.diminfo[0].strides = __pyx_pybuffernd_aux_mod_mass.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_aux_mod_mass.diminfo[0].shape = __pyx_pybuffernd_aux_mod_mass.rcbuffer->pybuffer.shape[0];
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":35
+  /* "pyascore/ptm_scoring/Ascore.pyx":34
  *                     np.ndarray[np.float32_t, ndim=1, mode="c"] aux_mod_mass = None):
  *         # Consume spectra and bin
  *         self.binned_spectra_ptr[0].consumeSpectra(&mz_arr[0], &int_arr[0], mz_arr.size)             # <<<<<<<<<<<<<<
@@ -5660,13 +5612,13 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
  */
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_mz_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 35, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_mz_arr), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(3, 35, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(3, 34, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   (__pyx_v_self->binned_spectra_ptr[0]).consumeSpectra((&(*__Pyx_BufPtrCContig1d(double *, __pyx_pybuffernd_mz_arr.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_mz_arr.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(double *, __pyx_pybuffernd_int_arr.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_int_arr.diminfo[0].strides))), __pyx_t_4);
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":38
+  /* "pyascore/ptm_scoring/Ascore.pyx":37
  * 
  *         # Build modified peptide with or without constant mods
  *         if aux_mod_pos is not None and aux_mod_mass is not None:             # <<<<<<<<<<<<<<
@@ -5686,7 +5638,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_5) {
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":39
+    /* "pyascore/ptm_scoring/Ascore.pyx":38
  *         # Build modified peptide with or without constant mods
  *         if aux_mod_pos is not None and aux_mod_mass is not None:
  *             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,             # <<<<<<<<<<<<<<
@@ -5695,14 +5647,14 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
  */
     if (unlikely(__pyx_v_peptide == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
-      __PYX_ERR(3, 39, __pyx_L1_error)
+      __PYX_ERR(3, 38, __pyx_L1_error)
     }
-    __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_peptide); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 39, __pyx_L1_error)
+    __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_peptide); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 38, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_8 = __pyx_convert_string_from_py_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(3, 39, __pyx_L1_error)
+    __pyx_t_8 = __pyx_convert_string_from_py_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(3, 38, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":40
+    /* "pyascore/ptm_scoring/Ascore.pyx":39
  *         if aux_mod_pos is not None and aux_mod_mass is not None:
  *             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,
  *                                                         &aux_mod_pos[0], &aux_mod_mass[0],             # <<<<<<<<<<<<<<
@@ -5712,19 +5664,19 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
     __pyx_t_9 = 0;
     __pyx_t_10 = 0;
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":41
+    /* "pyascore/ptm_scoring/Ascore.pyx":40
  *             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,
  *                                                         &aux_mod_pos[0], &aux_mod_mass[0],
  *                                                         aux_mod_pos.size)             # <<<<<<<<<<<<<<
  *         else:
  *             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_aux_mod_pos), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 41, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_aux_mod_pos), __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 40, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_11 = __Pyx_PyInt_As_size_t(__pyx_t_3); if (unlikely((__pyx_t_11 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(3, 41, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyInt_As_size_t(__pyx_t_3); if (unlikely((__pyx_t_11 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(3, 40, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":39
+    /* "pyascore/ptm_scoring/Ascore.pyx":38
  *         # Build modified peptide with or without constant mods
  *         if aux_mod_pos is not None and aux_mod_mass is not None:
  *             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,             # <<<<<<<<<<<<<<
@@ -5733,7 +5685,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
  */
     (__pyx_v_self->modified_peptide_ptr[0]).consumePeptide(__pyx_t_8, __pyx_v_n_of_mod, (&(*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_uint32_t *, __pyx_pybuffernd_aux_mod_pos.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_aux_mod_pos.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_float32_t *, __pyx_pybuffernd_aux_mod_mass.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_aux_mod_mass.diminfo[0].strides))), __pyx_t_11);
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":38
+    /* "pyascore/ptm_scoring/Ascore.pyx":37
  * 
  *         # Build modified peptide with or without constant mods
  *         if aux_mod_pos is not None and aux_mod_mass is not None:             # <<<<<<<<<<<<<<
@@ -5743,7 +5695,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
     goto __pyx_L3;
   }
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":43
+  /* "pyascore/ptm_scoring/Ascore.pyx":42
  *                                                         aux_mod_pos.size)
  *         else:
  *             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)             # <<<<<<<<<<<<<<
@@ -5753,17 +5705,17 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
   /*else*/ {
     if (unlikely(__pyx_v_peptide == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
-      __PYX_ERR(3, 43, __pyx_L1_error)
+      __PYX_ERR(3, 42, __pyx_L1_error)
     }
-    __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_peptide); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 43, __pyx_L1_error)
+    __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_peptide); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 42, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_8 = __pyx_convert_string_from_py_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(3, 43, __pyx_L1_error)
+    __pyx_t_8 = __pyx_convert_string_from_py_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(3, 42, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     (__pyx_v_self->modified_peptide_ptr[0]).consumePeptide(__pyx_t_8, __pyx_v_n_of_mod);
   }
   __pyx_L3:;
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":46
+  /* "pyascore/ptm_scoring/Ascore.pyx":45
  * 
  *         # Allow modified peptide to consume peaks from binned spectra
  *         while (self.binned_spectra_ptr[0].getBin() < self.binned_spectra_ptr[0].getNBins()):             # <<<<<<<<<<<<<<
@@ -5774,7 +5726,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
     __pyx_t_5 = (((__pyx_v_self->binned_spectra_ptr[0]).getBin() < (__pyx_v_self->binned_spectra_ptr[0]).getNBins()) != 0);
     if (!__pyx_t_5) break;
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":48
+    /* "pyascore/ptm_scoring/Ascore.pyx":47
  *         while (self.binned_spectra_ptr[0].getBin() < self.binned_spectra_ptr[0].getNBins()):
  * 
  *             self.binned_spectra_ptr[0].resetRank()             # <<<<<<<<<<<<<<
@@ -5783,7 +5735,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
  */
     (void)((__pyx_v_self->binned_spectra_ptr[0]).resetRank());
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":49
+    /* "pyascore/ptm_scoring/Ascore.pyx":48
  * 
  *             self.binned_spectra_ptr[0].resetRank()
  *             while (self.binned_spectra_ptr[0].getRank() < self.binned_spectra_ptr[0].getNPeaks()):             # <<<<<<<<<<<<<<
@@ -5794,7 +5746,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
       __pyx_t_5 = (((__pyx_v_self->binned_spectra_ptr[0]).getRank() < (__pyx_v_self->binned_spectra_ptr[0]).getNPeaks()) != 0);
       if (!__pyx_t_5) break;
 
-      /* "pyascore/ptm_scoring/Ascore.pyx":50
+      /* "pyascore/ptm_scoring/Ascore.pyx":49
  *             self.binned_spectra_ptr[0].resetRank()
  *             while (self.binned_spectra_ptr[0].getRank() < self.binned_spectra_ptr[0].getNPeaks()):
  *                 self.modified_peptide_ptr[0].consumePeak(self.binned_spectra_ptr[0].getMZ(),             # <<<<<<<<<<<<<<
@@ -5803,7 +5755,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
  */
       (__pyx_v_self->modified_peptide_ptr[0]).consumePeak((__pyx_v_self->binned_spectra_ptr[0]).getMZ(), (__pyx_v_self->binned_spectra_ptr[0]).getRank());
 
-      /* "pyascore/ptm_scoring/Ascore.pyx":52
+      /* "pyascore/ptm_scoring/Ascore.pyx":51
  *                 self.modified_peptide_ptr[0].consumePeak(self.binned_spectra_ptr[0].getMZ(),
  *                                                          self.binned_spectra_ptr[0].getRank())
  *                 self.binned_spectra_ptr[0].nextRank()             # <<<<<<<<<<<<<<
@@ -5813,7 +5765,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
       (void)((__pyx_v_self->binned_spectra_ptr[0]).nextRank());
     }
 
-    /* "pyascore/ptm_scoring/Ascore.pyx":54
+    /* "pyascore/ptm_scoring/Ascore.pyx":53
  *                 self.binned_spectra_ptr[0].nextRank()
  * 
  *             self.binned_spectra_ptr[0].nextBin()             # <<<<<<<<<<<<<<
@@ -5823,7 +5775,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
     (void)((__pyx_v_self->binned_spectra_ptr[0]).nextBin());
   }
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":56
+  /* "pyascore/ptm_scoring/Ascore.pyx":55
  *             self.binned_spectra_ptr[0].nextBin()
  * 
  *         self.ascore_ptr[0].score(self.binned_spectra_ptr[0], self.modified_peptide_ptr[0])             # <<<<<<<<<<<<<<
@@ -5832,7 +5784,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
  */
   (__pyx_v_self->ascore_ptr[0]).score((__pyx_v_self->binned_spectra_ptr[0]), (__pyx_v_self->modified_peptide_ptr[0]));
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":29
+  /* "pyascore/ptm_scoring/Ascore.pyx":28
  *     @cython.boundscheck(False)
  *     @cython.wraparound(False)
  *     def score(self, np.ndarray[double, ndim=1, mode="c"] mz_arr not None,             # <<<<<<<<<<<<<<
@@ -5868,7 +5820,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_4score(struct __pyx_
   return __pyx_r;
 }
 
-/* "pyascore/ptm_scoring/Ascore.pyx":59
+/* "pyascore/ptm_scoring/Ascore.pyx":58
  * 
  *     @property
  *     def best_sequence(self):             # <<<<<<<<<<<<<<
@@ -5895,7 +5847,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_13best_sequence___ge
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":60
+  /* "pyascore/ptm_scoring/Ascore.pyx":59
  *     @property
  *     def best_sequence(self):
  *         return self.ascore_ptr[0].getBestSequence().decode("utf8")             # <<<<<<<<<<<<<<
@@ -5903,13 +5855,13 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_13best_sequence___ge
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_decode_cpp_string((__pyx_v_self->ascore_ptr[0]).getBestSequence(), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 60, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_decode_cpp_string((__pyx_v_self->ascore_ptr[0]).getBestSequence(), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":59
+  /* "pyascore/ptm_scoring/Ascore.pyx":58
  * 
  *     @property
  *     def best_sequence(self):             # <<<<<<<<<<<<<<
@@ -5928,7 +5880,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_13best_sequence___ge
   return __pyx_r;
 }
 
-/* "pyascore/ptm_scoring/Ascore.pyx":63
+/* "pyascore/ptm_scoring/Ascore.pyx":62
  * 
  *     @property
  *     def best_score(self):             # <<<<<<<<<<<<<<
@@ -5954,19 +5906,19 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_10best_score___get__
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":64
+  /* "pyascore/ptm_scoring/Ascore.pyx":63
  *     @property
  *     def best_score(self):
  *         return self.ascore_ptr[0].getBestScore()             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->ascore_ptr[0]).getBestScore()); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 64, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->ascore_ptr[0]).getBestScore()); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 63, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "pyascore/ptm_scoring/Ascore.pyx":63
+  /* "pyascore/ptm_scoring/Ascore.pyx":62
  * 
  *     @property
  *     def best_score(self):             # <<<<<<<<<<<<<<
@@ -10461,8 +10413,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_int_arr, __pyx_k_int_arr, sizeof(__pyx_k_int_arr), 0, 0, 1, 1},
   {&__pyx_n_s_k, __pyx_k_k, sizeof(__pyx_k_k), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
-  {&__pyx_n_s_max_mz, __pyx_k_max_mz, sizeof(__pyx_k_max_mz), 0, 0, 1, 1},
-  {&__pyx_n_s_min_mz, __pyx_k_min_mz, sizeof(__pyx_k_min_mz), 0, 0, 1, 1},
   {&__pyx_n_s_mod_group, __pyx_k_mod_group, sizeof(__pyx_k_mod_group), 0, 0, 1, 1},
   {&__pyx_n_s_mod_mass, __pyx_k_mod_mass, sizeof(__pyx_k_mod_mass), 0, 0, 1, 1},
   {&__pyx_n_s_mz_arr, __pyx_k_mz_arr, sizeof(__pyx_k_mz_arr), 0, 0, 1, 1},

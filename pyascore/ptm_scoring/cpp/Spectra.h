@@ -13,7 +13,7 @@ namespace ptmscoring {
             size_t bin, rank;
             void sortTopSpectra();
         public:
-            BinnedSpectra(float, float, float, size_t);
+            BinnedSpectra(float, size_t);
             ~BinnedSpectra();
             void consumeSpectra(const double *, const double *, size_t);
 

@@ -7,7 +7,7 @@ from pyascore import PyAscore
 
 class TestPyAscore(unittest.TestCase):
     def test_single_spectrum_score(self):
-        ascore = PyAscore(min_mz=500., max_mz=1500., bin_size=100., n_top=10,
+        ascore = PyAscore(bin_size=100., n_top=10,
                           mod_group="STY", mod_mass=79.966331)
         def test_match_pairs(match_file, spec_file):
             with open(os.path.join("test", "match_spectra_pairs", match_file), "rb") as src:
@@ -21,9 +21,12 @@ class TestPyAscore(unittest.TestCase):
             for match, spectra in zip(match_list, spectra_list):
                 #print(match)
                 running_time -= time.time()
-                ascore = PyAscore(min_mz=500., max_mz=1500., bin_size=100., n_top=10,
+                ascore = PyAscore(bin_size=100., n_top=10,
                                   mod_group="STY", mod_mass=79.966331)
-                ascore.score(spectra["mz_values"], spectra["intensity_values"], match["peptide"], len(match["mod_positions"]))
+                ascore.score(spectra["mz_values"], 
+                             spectra["intensity_values"], 
+                             match["peptide"], 
+                             len(match["mod_positions"]))
                 running_time += time.time()
                 #print(ascore.best_sequence, ascore.best_score)
                 n += 1
