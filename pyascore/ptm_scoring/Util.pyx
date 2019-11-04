@@ -32,3 +32,7 @@ cdef class PyBinomialDist:
 
     def log_pvalue(self, size_t successes, size_t trials):
         return self.binomial_dist_ptr[0].log_pvalue(successes, trials)
+
+    def log10_pvalue(self, size_t successes, size_t trials):
+        return self.binomial_dist_ptr[0].log10_pvalue(successes, trials)
+

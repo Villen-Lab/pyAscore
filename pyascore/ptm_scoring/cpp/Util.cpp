@@ -77,4 +77,8 @@ namespace ptmscoring {
         return cache.at(bit_concat(successes, trials));
     }
 
+    float BinomialDist::log10_pvalue(size_t successes, size_t trials) {
+        return std::log10(std::exp(1)) * log_pvalue(successes, trials);
+    }
+
 }

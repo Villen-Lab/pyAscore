@@ -21,6 +21,7 @@ namespace ptmscoring {
             BinomialDist(float);
             float log_pmf(size_t, size_t);
             float log_pvalue(size_t, size_t);
+            float log10_pvalue(size_t, size_t);
             void initialize_cache(size_t, float);
     };
 }

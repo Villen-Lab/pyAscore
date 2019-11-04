@@ -13,8 +13,9 @@
 namespace ptmscoring {
 
     Ascore::Ascore () {
-        score_weights = {0.5, 0.75, 1.0, 1.0, 1.0, 
-                         1.0, 0.75, 0.5, 0.25, 0.25}; 
+        score_weights = {0.5, 0.75, 1.0, 1.0, 1.0, 1.0, 0.75, 0.5, 0.25, 0.25};
+        float weight_sum = std::accumulate(score_weights.begin(), score_weights.end(), 0);
+        for (float & val : score_weights){ val /= weight_sum; } 
     }
 
     Ascore::~Ascore () {}
@@ -113,8 +114,10 @@ namespace ptmscoring {
             for (size_t nions = 1; nions <= count_it->size(); nions++) {
                 //std::cout << count_it->at(nions - 1) << " ";
                 peptide_scores.back().push_back(
-                    -10 * scoring_distributions.at(nions - 1).log_pvalue(
-                        count_it->at(nions - 1), 2 * peptide_size
+                    std::abs(
+                        -10 * scoring_distributions.at(nions - 1).log10_pvalue(
+                            count_it->at(nions - 1), 2 * peptide_size
+                        )
                     )
                 );       
             }
