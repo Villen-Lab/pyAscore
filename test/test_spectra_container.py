@@ -32,11 +32,36 @@ class TestPyBinnedSpectra(unittest.TestCase):
                 self.assertEqual(spec.mz, next(true_rank_0))
 
             spec.next_bin()
-            spec.reset_rank();
-            #self.assertEqual(spec.n_peaks, next(true_n_peaks))
+            spec.reset_rank()
 
-            #spec.reset_rank()
-            #self.assertEqual(spec.mz, true_rank_0[ind])
+    def test_full_spectra_parse(self):
+        # Build random spectra
+        n_top = 10
+        bin_size = 100.
+        n_peaks = 500
+        np.random.seed(2345)
+        masses = np.random.uniform(500., 2000., n_peaks)
+        intensities = 100. * np.random.randn(n_peaks) + 300.
 
-            #spec.next_rank()
-            #self.assertEqual(spec.mz, true_rank_1[ind])
+        mz_low = np.min(masses)
+        mz_high = np.max(masses)
+        n_bins = int(np.ceil( ( mz_high - mz_low ) / bin_size ))
+        
+        spec = PyBinnedSpectra(bin_size=100., n_top=n_top)
+        spec.consume_spectra(masses, intensities)
+
+        for ind in range(n_bins):
+            select = np.logical_and(masses >= (mz_low + ind * bin_size),
+                                    masses < (mz_low + (ind + 1) * bin_size))
+            binned_masses = masses[select]
+            binned_intensities = intensities[select]
+
+            sorted_ind = np.argsort(binned_intensities)[::-1]
+            binned_masses = binned_masses[sorted_ind]
+            binned_intensities = binned_intensities[sorted_ind]
+            for rank in range(min(n_top, len(binned_masses))):
+                self.assertEqual(spec.mz, binned_masses[rank])
+                self.assertEqual(spec.intensity, binned_intensities[rank])
+                spec.next_rank()
+            spec.next_bin()
+            spec.reset_rank()

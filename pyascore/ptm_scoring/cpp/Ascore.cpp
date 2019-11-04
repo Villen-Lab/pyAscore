@@ -50,7 +50,7 @@ namespace ptmscoring {
     }
 
     void Ascore::accumulateCounts () {
-        for (char fragment_type : {'b'}){
+        for (char fragment_type : {'b', 'y'}){
             size_t signature_ind = 0;
             // Initialize count stack with a zero count vector
             std::unordered_map<size_t, std::vector<size_t>> count_map; 
