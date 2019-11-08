@@ -7,6 +7,8 @@ from Ascore cimport Ascore
 from ModifiedPeptide cimport ModifiedPeptide
 from Spectra cimport BinnedSpectra
 
+from libcpp.vector cimport vector
+
 cdef class PyAscore:
     cdef Ascore * ascore_ptr
     cdef ModifiedPeptide * modified_peptide_ptr
@@ -61,3 +63,15 @@ cdef class PyAscore:
     @property
     def best_score(self):
         return self.ascore_ptr[0].getBestScore()
+
+    @property
+    def ascores(self):
+        cdef vector[float] score_vector = self.ascore_ptr[0].getAscores()
+        cdef np.ndarray[float, ndim=1, mode="c"] score_array = np.zeros(
+            score_vector.size(), dtype=np.float32
+        )
+
+        cdef size_t i = 0
+        for i in range(score_vector.size()):
+            score_array[i] = score_vector[i]
+        return score_array

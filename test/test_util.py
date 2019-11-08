@@ -62,6 +62,6 @@ class TestBinomDist(unittest.TestCase):
                                                scipy_pvalue,
                                                rtol=0, atol=5e-5))
                     self.assertTrue(np.isclose(d.log10_pvalue(k, n),
-                                               np.log10(np.exp(1))*scipy_pvalue,
+                                               np.log10(np.exp(scipy_pvalue)),
                                                rtol=0, atol=5e-5))
  

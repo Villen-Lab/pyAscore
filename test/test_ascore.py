@@ -28,10 +28,12 @@ class TestPyAscore(unittest.TestCase):
                              match["peptide"], 
                              len(match["mod_positions"]))
                 running_time += time.time()
-                #print(ascore.best_sequence, ascore.best_score)
+                #print(ascore.best_sequence, ascore.best_score, ascore.ascores)
                 n += 1
 
-            print("Average for ({}, {}): {} sec/match".format( match_file, spec_file, (running_time/n) ))
+            print("Average for ({}, {}): {} sec/match".format( 
+                match_file, spec_file, (running_time/n) )
+            )
             print()
 
         test_match_pairs("velos_matches_3_mods.pkl", "velos_spectra_3_mods.pkl")
