@@ -65,6 +65,34 @@ class TestPyModifiedPeptide(unittest.TestCase):
         self.assertTrue( np.all( graph_b.get_signature() == [0, 0, 0, 0, 0] ) )
         self.assertTrue( np.all( graph_y.get_signature() == [0, 0, 0, 0, 0] ) )
 
+    def test_set_signature(self):
+        seq = "PASSSSSEFK"
+        pep = PyModifiedPeptide("STY", 79.966331)
+        pep.consume_peptide("PASSSSSEFK", 2)
+
+        b_graph = pep.get_fragment_graph("b", 1)
+        b_graph.set_signature(np.array([0, 1, 1, 0, 0], dtype=np.uint32))
+        true_b_masses = [97.05276, 168.08987, 255.1219, 422.120261, 589.118622, 676.150652, 
+                         763.182682, 892.225272, 1039.293682, 1167.388642]
+        for m in true_b_masses:
+            m = (m + 1.00727647)
+            self.assertTrue(
+                np.isclose(b_graph.get_fragment_mz(), m, rtol=1e-6, atol=0)
+            )
+            b_graph.incr_fragment()
+
+
+        y_graph = pep.get_fragment_graph("y", 1)
+        y_graph.set_signature(np.array([0, 1, 1, 0, 0], dtype=np.uint32))
+        true_y_masses = [146.11024, 293.17865, 422.22124, 509.25327, 596.2853, 
+                         763.283661, 930.282022, 1017.314052, 1088.351162, 1185.403922]
+        for m in true_y_masses:
+            m = (m + 1.00727647)
+            self.assertTrue(
+                np.isclose(y_graph.get_fragment_mz(), m, rtol=1e-6, atol=0)
+            )
+            y_graph.incr_fragment()
+
     def test_fragment_incr(self):
         pep = PyModifiedPeptide("STY", 79.966331)
         
@@ -157,3 +185,22 @@ class TestPyModifiedPeptide(unittest.TestCase):
             y_graph.reset_iterator()
             y_graph.incr_signature()
             test(y_graph, c, np.array([146.11024, 247.15792, 407.1885734, 536.231164, 683.266569, 850.26493, 921.30204]))
+
+    def test_site_determining(self):
+        pep = PyModifiedPeptide("STY", 79.966331)
+        pep.consume_peptide("ASMSK", 1)
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
+                                                np.array([0, 1], dtype=np.uint32),
+                                                "b", 1)
+        true_mz = (np.array([239.0427475, 370.08323747]), np.array([159.07641647, 290.11690647]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        pep.consume_peptide("PASSSSSEFK", 2)
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0, 1, 0, 0], dtype=np.uint32),
+                                                np.array([0, 0, 1, 0, 1], dtype=np.uint32),
+                                                "b", 1)
+        true_mz = (np.array([336.09550747, 423.12753747, 590.12589847, 677.15792847]), 
+                   np.array([256.12917647, 343.16120647, 510.15956747, 597.19159747]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))

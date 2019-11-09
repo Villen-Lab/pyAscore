@@ -28,9 +28,15 @@ cdef extern from "cpp/ModifiedPeptide.cpp" namespace "ptmscoring":
             void incrFragment();
             bint isFragmentEnd();
 
+            void setSignature(vector[size_t]);
             vector[size_t] getSignature();
             float getFragmentMZ();
             size_t getFragmentSize();
             string getFragmentSeq();
 
         FragmentGraph getFragmentGraph(char, size_t);
+        vector[vector[float]] getSiteDeterminingIons(
+            const vector[size_t] &,
+            const vector[size_t] &,
+            char, size_t
+        )

@@ -125,52 +125,18 @@ def main(args=None):
                 )
                 scores.append([match["scan"], 
                                ascore.best_sequence, 
-                               ascore.best_score])
+                               ascore.best_score,
+                               ";".join([str(s) for s in ascore.ascores])])
 
     score_dataframe = DataFrame(scores,
                                 columns=["Scan",
                                          "LocalizedSequence",
-                                         "PepScore"])
+                                         "PepScore",
+                                         "Ascores"])
     score_dataframe.to_csv(args.out_file, sep="\t", index=False)
     print("{} -- Ascore Completed".format(get_time_stamp()))
 
 
 if __name__ == "__main__":
     main()
-
-
-#def make_example_lists(spec_file_name, id_file_name,
-#                       prefix, destination,
-#                       n_per_list=10):
-#    id_parser = IdentificationParser(id_file_name, "pepXML",
-#                                     score_string="percolator_qvalue",
-#                                     score_threshold=0.01)
-#    sorted_ids = iter(sorted(id_parser.to_list(), key=lambda spec: spec["score"]))
-#
-#    spec_parser = SpectraParser(spec_file_name, "mzML")
-#    spec_dict = spec_parser.to_dict()
-#
-#    gathered_peptides = {}
-#    peptide_lists = {1 : [],
-#                     2 : [],
-#                     3 : []}
-#    for x in sorted_ids:
-#        if not gathered_peptides.get(x["peptide"], False):
-#            n_phospho = np.sum(79.966331 == x["mod_masses"])
-#            if n_phospho and len(peptide_lists[n_phospho]) < n_per_list:
-#              gathered_peptides[x["peptide"]] = True
-#              peptide_lists[n_phospho].append(x)
-#
-#        if all([len(l) == n_per_list for l in peptide_lists.values()]):
-#            break
-#    for n_mods, match_list in peptide_lists.items():
-#        spec_list = [spec_dict[m["scan"]] for m in match_list]
-#
-#        match_file_name = prefix + "_matches_{}_mods.pkl".format(n_mods)
-#        with open(os.path.join(destination, match_file_name), "wb") as dest:
-#            pickle.dump(match_list, dest)
-#
-#        spec_file_name = prefix + "_spectra_{}_mods.pkl".format(n_mods)
-#        with open(os.path.join(destination, spec_file_name), "wb") as dest:
-#            pickle.dump(spec_list, dest)
 

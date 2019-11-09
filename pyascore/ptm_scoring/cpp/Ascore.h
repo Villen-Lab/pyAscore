@@ -15,20 +15,29 @@ namespace ptmscoring {
         const BinnedSpectra * binned_spectra_ptr;
         const ModifiedPeptide * modified_peptide_ptr;
 
-        std::vector<std::vector<size_t>> signatures;
-        std::vector<std::vector<size_t>> accumulated_counts;
-        std::vector<std::vector<float>> peptide_scores;
         std::vector<float> score_weights;
         std::vector<BinomialDist> scoring_distributions;
 
-        std::vector<size_t> best_signature;
-        float best_weighted_score;
+        struct ScoreContainer {
+            std::vector<size_t> signature;
+            std::vector<size_t> counts;
+            std::vector<float> scores;
+            float weighted_score = -1;
+        };
+        std::vector<ScoreContainer> peptide_scores_;
+
+        std::vector<size_t> mod_sig_pos_;
+        std::vector<float> ascores_;
 
         void resetInternalState();
-        bool isUnambiguous();
         void accumulateCounts();
         void calculateFullScores();
-        void findBestPeptide();
+        void sortScores();
+        bool isUnambiguous();
+        void findModifiedPos();
+        std::vector<size_t> findDifferences(const ScoreContainer&, const ScoreContainer&);
+        float calculateAmbiguity(const ScoreContainer&, const ScoreContainer&);
+        void calculateAscores();
         public:
             Ascore();
             ~Ascore();
@@ -36,6 +45,7 @@ namespace ptmscoring {
             void score(const BinnedSpectra &, const ModifiedPeptide &);
             std::string getBestSequence();
             float getBestScore();
+            std::vector<float> getAscores();
     };
 
 }

@@ -148,6 +148,37 @@ namespace ptmscoring {
         return ModifiedPeptide::FragmentGraph(this, fragment_type, charge_state);
     }
 
+    std::vector<std::vector<float>> ModifiedPeptide::getSiteDeterminingIons (const std::vector<size_t> & signature_1,
+                                                                             const std::vector<size_t> & signature_2,
+                                                                             char fragment_type, size_t charge_state) const {
+        // Why is this so convoluted? 
+        // Theoretically a user could give a mod that gave one amino acid the same mass as multiple.
+        // S[Mass of A] = SA
+        ModifiedPeptide::FragmentGraph graph_1 = getFragmentGraph(fragment_type, charge_state);
+        ModifiedPeptide::FragmentGraph graph_2 = getFragmentGraph(fragment_type, charge_state);
+        graph_1.setSignature(signature_1), graph_2.setSignature(signature_2);
+
+        std::vector<std::vector<float>> ion_lists;
+        ion_lists.resize(2);
+        while (!graph_1.isFragmentEnd() and !graph_2.isFragmentEnd()) {
+            if ( std::abs(graph_1.getFragmentMZ() - graph_2.getFragmentMZ()) < .5 ) { // Site determining ions should be outside tolerance
+                graph_1.incrFragment();
+                graph_2.incrFragment();
+            } else if (graph_1.getFragmentMZ() > graph_2.getFragmentMZ()) {
+                ion_lists[1].push_back(graph_2.getFragmentMZ());
+                graph_2.incrFragment();
+            } else {
+                ion_lists[0].push_back(graph_1.getFragmentMZ());
+                graph_1.incrFragment();
+            }
+        }
+
+        for (;!graph_1.isFragmentEnd(); graph_1.incrFragment()) {ion_lists[0].push_back(graph_1.getFragmentMZ());}
+        for (;!graph_2.isFragmentEnd(); graph_2.incrFragment()) {ion_lists[1].push_back(graph_2.getFragmentMZ());}
+
+        return ion_lists;
+    }
+
     ////////////////////////////////////////
     // Start FragmentGraph Implementation //
     ////////////////////////////////////////
@@ -302,6 +333,28 @@ namespace ptmscoring {
 
     bool ModifiedPeptide::FragmentGraph::isFragmentEnd () {
         return isResidueEnd();
+    }
+
+    void ModifiedPeptide::FragmentGraph::setSignature (std::vector<size_t> new_signature) {
+        if (new_signature.size() != modifiable.size()) {throw 50;}
+        
+        if (fragment_type == 'y') {
+            std::reverse(new_signature.begin(), new_signature.end());
+        }
+
+        // Reset fragment state
+        running_sum.clear();
+        running_sequence.clear();
+
+        auto sig_it = new_signature.begin();
+        auto mod_it = modifiable.begin();
+        for (; sig_it != new_signature.end(); sig_it++, mod_it++){
+            signature[*mod_it] = *sig_it;
+        }    
+
+        // Reset to first step
+        resetResidueInd();
+        calculateFragment();
     }
 
     std::vector<size_t> ModifiedPeptide::FragmentGraph::getSignature () {

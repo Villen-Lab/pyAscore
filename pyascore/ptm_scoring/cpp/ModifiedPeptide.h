@@ -43,6 +43,11 @@ namespace ptmscoring {
 
             class FragmentGraph;
             FragmentGraph getFragmentGraph(char, size_t) const;
+            std::vector<std::vector<float>> getSiteDeterminingIons(
+                const std::vector<size_t> &, 
+                const std::vector<size_t> &,
+                char, size_t
+            ) const;
     };
 
     class ModifiedPeptide::FragmentGraph {
@@ -79,6 +84,7 @@ namespace ptmscoring {
             void incrFragment();
             bool isFragmentEnd();
 
+            void setSignature(std::vector<size_t>);
             std::vector<size_t> getSignature();
             float getFragmentMZ();
             size_t getFragmentSize();

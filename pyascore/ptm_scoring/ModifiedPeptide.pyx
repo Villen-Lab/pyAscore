@@ -31,6 +31,30 @@ cdef class PyModifiedPeptide:
     def get_fragment_graph(self, str fragment_type, size_t charge_state):
         return PyFragmentGraph(self, fragment_type.encode("utf8")[0], charge_state)
 
+    def get_site_determining_ions(self, np.ndarray[unsigned int, ndim=1, mode="c"] sig_1,
+                                        np.ndarray[unsigned int, ndim=1, mode="c"] sig_2,
+                                        str fragment_type, size_t charge_state):
+
+        cdef vector[size_t] sig_vec_1
+        cdef vector[size_t] sig_vec_2
+        cdef size_t ind
+        for ind in range(<size_t> min(sig_1.size, sig_2.size)):
+            sig_vec_1.push_back(<size_t> sig_1[ind])
+            sig_vec_2.push_back(<size_t> sig_2[ind])
+
+        cdef vector[vector[float]] ions = self.modified_peptide_ptr[0].getSiteDeterminingIons(
+            sig_vec_1, sig_vec_2, fragment_type.encode("utf8")[0], charge_state
+        )
+
+        ion_arrays = (np.zeros(ions[0].size(), dtype=np.float32),
+                      np.zeros(ions[1].size(), dtype=np.float32))
+        for ind in range(ions[0].size()):
+            ion_arrays[0][ind] = ions[0][ind]
+        for ind in range(ions[1].size()):
+            ion_arrays[1][ind] = ions[1][ind]
+
+        return ion_arrays
+
 cdef class PyFragmentGraph:
     cdef ModifiedPeptide.FragmentGraph * fragment_graph_ptr
 
@@ -64,6 +88,15 @@ cdef class PyFragmentGraph:
 
     def is_fragment_end(self):
         return self.fragment_graph_ptr[0].isFragmentEnd()
+
+    def set_signature(self, np.ndarray[unsigned int, ndim=1, mode="c"] new_signature):
+        cdef vector[size_t] signature_vector
+        cdef size_t ind
+        for ind in range(<size_t> new_signature.size):
+            signature_vector.push_back(<size_t> new_signature[ind])
+
+        self.fragment_graph_ptr[0].setSignature(signature_vector)
+        
 
     def get_signature(self):
         cdef vector[size_t] signature_vector = self.fragment_graph_ptr[0].getSignature()
