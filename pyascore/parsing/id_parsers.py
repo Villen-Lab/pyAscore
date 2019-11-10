@@ -64,6 +64,52 @@ class MassCorrector:
 
         return np.array(corrected_positions), np.array(corrected_masses)
 
+    def correct_numpy(self, peptide, positions, masses):
+        # Trivial return
+        if positions.size == 0:
+            return np.array([]), np.array([])
+
+        corrected_positions = []
+        corrected_masses = []
+
+        n_mod_mass = self.mod_mass_dict.get('n', np.inf)
+        n_mod_possibilities = [n_mod_mass,
+                               STD_AA_MASS.get(peptide[0], np.inf) + n_mod_mass,
+                               STD_AA_MASS.get(peptide[0], np.inf) + self.mod_mass_dict.get(peptide[0], np.inf) + n_mod_mass]
+        if positions[0] == 0 and isclose(masses[0], n_mod_possibilities[0],
+                                         rtol=0., atol=self.mz_tol):
+            corrected_positions.append(0.)
+            corrected_masses.append(n_mod_mass)
+            positions = positions[1:]
+            masses = masses[1:]
+
+        elif positions[0] == 1 and isclose(
+            masses[0], n_mod_possibilities[1],
+            rtol=0., atol=self.mz_tol):
+            corrected_positions.append(0.)
+            corrected_masses.append(n_mod_mass)
+            positions = positions[1:]
+            masses = masses[1:]
+
+        elif positions[0] == 1 and isclose(
+            masses[0], n_mod_possibilities[2],
+            rtol=0., atol=self.mz_tol):
+            corrected_positions.append(0)
+            corrected_masses.append(n_mod_mass)
+            masses[0] -= n_mod_mass
+
+        if positions.size > 0:
+            std_masses = np.array([STD_AA_MASS.get(peptide[pos-1], np.inf) for pos in positions if pos != 0])
+            std_mods = np.array([self.mod_mass_dict.get(peptide[pos-1], np.inf) for pos in positions if pos != 0])
+            matches = np.isclose(masses, std_masses + std_mods, rtol=0., atol=self.mz_tol)
+            if np.any(~matches):
+                raise ValueError("Unrecognized mod at positions, {},"
+                                 " with masses, {}".format(positions[np.where(~matches)],
+                                                           masses[np.where(~matches)])) 
+            corrected_positions.extend(positions)
+            corrected_masses.extend(std_mods)    
+
+        return np.array(corrected_positions), np.array(corrected_masses)
 
 class IDExtractor:
     """
@@ -244,9 +290,12 @@ class IdentificationParser:
         self._get_match_records()
         for match in self._match_records:
             for ind in range(len(match['peptides'])):
+                
+                 
                 mod_positions, mod_masses = self.mass_corrector.correct_multiple(match['peptides'][ind],
                                                                                  match['mod_positions'][ind],
                                                                                  match['mod_masses'][ind])
+
                 score = match['scores'][ind]
                 if self.score_func is not None and score is not None:
                     score = self.score_func(score)
@@ -261,6 +310,7 @@ class IdentificationParser:
                        "mod_positions": mod_positions,
                        "mod_masses": mod_masses}
 
+
     def to_list(self):
         """
         Return modified hits as list of dicts with keys: (scan, charge_state, score, peptide, mod_positions, mod_masses)
@@ -272,47 +322,3 @@ class IdentificationParser:
         Return modified hits as dict with scans as keys and dict values with keys: (charge_state, score, peptide, mod_positions, mod_masses)
         """
         return {hit.pop("scan") : hit for hit in self._generate_hits()}
-
-#    def _format_mods(self, peptide, positions, masses):
-#        mod_strings = []
-#        for pos, mass in zip(positions, masses):
-#            res = 'n' if pos == 0 else peptide[pos - 1]
-#            res, pos, mass = self.mass_corrector.correct(res, pos, mass)
-#            for p, m in zip(pos, mass):
-#                mod_strings.append("{}={:.6f}".format(p if p == -100 else p-1, m))
-#        return ",".join(mod_strings)
-#
-#    def _generate_tsv_entries(self):
-#        self._get_match_records()
-#        for match in self._match_records:
-#            for ind in range(len(match['peptides'])):
-#                mod_string = self._format_mods(match['peptides'][ind],
-#                                               match['mod_positions'][ind],
-#                                               match['mod_masses'][ind])
-#                score = match['scores'][ind]
-#                if self.score_func is not None and score is not None:
-#                    score = self.score_func(score)
-#
-#                if len(mod_string) == 0 or not self._passes_scoring(score):
-#                    continue
-#
-#                fields = [self.spec_file_name,
-#                          match['scans'][ind],
-#                          match['charge_states'][ind],
-#                          score,
-#                          match['peptides'][ind],
-#                          mod_string]
-#                yield "\t".join([str(e) for e in fields])
-#                                     
-#
-#    def to_tsv(self, filename, sep="\t"):
-#        with open(filename, "w") as dest:
-#            dest.write("\t".join(["srcFile",
-#                                  "scanNum",
-#                                  "charge",
-#                                  "PSMscore",
-#                                  "peptide",
-#                                  "modSites"]) + "\n")
-#            for entry in self._generate_tsv_entries():
-#                dest.write(entry + "\n")
-#
