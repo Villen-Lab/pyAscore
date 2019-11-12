@@ -52,11 +52,11 @@ namespace ptmscoring {
     }
 
     void Ascore::accumulateCounts () {
+        std::unordered_map<long, ScoreContainer> score_cache;
         for (char fragment_type : {'b', 'y'}){
-            size_t signature_ind = 0;
             // Initialize count stack with a zero count vector
-            std::unordered_map<size_t, std::vector<size_t>> count_map; 
-            count_map[1] = std::vector<size_t>(binned_spectra_ptr->getNTop());
+            std::unordered_map<size_t, std::vector<size_t>> count_cache; 
+            count_cache[1] = std::vector<size_t>(binned_spectra_ptr->getNTop());
 
             // Iterate through signatures and accumulate scores
             std::vector<size_t> cur_count;
@@ -66,11 +66,11 @@ namespace ptmscoring {
             for (; !graph.isSignatureEnd(); graph.incrSignature()){
 
                 // Copy last signature state
-                cur_count = count_map[graph.getFragmentSize()];
+                cur_count = count_cache[graph.getFragmentSize()];
 
                 for (; !graph.isFragmentEnd(); graph.incrFragment()){
                     if ( graph.isPositionModified() ) { 
-                        count_map[graph.getFragmentSize()] = cur_count; 
+                        count_cache[graph.getFragmentSize()] = cur_count; 
                     }
                     float fragment_mz = graph.getFragmentMZ();
                     if ( modified_peptide_ptr->hasMatch(fragment_mz) ){
@@ -82,24 +82,30 @@ namespace ptmscoring {
                 }
 
                 // Write signature info
-                if ( fragment_type == 'b' ) {
-                    peptide_scores_.push_back({ graph.getSignature(), cur_count, {} , -1});
+                long index = 0;
+                for (size_t sig_pos : graph.getSignature()) {
+                    index = (index<<1) | sig_pos;
+                }
+
+                if (!score_cache.count(index)) {
+                    score_cache[index] = { graph.getSignature(), cur_count, {} , -1};
                 } else {
-                    ScoreContainer & score_ref = *(peptide_scores_.end() - 1 - signature_ind);
+                    ScoreContainer & score_ref = score_cache[index];
                     for (size_t ind = 0; ind < cur_count.size(); ind++) {
                         score_ref.counts[ind] += cur_count[ind];
                     }
-                    signature_ind += 1;
                 }
             }
         }
-
-        for (ScoreContainer & scores : peptide_scores_) {
-            for (std::vector<size_t>::iterator it = scores.counts.begin() + 1;
-                 it != scores.counts.end(); it++) {
+        
+        peptide_scores_.reserve(score_cache.size());
+        for (auto & cached_pair : score_cache) {
+            for (std::vector<size_t>::iterator it = cached_pair.second.counts.begin() + 1;
+                 it != cached_pair.second.counts.end(); it++) {
                  *it += *(it - 1);
             }
-        }   
+            peptide_scores_.push_back(std::move(cached_pair.second));
+        }
     }
 
     void Ascore::calculateFullScores () {
@@ -154,8 +160,8 @@ namespace ptmscoring {
         }
 
         // Find best depth
-        float max_score_diff = 0;
-        float max_score_depth = 0;
+        float max_score_diff = 0.;
+        size_t max_score_depth = 0;
         for (size_t depth = 0; depth < ref.scores.size(); depth++) {
             float diff = ref.scores[depth] - other.scores[depth];
             if (diff > max_score_diff) {
@@ -163,7 +169,6 @@ namespace ptmscoring {
                 max_score_depth = depth;
             }
         }
-        //std::cout << max_score_diff << " " << max_score_depth << std::endl;
 
         // Calculate ascore
         std::vector<size_t> ion_counts(2);
@@ -207,16 +212,10 @@ namespace ptmscoring {
         ascores_.resize(mod_sig_pos_.size(), std::numeric_limits<float>::infinity());
 
         ScoreContainer & best_score = peptide_scores_.front();
-        //std::cout << std::endl << "Best:" << std::endl;
-        //for ( size_t i : best_score.signature ) {std::cout << i << " ";}
-        //std::cout << best_score.weighted_score << std::endl << "Competing:" << std::endl;
         for ( ScoreContainer & competing_score : peptide_scores_ ) {
             const std::vector<size_t> & differences = findDifferences(best_score, competing_score);
             if ( differences.size() == 1 and !std::isfinite(ascores_[differences.front()]) ) {
                 ascores_[differences.front()] = calculateAmbiguity(best_score, competing_score);
-                //for ( size_t i : competing_score.signature ) {std::cout << i << " ";}
-                //std::cout << competing_score.weighted_score << " "
-                //<< ascores_[differences.front()] << std::endl;
             }
         }   
     }
