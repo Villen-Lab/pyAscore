@@ -12,6 +12,7 @@ namespace ptmscoring {
     class ModifiedPeptide {
         std::string mod_group;
         float mod_mass;
+        float mz_error;
 
         std::string peptide;
         size_t n_of_mod;
@@ -24,7 +25,7 @@ namespace ptmscoring {
         void applyAuxMods(const unsigned int * = NULL, const float * = NULL, size_t = 0);
         void initializeFragments();
         public:
-            ModifiedPeptide(std::string, float);
+            ModifiedPeptide(std::string, float, float);
             ~ModifiedPeptide();
 
             void consumePeptide(std::string, size_t, 
@@ -37,6 +38,7 @@ namespace ptmscoring {
 
             std::string getModGroup() const;
             float getModMass() const;
+            float getMZError() const;
             size_t getNumberOfMods() const;
             size_t getNumberModifiable() const;
             std::string getPeptide(std::vector<size_t> = {}) const;

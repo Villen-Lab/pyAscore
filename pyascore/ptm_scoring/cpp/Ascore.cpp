@@ -31,7 +31,7 @@ namespace ptmscoring {
             for  (size_t depth = scoring_distributions.size() + 1; 
                   depth <= binned_spectra_ptr->getNTop(); 
                   depth++){
-                scoring_distributions.push_back( depth / 100. );
+                scoring_distributions.push_back( 2 * modified_peptide_ptr->getMZError() * depth / 100. );
             }
         }
     }

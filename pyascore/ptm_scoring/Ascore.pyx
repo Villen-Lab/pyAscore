@@ -15,9 +15,10 @@ cdef class PyAscore:
     cdef BinnedSpectra * binned_spectra_ptr
 
     def __cinit__(self, float bin_size, size_t n_top,
-                        str mod_group, float mod_mass):
+                        str mod_group, float mod_mass,
+                        float mz_error=.5):
         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
-        self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), mod_mass)
+        self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), mod_mass, mz_error)
         self.ascore_ptr = new Ascore()
 
     def __dealloc__(self):

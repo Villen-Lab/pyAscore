@@ -11,9 +11,10 @@
 
 namespace ptmscoring {
 
-    ModifiedPeptide::ModifiedPeptide (std::string mod_group, float mod_mass){
+    ModifiedPeptide::ModifiedPeptide (std::string mod_group, float mod_mass, float mz_error){
         this->mod_group = mod_group;
         this->mod_mass = mod_mass;
+        this->mz_error = mz_error;
     }
 
     ModifiedPeptide::~ModifiedPeptide () {};
@@ -87,8 +88,8 @@ namespace ptmscoring {
         float ppm_low;
         float ppm_high;
         for(; it < fragments.end(); it++) {
-            ppm_low = *it - .5;
-            ppm_high = *it + .5;
+            ppm_low = *it - mz_error;
+            ppm_high = *it + mz_error;
             if (mz > ppm_low and mz < ppm_high) {
                 if (!fragment_scores.count(*it) or std::get<1>(fragment_scores.at(*it)) > rank) {
                     fragment_scores[*it] = {mz, rank}; // The theoretical mz needs to be the key
@@ -112,6 +113,10 @@ namespace ptmscoring {
 
     float ModifiedPeptide::getModMass () const { 
         return mod_mass;
+    }
+
+    float ModifiedPeptide::getMZError () const {
+        return mz_error;
     }
 
     size_t ModifiedPeptide::getNumberOfMods () const {
@@ -161,7 +166,7 @@ namespace ptmscoring {
         std::vector<std::vector<float>> ion_lists;
         ion_lists.resize(2);
         while (!graph_1.isFragmentEnd() and !graph_2.isFragmentEnd()) {
-            if ( std::abs(graph_1.getFragmentMZ() - graph_2.getFragmentMZ()) < .5 ) { // Site determining ions should be outside tolerance
+            if ( std::abs(graph_1.getFragmentMZ() - graph_2.getFragmentMZ()) < mz_error ) { // Site determining ions should be outside tolerance
                 graph_1.incrFragment();
                 graph_2.incrFragment();
             } else if (graph_1.getFragmentMZ() > graph_2.getFragmentMZ()) {

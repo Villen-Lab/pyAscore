@@ -30,14 +30,15 @@ def build_identification_parser(arg_ref):
 def build_ascore(arg_ref):
     return PyAscore(bin_size=100., n_top=10,
                     mod_group=arg_ref.residues,
-                    mod_mass=arg_ref.mod_mass)
+                    mod_mass=arg_ref.mod_mass,
+                    mz_error=arg_ref.mz_error)
 
 def process_mods(arg_ref, positions, masses):
     variable_mod_count = 0
     const_pos, const_masses = [], []
     for pos, mass in zip(positions, masses):
         if np.isclose(arg_ref.mod_mass, mass,
-                      rtol=1e-6, atol=arg_ref.mod_tol):
+                      rtol=1e-6, atol=arg_ref.mod_correction_tol):
             variable_mod_count += 1
         else:
             shift = 1 if not arg_ref.zero_based else 0
@@ -79,8 +80,13 @@ def main(args=None):
                         help="Modification mass to match to identifications."
                              " This is often rounded by search engines so this"
                              " argument should be considered the most accurate mass")
-    parser.add_argument("--mod_tol", type=float, default=1.,
-                        help="A wide tolerance can help overcome rounding."
+    parser.add_argument("--mz_error", type=float, default=0.5,
+                        help="Tolerance in mz for deciding whether a spectral peak"
+                             " matches to a theoretical peak.")
+    parser.add_argument("--mod_correction_tol", type=float, default=1.,
+                        help="MZ tolerance for deciding whether a reported modification"
+                             " matches internal or user specified modifications."
+                             " A wide tolerance can help overcome rounding."
                              " If more precission is needed, make sure to"
                              " set this parameter and that your search"
                              " engine provides for it.")
