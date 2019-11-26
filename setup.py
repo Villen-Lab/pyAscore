@@ -15,7 +15,7 @@ EMAIL = "valenta4@uw.edu"
 LICENSE = "Apache 2.0"
 
 SRC_DIR = "pyascore"
-PACKAGES = [SRC_DIR]
+PACKAGES = [SRC_DIR, SRC_DIR + ".parsing"]
 
 HERE = path.abspath(path.dirname(__file__))
 # Get the long description from the README file

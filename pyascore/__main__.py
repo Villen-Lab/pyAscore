@@ -96,7 +96,7 @@ def main(args=None):
                         help="Number of PSMS to take from each scan."
                            " Set to negative to always analyze all.")
     parser.add_argument("spec_file", type=str,
-                        help="MS Spectra file supplied as MZML")
+                        help="MS Spectra file supplied as MzML")
     parser.add_argument("ident_file", type=str,
                         help="Comet hits supplied as pepXML")
     parser.add_argument("out_file", type=str,
