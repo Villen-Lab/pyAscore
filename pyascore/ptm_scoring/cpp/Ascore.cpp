@@ -23,8 +23,7 @@ namespace ptmscoring {
     void Ascore::resetInternalState () {
         // Clear scoring containers
         peptide_scores_.clear();
-        mod_sig_pos_.clear();
-        ascores_.clear();
+        ascore_containers_.clear();
 
         // Only add scoring distributions if first initialization or depth has changed
         if (scoring_distributions.size() < binned_spectra_ptr->getNTop()){
@@ -42,8 +41,11 @@ namespace ptmscoring {
             peptide_scores_.push_back( {} );
             peptide_scores_.front().signature.resize(modified_peptide_ptr->getNumberOfMods(), 1);
             peptide_scores_.front().weighted_score = std::numeric_limits<float>::infinity();
-            ascores_.resize(modified_peptide_ptr->getNumberOfMods(), 
-                            std::numeric_limits<float>::infinity());
+            for (size_t ind = 0; ind < modified_peptide_ptr->getNumberOfMods(); ind++){
+                ascore_containers_.push_back({
+                    ind, {}, {}, {std::numeric_limits<float>::infinity()}
+                });
+            }
             return true;
         } else {
             return false;
@@ -137,21 +139,11 @@ namespace ptmscoring {
     void Ascore::findModifiedPos () {
         ScoreContainer & best_score = peptide_scores_.front();
         for (size_t ind = 0; ind < best_score.signature.size(); ind++) {
-            if (best_score.signature[ind]) {mod_sig_pos_.push_back(ind);}
-        }
-    }
-
-    std::vector<size_t> Ascore::findDifferences(const ScoreContainer& ref, 
-                                                const ScoreContainer& other) {
-        std::vector<size_t> differences;
-        for (size_t ind = 0; ind < mod_sig_pos_.size(); ind++) {
-            if ( ref.signature[mod_sig_pos_[ind]] != other.signature[mod_sig_pos_[ind]] ) {
-                differences.push_back(ind);
+            if (best_score.signature[ind]) {
+                ascore_containers_.push_back({ind});
             }
         }
-
-        return differences;
-    } 
+    }
 
     float Ascore::calculateAmbiguity(const ScoreContainer& ref, const ScoreContainer& other){
         // Remove trivial cases
@@ -209,13 +201,35 @@ namespace ptmscoring {
 
     void Ascore::calculateAscores() {
         findModifiedPos();
-        ascores_.resize(mod_sig_pos_.size(), std::numeric_limits<float>::infinity());
 
         ScoreContainer & best_score = peptide_scores_.front();
         for ( ScoreContainer & competing_score : peptide_scores_ ) {
-            const std::vector<size_t> & differences = findDifferences(best_score, competing_score);
-            if ( differences.size() == 1 and !std::isfinite(ascores_[differences.front()]) ) {
-                ascores_[differences.front()] = calculateAmbiguity(best_score, competing_score);
+            size_t ndifferences = modified_peptide_ptr->getNumberOfMods() - std::inner_product(
+                best_score.signature.begin(), best_score.signature.end(), competing_score.signature.begin(), 0
+            );
+
+            if ( ndifferences != 1 ) continue;
+
+            size_t container_position = 0;
+            size_t same_count = 0;
+            size_t competing_position = 0;
+            for (size_t ind = 0; ind < best_score.signature.size(); ind++) {
+                if (best_score.signature.at(ind) && competing_score.signature.at(ind)) {
+                    same_count++;
+                } else if (best_score.signature.at(ind)){
+                    container_position = same_count;
+                } else if (competing_score.signature.at(ind)) {
+                    competing_position = ind;
+                }
+            }
+
+            AscoreContainer & cont = ascore_containers_.at(container_position);
+            if (cont.ascores.empty() || competing_score.weighted_score == cont.pep_scores.back() ) {
+
+                cont.sig_index.push_back( competing_position );
+                cont.pep_scores.push_back( competing_score.weighted_score );
+                cont.ascores.push_back( calculateAmbiguity(best_score, competing_score) );
+
             }
         }   
     }
@@ -253,7 +267,20 @@ namespace ptmscoring {
     }
 
     std::vector<float> Ascore::getAscores () {
-        return ascores_;
+        std::vector<float> ascores; 
+        for (AscoreContainer& cont : ascore_containers_) {
+            ascores.push_back(
+                *std::min_element(cont.ascores.begin(), cont.ascores.end())
+            );
+        }
+        return ascores;
     }
+
+    std::vector<size_t> Ascore::getAlternativeSites (size_t site) {
+        std::vector<size_t> ambiguity_range = ascore_containers_.at(site).sig_index;
+        std::sort(ambiguity_range.begin(), ambiguity_range.end());
+        return ambiguity_range;
+    }
+
 }
 

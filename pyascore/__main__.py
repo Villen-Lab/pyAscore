@@ -129,16 +129,20 @@ def main(args=None):
                     match["peptide"], n_variable,
                     const_mod_pos, const_mod_masses
                 )
+                alt_sites = [",".join([str(site) for site in site_list]) 
+                             for site_list in ascore.alt_sites]
                 scores.append([match["scan"], 
                                ascore.best_sequence, 
                                ascore.best_score,
-                               ";".join([str(s) for s in ascore.ascores])])
+                               ";".join([str(s) for s in ascore.ascores]),
+                               ";".join(alt_sites)])
 
     score_dataframe = DataFrame(scores,
                                 columns=["Scan",
                                          "LocalizedSequence",
                                          "PepScore",
-                                         "Ascores"])
+                                         "Ascores",
+                                         "AltSites"])
     score_dataframe.to_csv(args.out_file, sep="\t", index=False)
     print("{} -- Ascore Completed".format(get_time_stamp()))
 

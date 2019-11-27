@@ -76,3 +76,27 @@ cdef class PyAscore:
         for i in range(score_vector.size()):
             score_array[i] = score_vector[i]
         return score_array
+
+    @property
+    def alt_sites(self):
+        cdef size_t nmods
+        cdef size_t mod_ind
+        cdef size_t alt_ind
+        
+        cdef vector[size_t] alt_vector
+        cdef np.ndarray[np.uint32_t, ndim=1, mode="c"] alt_array
+
+        alt_site_list = []
+
+        n_mods = self.modified_peptide_ptr[0].getNumberOfMods()
+        for mod_ind in range(n_mods):
+            alt_vector = self.ascore_ptr[0].getAlternativeSites(mod_ind)
+
+            alt_array = np.zeros( alt_vector.size(), dtype=np.uint32 )
+            
+            for alt_ind in range(alt_vector.size()):
+                alt_array[alt_ind] = alt_vector[alt_ind]
+
+            alt_site_list.append(alt_array)
+
+        return alt_site_list
