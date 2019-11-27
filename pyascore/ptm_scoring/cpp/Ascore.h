@@ -26,8 +26,13 @@ namespace ptmscoring {
         };
         std::vector<ScoreContainer> peptide_scores_;
 
-        std::vector<size_t> mod_sig_pos_;
-        std::vector<float> ascores_;
+        struct AscoreContainer {
+            size_t sig_pos; // Position within signature of reference
+            std::vector<size_t> sig_index; // Position within signature of competing modifiable amino acids
+            std::vector<float> pep_scores; // Pepscore for competing modifiable amino acids
+            std::vector<float> ascores; // Ascores of reference vs other modifiable amino acids
+        };
+        std::vector<AscoreContainer> ascore_containers_;
 
         void resetInternalState();
         void accumulateCounts();
@@ -35,7 +40,6 @@ namespace ptmscoring {
         void sortScores();
         bool isUnambiguous();
         void findModifiedPos();
-        std::vector<size_t> findDifferences(const ScoreContainer&, const ScoreContainer&);
         float calculateAmbiguity(const ScoreContainer&, const ScoreContainer&);
         void calculateAscores();
         public:
@@ -46,6 +50,7 @@ namespace ptmscoring {
             std::string getBestSequence();
             float getBestScore();
             std::vector<float> getAscores();
+            std::vector<size_t> getAlternativeSites(size_t);
     };
 
 }

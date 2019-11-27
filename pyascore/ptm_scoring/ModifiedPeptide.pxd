@@ -8,13 +8,14 @@ cdef extern from "cpp/ModifiedPeptide.cpp":
 
 cdef extern from "cpp/ModifiedPeptide.cpp" namespace "ptmscoring":
     cdef cppclass ModifiedPeptide:
-        ModifiedPeptide(string, float, float);
+        ModifiedPeptide(string, float, float)
         void consumePeptide(string, size_t)
         void consumePeptide(string, size_t, 
                             const unsigned int *, 
                             const float *,
                             size_t)
-        void consumePeak(float, size_t);
+        void consumePeak(float, size_t)
+        size_t getNumberOfMods()
 
         cppclass FragmentGraph:
             FragmentGraph(const ModifiedPeptide *, char, size_t);

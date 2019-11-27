@@ -13,3 +13,4 @@ cdef extern from "cpp/Ascore.h" namespace "ptmscoring":
         string getBestSequence()
         float getBestScore()
         vector[float] getAscores();
+        vector[size_t] getAlternativeSites(size_t);
