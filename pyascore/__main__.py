@@ -1,5 +1,6 @@
 import sys
 import argparse
+import re
 from pyascore import *
 from datetime import datetime
 from itertools import groupby
@@ -11,6 +12,17 @@ import pickle
 def get_time_stamp():
     return datetime.now().strftime("%m/%d/%y %H:%M:%S")
 
+def args_from_file(file_path):
+    with open(file_path, "r") as parameters:
+        arg_list = []
+        for line in parameters:
+            line = line.split("#")[0].rstrip().lstrip()
+            search_result = re.search("^([^\s]+)\s*=\s*([^\s]+)$", line)
+            if search_result is not None:
+                arg_list.append("--" + search_result.group(1))
+                arg_list.append(search_result.group(2))
+        
+        return arg_list
 
 def build_spectra_parser(arg_ref):
     print("{} -- Reading spectra from: {}".format(get_time_stamp(), arg_ref.spec_file))
@@ -58,11 +70,7 @@ def save_match(spectra, match):
         pickle.dump([match], src)
 
 
-def main(args=None):
-    """The main routine."""
-    if args is None:
-        args = sys.argv[1:]
-
+def main():
     parser = argparse.ArgumentParser(
         prog="pyAscore", description="The pyAscore module provides PTM localization analysis"
                                      " using a custom implementation of the Ascore algorithm."
@@ -90,11 +98,13 @@ def main(args=None):
                              " If more precission is needed, make sure to"
                              " set this parameter and that your search"
                              " engine provides for it.")
-    parser.add_argument("--zero_based", action='store_true',
+    parser.add_argument("--zero_based", type=bool, default=False,
                         help="Mod positions are by default assumed to be 1 based")
     parser.add_argument("--hit_depth", type=int, default=1,
                         help="Number of PSMS to take from each scan."
                            " Set to negative to always analyze all.")
+    parser.add_argument("--parameter_file", type=str, default="",
+                        help="A file containing parameters. e.x. param = val")
     parser.add_argument("spec_file", type=str,
                         help="MS Spectra file supplied as MzML")
     parser.add_argument("ident_file", type=str,
@@ -103,6 +113,8 @@ def main(args=None):
                         help="Destination for Ascores")
     args = parser.parse_args()
 
+    if args.parameter_file:
+        args = parser.parse_args(args_from_file(args.parameter_file) + sys.argv[1:])
 
     print("{} -- Ascore Started".format(get_time_stamp()))
 
