@@ -1,6 +1,7 @@
 import re
 import numpy as np
 from numpy import isclose
+from pandas import read_csv
 from pyteomics.pepxml import PepXML
 from pyteomics import mass
 
@@ -14,6 +15,8 @@ COMMON_MODS = {"n": 42.010565,
                "T": 79.966331,
                "Y": 79.966331,
                "C": 57.021464}
+
+CONSTANT_MODS = {"C": 57.021464}
 
 class MassCorrector:
     def __init__(self, mod_mass_dict=COMMON_MODS, aa_mass_dict=STD_AA_MASS, mz_tol=1.5, n_mod_ind=0):
@@ -111,6 +114,16 @@ class MassCorrector:
 
         return np.array(corrected_positions), np.array(corrected_masses)
 
+class PercolatorTXT:
+    """
+    Simple wrapper to provide standardized access to Percolator ouput csvs.
+    """
+    def __init__(self, file_path):
+        self._internal_csv = read_csv(file_path, sep="\t")
+
+    def map(self, func):
+        return self._internal_csv.groupby("scan").apply(func).to_list()
+
 class IDExtractor:
     """
     Parser class for Pyteomics identifications dictionaries
@@ -168,7 +181,6 @@ class IDExtractor:
             self.results["charge_states"][ind] = self._get_charge()
             self.results["peptides"][ind] = self._get_peptide()
             self.results["mod_positions"][ind], self.results["mod_masses"][ind] = self._get_mod_info()
-
         return self.results
 
 class PepXMLExtractor(IDExtractor):
@@ -215,6 +227,44 @@ class PepXMLExtractor(IDExtractor):
         except KeyError:
             return np.zeros(0, dtype=np.int32), np.zeros(0, dtype=np.float32)
 
+class PercolatorTXTExtractor(IDExtractor):
+    def _get_matches(self):
+        return [id for id in self.entry.transpose().to_dict().values()]
+
+    def _get_scans(self):
+        return self._match["scan"]
+
+    def _get_charge(self):
+        return self._match["charge"]
+
+    def _get_score(self):
+        return self._match["percolator score"]
+
+    def _get_peptide(self):
+        return re.sub("n|(\[[^A-z]+\])", "", self._match["sequence"])
+
+    def _get_mod_info(self):
+        mass = []
+        pos = []
+        # Extract n terminus first
+        n_term_mod = re.match("n?\[[^A-z]+\]", self._match["sequence"])
+        if n_term_mod is not None:
+            mass.append(
+                re.search("(?<=\[)[^A-z]+(?=\])", n_term_mod.group()).group()
+            )
+            pos.append(0)
+
+        # Extract the rest of the sequence
+        residues = [res.group() for res in re.finditer("[A-Z](\[[^A-z]+\])?", self._match["sequence"])]
+        for ind, res in enumerate(residues, 1):
+            extracted_mod = re.search("(?<=\[)[^A-z]+(?=\])", res)
+            if extracted_mod is not None:
+                mass.append(STD_AA_MASS[res[0]] + float(extracted_mod.group()))
+                pos.append(ind)
+            elif res[0] in CONSTANT_MODS:
+                mass.append(STD_AA_MASS[res[0]] + CONSTANT_MODS[res[0]])
+                pos.append(ind)
+        return np.array(pos, dtype=np.int32), np.array(mass, dtype=np.float32)
 
 class IdentificationParser:
     """
@@ -243,6 +293,9 @@ class IdentificationParser:
         if id_file_format == "pepXML":
             self._reader = PepXML(id_file_name)
             self._extractor = PepXMLExtractor(score_string)
+        elif id_file_format == "percolatorTXT":
+            self._reader = PercolatorTXT(id_file_name)
+            self._extractor = PercolatorTXTExtractor() 
         else:
             raise ValueError("{} not supported at this time.".format(id_file_format))
         

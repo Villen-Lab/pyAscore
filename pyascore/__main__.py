@@ -33,7 +33,7 @@ def build_spectra_parser(arg_ref):
 def build_identification_parser(arg_ref):
     print("{} -- Reading identifications from: {}".format(get_time_stamp(), arg_ref.ident_file))
     id_parser = iter(
-        sorted(IdentificationParser(arg_ref.ident_file, "pepXML").to_list(),
+        sorted(IdentificationParser(arg_ref.ident_file, arg_ref.ident_file_type).to_list(),
                key=lambda spec: spec["scan"])
     )
     return id_parser
@@ -105,6 +105,9 @@ def main():
                            " Set to negative to always analyze all.")
     parser.add_argument("--parameter_file", type=str, default="",
                         help="A file containing parameters. e.x. param = val")
+    parser.add_argument("--ident_file_type", type=str, default="pepXML",
+                        help="The type of file supplied for identifications."
+                             " One of pepXML, percolatorTXT. Default: pepXML")
     parser.add_argument("spec_file", type=str,
                         help="MS Spectra file supplied as MzML")
     parser.add_argument("ident_file", type=str,
