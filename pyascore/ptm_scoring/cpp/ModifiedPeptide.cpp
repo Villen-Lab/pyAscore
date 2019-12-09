@@ -37,14 +37,19 @@ namespace ptmscoring {
 
     }
 
-    void ModifiedPeptide::applyAuxMods (const unsigned int * aux_mod_pos,
-                                        const float * aux_mod_mass,
-                                        size_t n_aux_mods) {
+    void ModifiedPeptide::applyAuxMods () {
 
         for (size_t ind = 0; ind < n_aux_mods; ind++) {
-            residues[aux_mod_pos[ind]].front() += aux_mod_mass[ind];
-            // A residue with an aux mod is not allowed to have more than 1 mod
-            residues[aux_mod_pos[ind]].resize(1);
+            if (aux_mod_pos[ind] == 0) {
+                transform(residues[aux_mod_pos[ind]].begin(), 
+                          residues[aux_mod_pos[ind]].end(), 
+                          residues[aux_mod_pos[ind]].begin(),
+                          bind2nd(std::plus<float>(), aux_mod_mass[ind]));
+            } else {
+                residues[aux_mod_pos[ind] - 1].front() += aux_mod_mass[ind];
+                // A residue with a non n-terminus aux mod cannot have a variable mod
+                residues[aux_mod_pos[ind] - 1].resize(1);
+            }
         }
 
     }
@@ -74,9 +79,12 @@ namespace ptmscoring {
 
         this->peptide = peptide;
         this->n_of_mod = n_of_mod;
+        this->aux_mod_pos = aux_mod_pos;
+        this->aux_mod_mass = aux_mod_mass;
+        this->n_aux_mods = n_aux_mods;
 
         initializeResidues();
-        applyAuxMods(aux_mod_pos, aux_mod_mass, n_aux_mods);
+        applyAuxMods();
         initializeFragments();
 
     }

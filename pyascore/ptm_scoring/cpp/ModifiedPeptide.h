@@ -16,13 +16,16 @@ namespace ptmscoring {
 
         std::string peptide;
         size_t n_of_mod;
+        const unsigned int * aux_mod_pos;
+        const float * aux_mod_mass;
+        size_t n_aux_mods;
 
         std::vector<std::vector<float>> residues;
         std::vector<float> fragments;
         std::unordered_map<float, std::tuple<float, size_t>> fragment_scores;
 
         void initializeResidues();
-        void applyAuxMods(const unsigned int * = NULL, const float * = NULL, size_t = 0);
+        void applyAuxMods();
         void initializeFragments();
         public:
             ModifiedPeptide(std::string, float, float);

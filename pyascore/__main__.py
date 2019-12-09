@@ -53,8 +53,8 @@ def process_mods(arg_ref, positions, masses):
                       rtol=1e-6, atol=arg_ref.mod_correction_tol):
             variable_mod_count += 1
         else:
-            shift = 1 if not arg_ref.zero_based else 0
-            const_pos.append(pos - shift)
+            shift = 1 if arg_ref.zero_based else 0
+            const_pos.append(pos + shift)
             const_masses.append(mass)
 
     return (np.array(const_pos, dtype=np.uint32),
@@ -135,7 +135,7 @@ def main():
             const_mod_pos, const_mod_masses, n_variable = process_mods(
                 args, match["mod_positions"], match["mod_masses"]
             )
-            if n_variable > 0 and not np.isin(4294967295, const_mod_pos):
+            if n_variable > 0:
                 if args.match_save:
                     save_match(spectra, match)
                 ascore.score(
