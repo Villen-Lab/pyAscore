@@ -226,7 +226,7 @@ namespace ptmscoring {
             AscoreContainer & cont = ascore_containers_.at(container_position);
             if (cont.ascores.empty() || competing_score.weighted_score == cont.pep_scores.back() ) {
 
-                cont.competing_index.push_back( competing_position );
+                cont.competing_index.push_back( modified_peptide_ptr->getPosOfNthModifiable(competing_position) + 1 );
                 cont.pep_scores.push_back( competing_score.weighted_score );
                 cont.ascores.push_back( calculateAmbiguity(best_score, competing_score) );
 

@@ -141,6 +141,17 @@ namespace ptmscoring {
         return n_modifiable;
     }
 
+    size_t ModifiedPeptide::getPosOfNthModifiable (size_t n) const {
+        for (size_t ind = 0; ind < residues.size(); ind++) {
+            if (residues.at(ind).size() > 1 and n == 0) {
+                return ind;
+            } else if (residues.at(ind).size() > 1) {
+                n--;
+            }
+        }
+        return residues.size();
+    }
+
     std::string ModifiedPeptide::getPeptide(std::vector<size_t> signature) const {
         // If no signature is given, just use first signature
         if ( signature.size() == 0 ) {
