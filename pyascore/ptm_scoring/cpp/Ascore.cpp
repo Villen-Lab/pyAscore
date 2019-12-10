@@ -226,7 +226,7 @@ namespace ptmscoring {
             AscoreContainer & cont = ascore_containers_.at(container_position);
             if (cont.ascores.empty() || competing_score.weighted_score == cont.pep_scores.back() ) {
 
-                cont.sig_index.push_back( competing_position );
+                cont.competing_index.push_back( competing_position );
                 cont.pep_scores.push_back( competing_score.weighted_score );
                 cont.ascores.push_back( calculateAmbiguity(best_score, competing_score) );
 
@@ -277,7 +277,7 @@ namespace ptmscoring {
     }
 
     std::vector<size_t> Ascore::getAlternativeSites (size_t site) {
-        std::vector<size_t> ambiguity_range = ascore_containers_.at(site).sig_index;
+        std::vector<size_t> ambiguity_range = ascore_containers_.at(site).competing_index;
         std::sort(ambiguity_range.begin(), ambiguity_range.end());
         return ambiguity_range;
     }

@@ -28,7 +28,7 @@ namespace ptmscoring {
 
         struct AscoreContainer {
             size_t sig_pos; // Position within signature of reference
-            std::vector<size_t> sig_index; // Position within signature of competing modifiable amino acids
+            std::vector<size_t> competing_index; // Position within peptide of competing modifiable amino acids
             std::vector<float> pep_scores; // Pepscore for competing modifiable amino acids
             std::vector<float> ascores; // Ascores of reference vs other modifiable amino acids
         };

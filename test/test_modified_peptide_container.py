@@ -204,3 +204,14 @@ class TestPyModifiedPeptide(unittest.TestCase):
                    np.array([256.12917647, 343.16120647, 510.15956747, 597.19159747]))
         for c, m in zip(calc_mz, true_mz):
             self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+    def test_peptide_print(self):
+        pep = PyModifiedPeptide("STY", 79.966331)
+
+        pep.consume_peptide("ASMTK", 1, np.array([0, 3]).astype(np.uint32), np.array([42.010565, 15.994915]).astype(np.float32))
+        self.assertEqual(pep.get_peptide(), "n[42]AS[80]M[16]TK")
+        self.assertEqual(pep.get_peptide(np.array([0, 1], dtype=np.uint32)), "n[42]ASM[16]T[80]K")
+
+        pep.consume_peptide("PASSSSSEFK", 2)
+        self.assertEqual(pep.get_peptide(), "PAS[80]S[80]SSSEFK")
+        self.assertEqual(pep.get_peptide(np.array([0, 1, 0, 1, 0], dtype=np.uint32)), "PASS[80]SS[80]SEFK")

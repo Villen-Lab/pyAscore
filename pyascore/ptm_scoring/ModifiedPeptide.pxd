@@ -14,6 +14,7 @@ cdef extern from "cpp/ModifiedPeptide.cpp" namespace "ptmscoring":
                             const unsigned int *, 
                             const float *,
                             size_t)
+        string getPeptide(vector[size_t])
         void consumePeak(float, size_t)
         size_t getNumberOfMods()
 

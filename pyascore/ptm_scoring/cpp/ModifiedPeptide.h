@@ -16,9 +16,8 @@ namespace ptmscoring {
 
         std::string peptide;
         size_t n_of_mod;
-        const unsigned int * aux_mod_pos;
-        const float * aux_mod_mass;
-        size_t n_aux_mods;
+        std::vector<unsigned int> aux_mod_pos;
+        std::vector<float> aux_mod_mass;
 
         std::vector<std::vector<float>> residues;
         std::vector<float> fragments;

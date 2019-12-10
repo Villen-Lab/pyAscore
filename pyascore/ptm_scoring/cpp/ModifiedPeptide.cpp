@@ -39,7 +39,7 @@ namespace ptmscoring {
 
     void ModifiedPeptide::applyAuxMods () {
 
-        for (size_t ind = 0; ind < n_aux_mods; ind++) {
+        for (size_t ind = 0; ind < aux_mod_pos.size(); ind++) {
             if (aux_mod_pos[ind] == 0) {
                 transform(residues[aux_mod_pos[ind]].begin(), 
                           residues[aux_mod_pos[ind]].end(), 
@@ -79,9 +79,11 @@ namespace ptmscoring {
 
         this->peptide = peptide;
         this->n_of_mod = n_of_mod;
-        this->aux_mod_pos = aux_mod_pos;
-        this->aux_mod_mass = aux_mod_mass;
-        this->n_aux_mods = n_aux_mods;
+
+        this->aux_mod_pos.resize(n_aux_mods);
+        std::copy(aux_mod_pos, aux_mod_pos + n_aux_mods, this->aux_mod_pos.begin());
+        this->aux_mod_mass.resize(n_aux_mods);
+        std::copy(aux_mod_mass, aux_mod_mass + n_aux_mods, this->aux_mod_mass.begin());
 
         initializeResidues();
         applyAuxMods();
@@ -140,21 +142,47 @@ namespace ptmscoring {
     }
 
     std::string ModifiedPeptide::getPeptide(std::vector<size_t> signature) const {
+        // If no signature is given, just use first signature
         if ( signature.size() == 0 ) {
-            return peptide;
-        } else {
-            std::string mod_peptide = "";
-            auto sig_iter = signature.begin();
-            char mod_buffer[10];
-            std::sprintf(mod_buffer, "[%d]", (int) std::round(mod_mass));
-            for (char aa : peptide) {
-                mod_peptide += aa;
-                if (mod_group.find(aa) != std::string::npos and sig_iter != signature.end() and  *sig_iter++ == 1){
-                    mod_peptide += mod_buffer;
-                }
-            }
-            return mod_peptide;
+            signature = std::vector<size_t>(n_of_mod, 1);
         }
+
+        std::string mod_peptide = "";
+
+        // If an n terminal mod is present, pin it to the front
+        size_t aux_ind = 0;
+        if (!aux_mod_pos.empty() and aux_mod_pos.front() == 0) {
+            mod_peptide += "n";
+
+            char mod_buffer[10];
+            std::sprintf(mod_buffer, "[%d]", (int) std::round(aux_mod_mass[0]));
+            mod_peptide += mod_buffer;
+
+            aux_ind++;
+        }
+
+        size_t sig_ind = 0;
+        for (size_t pep_ind = 0; pep_ind < peptide.size(); pep_ind++) { 
+            char aa = peptide[pep_ind];
+            mod_peptide += aa;
+
+            if (mod_group.find(aa) != std::string::npos 
+                and sig_ind < signature.size() 
+                and signature[sig_ind++] == 1) {
+                // Add a modification mass
+                char mod_buffer[10];
+                std::sprintf(mod_buffer, "[%d]", (int) std::round(mod_mass));
+                mod_peptide += mod_buffer;
+            } else if (aux_ind < aux_mod_pos.size()
+                       and (pep_ind + 1) == aux_mod_pos[aux_ind]) {
+                // Add a mass specified in aux_masses
+                char mod_buffer[10];
+                std::sprintf(mod_buffer, "[%d]", (int) std::round(aux_mod_mass[aux_ind]));
+                mod_peptide += mod_buffer;
+                aux_ind++;
+            }
+        }
+        return mod_peptide;
     }
 
     ModifiedPeptide::FragmentGraph ModifiedPeptide::getFragmentGraph (char fragment_type, size_t charge_state) const {

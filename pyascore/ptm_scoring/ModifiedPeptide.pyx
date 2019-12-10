@@ -28,6 +28,14 @@ cdef class PyModifiedPeptide:
         else:
             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
 
+    def get_peptide(self, np.ndarray[unsigned int, ndim=1, mode="c"] signature = np.ndarray(0, dtype=np.uint32)):
+        cdef vector[size_t] signature_vector
+        cdef size_t ind
+        for ind in range(<size_t> signature.size):
+            signature_vector.push_back(<size_t> signature[ind])
+
+        return self.modified_peptide_ptr[0].getPeptide(signature_vector).decode("utf8")
+
     def get_fragment_graph(self, str fragment_type, size_t charge_state):
         return PyFragmentGraph(self, fragment_type.encode("utf8")[0], charge_state)
 
