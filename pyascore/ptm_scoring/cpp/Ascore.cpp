@@ -14,7 +14,7 @@ namespace ptmscoring {
 
     Ascore::Ascore () {
         score_weights = {0.5, 0.75, 1.0, 1.0, 1.0, 1.0, 0.75, 0.5, 0.25, 0.25};
-        float weight_sum = std::accumulate(score_weights.begin(), score_weights.end(), 0);
+        float weight_sum = std::accumulate(score_weights.begin(), score_weights.end(), 0.);
         for (float & val : score_weights){ val /= weight_sum; } 
     }
 
@@ -111,8 +111,7 @@ namespace ptmscoring {
     }
 
     void Ascore::calculateFullScores () {
-        size_t peptide_size = modified_peptide_ptr->getPeptide().size();
-
+        size_t peptide_size = modified_peptide_ptr->getBasePeptide().size();
         for ( ScoreContainer & score_cont : peptide_scores_ ) {
             for (size_t nions = 1; nions <= score_cont.counts.size(); nions++) {
                 score_cont.scores.push_back(

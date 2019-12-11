@@ -44,6 +44,7 @@ namespace ptmscoring {
             size_t getNumberOfMods() const;
             size_t getNumberModifiable() const;
             size_t getPosOfNthModifiable(size_t) const;
+            std::string getBasePeptide() const;
             std::string getPeptide(std::vector<size_t> = {}) const;
 
             class FragmentGraph;

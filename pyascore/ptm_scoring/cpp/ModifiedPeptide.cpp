@@ -152,6 +152,10 @@ namespace ptmscoring {
         return residues.size();
     }
 
+    std::string ModifiedPeptide::getBasePeptide () const {
+        return peptide;
+    }
+
     std::string ModifiedPeptide::getPeptide(std::vector<size_t> signature) const {
         // If no signature is given, just use first signature
         if ( signature.size() == 0 ) {
