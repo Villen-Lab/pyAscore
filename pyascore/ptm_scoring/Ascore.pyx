@@ -10,6 +10,47 @@ from Spectra cimport BinnedSpectra
 from libcpp.vector cimport vector
 
 cdef class PyAscore:
+    """
+    The PyAscore object scores the localization of post translational modifications (PTMs).
+
+    Objects are designed to take in a spectra, the associated peptide sequence, a set of fixed 
+    position modifications, and a variable amount of unlocalized modifications and determine
+    how much evidence exists for placing PTMs on individual amino acids. The algorithm is a 
+    modified version of Beausoleil et al. [PMID: 16964243] which can efficiently handle any
+    size peptide and arbitrary PTM masses. Each scored PSM will generate the most likely PTM
+    positions and scores, as well as alternative sites for each PTM which have equal evidence
+    but evidence that is less than or equal to the maximum. These alternative sites are not 
+    required to be adjacent (i.e. not separated by another modifiable residue).
+
+    Note:
+        Attributes are only meaningful after consumption of the first peptide.
+
+    Parameters
+    ----------
+    bin_size : float
+        Size in MZ of each bin
+    n_top : int
+        Number of top peaks to retain in each bin (must be >= 0)
+    mod_group : str
+        A string which lists the possible modified residues for the unlocalized modification. For example, 
+        with phosphorylation, you may want "STY".
+    mod_mass : float
+        The mass of the unlocalized modification in Daltons. For example, phosphorylation is 79.966331.
+    mz_error : float
+        The error in daltons to match theoretical peaks to consumed spectral peaks. The option to use PPM
+        will likely be included in the future. (Defaults to 0.5)
+
+    Attributes
+    ----------
+    best_sequence : str
+        Peptide sequence with modifications included in brackets for the best scoring localization.
+    best_score : float
+        The best Pep score among all possible localization permutations.
+    ascores : ndarray of float32
+        Ascores for each individual non-static site in the peptide.
+    alt_sites : list of ndarry of uint32
+        Alternative positions for each individual non-static site in the peptide.
+    """
     cdef Ascore * ascore_ptr
     cdef ModifiedPeptide * modified_peptide_ptr
     cdef BinnedSpectra * binned_spectra_ptr
@@ -33,6 +74,24 @@ cdef class PyAscore:
                     str peptide, size_t n_of_mod,
                     np.ndarray[np.uint32_t, ndim=1, mode="c"] aux_mod_pos = None,
                     np.ndarray[np.float32_t, ndim=1, mode="c"] aux_mod_mass = None):
+        """Consumer spectra and associated peptide information and score PTM localization
+
+        Parameters
+        ----------
+        mz_arr : ndarray of float64
+            Array of MZ values for each peak in a spectra.
+        int_arr : ndarray of float64
+            Array of intensity values for each peak in a spectra.
+        peptide : str
+            The peptide string without any modifications or n-terminal markings.
+        n_of_mod : int > 0
+            Number of unlocalized modifications on the sequence.
+        aux_mod_pos : ndarray of uint32
+            Positions of fixed modifications. Most modification positions should start at 1 with 0 being
+            reserved for n-terminal modifications, as seems to be the field prefered encoding.
+        aux_mod_mass : ndarray of float32
+            Masses of individual fixed postion modifications.
+        """ 
         # Consume spectra and bin
         self.binned_spectra_ptr[0].consumeSpectra(&mz_arr[0], &int_arr[0], mz_arr.size)
 

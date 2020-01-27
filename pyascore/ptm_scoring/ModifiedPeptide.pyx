@@ -8,6 +8,29 @@ from libcpp.string cimport string
 from ModifiedPeptide cimport ModifiedPeptide
 
 cdef class PyModifiedPeptide:
+    """
+    The PyModifiedPeptide object provides functionality for modified residues of peptides.
+
+    Objects can take in a sequence, a set of fixed position modifications, and a variable amount
+    of unlocalized modifications which can fall on any residue of a specified type. The design 
+    allows peaks from spectra to be matched to theoretical peaks from any possible localization. 
+    Individual realizations of modified peptides are encoded via a "signature", which is merely a 
+    binary vector with an entry for each modifiable residue, and a 1 signifying that the residue 
+    is modified. The peaks of all possible modifications states can be traversed by creating a 
+    PyFragmentGraph object, and if two signatures are provided, one can retrieve only the site 
+    determining peaks.
+
+    Parameters
+    ----------
+    mod_group : str
+        A string which lists the possible modified residues for the unlocalized modification. For example, 
+        with phosphorylation, you may want "STY".
+    mod_mass : float
+        The mass of the unlocalized modification in Daltons. For example, phosphorylation is 79.966331.
+    mz_error : float
+        The error in daltons to match theoretical peaks to consumed spectral peaks. The option to use PPM
+        will likely be included in the future. (Defaults to 0.5)
+    """
     cdef ModifiedPeptide * modified_peptide_ptr
 
     def __cinit__(self, str mod_group, float mod_mass, float mz_error = .5):
@@ -21,6 +44,20 @@ cdef class PyModifiedPeptide:
     def consume_peptide(self, str peptide, size_t n_of_mod, 
                         np.ndarray[unsigned int, ndim=1, mode="c"] aux_mod_pos = None, 
                         np.ndarray[float, ndim=1, mode="c"] aux_mod_mass = None):
+        """Consumes a single peptide sequence and creates it's internal representation
+
+        Parameters
+        ----------
+        peptide : str
+            The peptide string without any modifications or n-terminal markings
+        n_of_mod : int > 0
+            Number of unlocalized modifications on the sequence
+        aux_mod_pos : ndarray of uint32
+            Positions of fixed modifications. Most modification positions should start at 1 with 0 being
+            reserved for n-terminal modifications, as seems to be the field prefered encoding.
+        aux_mod_mass : ndarray of float32
+            Masses of individual fixed postion modifications.
+        """
         if aux_mod_pos is not None and aux_mod_mass is not None:
             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,
                                                         &aux_mod_pos[0], &aux_mod_mass[0], 
@@ -29,6 +66,18 @@ cdef class PyModifiedPeptide:
             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
 
     def get_peptide(self, np.ndarray[unsigned int, ndim=1, mode="c"] signature = np.ndarray(0, dtype=np.uint32)):
+        """Prints the modified sequence (residues plus mod mass) of the consumed peptide
+
+        Parameters
+        ----------
+        signature : ndarray of 0,1 values
+            Encodes the modification state that each modifiable amino acid should have. Defaults to no modifications.
+
+        Returns
+        -------
+        str
+            A peptide sequence with bracketed modification masses, e.g. PEPT[80]IDEK.
+        """
         cdef vector[size_t] signature_vector
         cdef size_t ind
         for ind in range(<size_t> signature.size):
@@ -37,11 +86,44 @@ cdef class PyModifiedPeptide:
         return self.modified_peptide_ptr[0].getPeptide(signature_vector).decode("utf8")
 
     def get_fragment_graph(self, str fragment_type, size_t charge_state):
+        """Builds a PyFragmentGraph object which references the current PyModifiedPeptide object
+
+        Parameters
+        ----------
+        fragment_type : char
+            The type of fragment graph to create, e.g. 'b'.
+        charge_state : integer > 0
+            The charge state of all fragments.
+
+        Returns
+        -------
+        PyFragmentGraph
+            The fragment graph of specified type and charge state.
+        """
         return PyFragmentGraph(self, fragment_type.encode("utf8")[0], charge_state)
 
     def get_site_determining_ions(self, np.ndarray[unsigned int, ndim=1, mode="c"] sig_1,
                                         np.ndarray[unsigned int, ndim=1, mode="c"] sig_2,
                                         str fragment_type, size_t charge_state):
+        """Determine the non-overlapping theoretical fragments of two peptides.
+
+        Parameters
+        ----------
+        sig1 : ndarray of 0,1 values
+            Encodes the modification state that each modifiable amino acid should have in the first peptide.
+        sig2 : ndarray of 0,1 values
+            Encodes the modification state that each modifiable amino acid should have in the second peptide.
+        fragment_type : char
+            The type of fragment graph to create, e.g. 'b'.
+        charge_state : integer > 0
+            The charge state of all fragments.
+
+        Returns
+        -------
+        tuple of ndarray
+            A tuple of length 2 with entries that contain all theoretical fragments for a modified peptide not found
+            in the other modified peptide.
+        """
 
         cdef vector[size_t] sig_vec_1
         cdef vector[size_t] sig_vec_2
@@ -64,6 +146,33 @@ cdef class PyModifiedPeptide:
         return ion_arrays
 
 cdef class PyFragmentGraph:
+    """
+    The PyFragmentGraph object allows traversal of the modification tree of a PyModifiedPeptide object.
+
+    Every possible modified residue creates a branch point determined by it being modified or not, and 
+    the PyFragmentGraph object allows efficient depth first traversal of the tree. By specifying whether
+    the graph should be made over the b or y ions (more ion types to come), this object will spit out the
+    appropriate theoretical MZ for each fragment. These MZ can be mathed against the internal cache of the 
+    PyModifiedPeptide object to determine if any consumed peaks match the theoretical peak. For efficiency's
+    sake, y and b ion graphs iterate through signatures differently, and may not necessarily be reverse 
+    iterators of each other.
+
+    Object creation through the PyModifiedPeptide.get_fragment_graph method is suggested by not required.
+
+    Parameters
+    ----------
+    peptide : PyModifiedPeptide
+        A PyModifiedPeptide instance which has consumed at least one peptide
+    fragment_type : char
+        The type of fragment graph to create, e.g. 'b'.
+    charge_state : integer > 0
+        The charge state of all fragments
+
+    Attributes
+    ----------
+    fragment_type
+    charge_state
+    """
     cdef ModifiedPeptide.FragmentGraph * fragment_graph_ptr
 
     def __cinit__(self, PyModifiedPeptide peptide, char fragment_type, size_t charge_state):
@@ -83,21 +192,39 @@ cdef class PyFragmentGraph:
         return self.fragment_graph_ptr[0].getChargeState()
 
     def reset_iterator(self):
+        """Resets iterator to the first position of the first signature."""
         return self.fragment_graph_ptr[0].resetIterator()
 
     def incr_signature(self):
+        """Get next signature at position of last modification switch."""
         return self.fragment_graph_ptr[0].incrSignature()
 
     def is_signature_end(self):
+        """Check if iterator is at last signature.
+
+        Returns
+        -------
+        bool
+            Is this the last signature?
+        """
         return self.fragment_graph_ptr[0].isSignatureEnd()
 
     def incr_fragment(self):
+        """Increment to next fragment for current signature."""
         return self.fragment_graph_ptr[0].incrFragment()
 
     def is_fragment_end(self):
+        """Check if iterator has reached the last fragemnt, i.e. the end of the peptide."""
         return self.fragment_graph_ptr[0].isFragmentEnd()
 
     def set_signature(self, np.ndarray[unsigned int, ndim=1, mode="c"] new_signature):
+        """Change signature to user specified value and reset to the first fragment.
+
+        Parameters
+        ----------
+        new_signature : ndarray of uint32
+            Encodes the modification state that each modifiable amino acid should have.
+        """
         cdef vector[size_t] signature_vector
         cdef size_t ind
         for ind in range(<size_t> new_signature.size):
@@ -105,8 +232,13 @@ cdef class PyFragmentGraph:
 
         self.fragment_graph_ptr[0].setSignature(signature_vector)
         
-
     def get_signature(self):
+        """Return current signature.
+
+        Returns
+        -------
+        ndarray of uint64
+        """
         cdef vector[size_t] signature_vector = self.fragment_graph_ptr[0].getSignature()
         signature_array = np.zeros(signature_vector.size(), dtype=np.uint64)
 
@@ -116,11 +248,29 @@ cdef class PyFragmentGraph:
         return signature_array
 
     def get_fragment_mz(self):
+        """Return the size of the current fragment in MZ.
+
+        Returns
+        -------
+        float
+        """
         return self.fragment_graph_ptr[0].getFragmentMZ()
 
     def get_fragment_size(self):
+        """Return the size of the current fragment in number of amino acids.
+
+        Returns
+        -------
+        int
+        """
         return self.fragment_graph_ptr[0].getFragmentSize()
 
     def get_fragment_seq(self):
+        """Return sequence of current fragment without modifications.
+
+        Returns
+        -------
+        str
+        """
         return self.fragment_graph_ptr[0].getFragmentSeq().decode('utf8')
 
