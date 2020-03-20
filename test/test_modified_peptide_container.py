@@ -186,22 +186,103 @@ class TestPyModifiedPeptide(unittest.TestCase):
             y_graph.incr_signature()
             test(y_graph, c, np.array([146.11024, 247.15792, 407.1885734, 536.231164, 683.266569, 850.26493, 921.30204]))
 
-    def test_site_determining(self):
+    def test_site_determining_single(self):
         pep = PyModifiedPeptide("STY", 79.966331)
+
+        # Site determining peaks with no constant modifications
         pep.consume_peptide("ASMSK", 1)
         calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
                                                 np.array([0, 1], dtype=np.uint32),
                                                 "b", 1)
-        true_mz = (np.array([239.0427475, 370.08323747]), np.array([159.07641647, 290.11690647]))
+        true_mz = (np.array([239.0427475, 370.08323747]), 
+                   np.array([159.07641647, 290.11690647]))
         for c, m in zip(calc_mz, true_mz):
             self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
 
-        pep.consume_peptide("PASSSSSEFK", 2)
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
+                                                np.array([0, 1], dtype=np.uint32),
+                                                "y", 1)
+        true_mz = (np.array([234.14954647, 365.19003647]),
+                   np.array([314.11587747, 445.15636747]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        # Site determining peaks with a single straddling constant modification
+        pep.consume_peptide("ASMSK", 1,
+                            np.array([3], dtype=np.uint32),
+                            np.array([15.9949146202], dtype=np.float32))
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
+                                                np.array([0, 1], dtype=np.uint32),
+                                                "b", 1)
+        true_mz = (np.array([239.0427475, 386.078152]), 
+                   np.array([159.07641647, 306.111821]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
+                                                np.array([0, 1], dtype=np.uint32),
+                                                "y", 1)
+        true_mz = (np.array([234.14954647, 381.184951]),
+                   np.array([314.11587747, 461.1512821]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+    def test_sit_determining_double(self):
+        pep = PyModifiedPeptide("STY", 79.966331)
+
+        # Site determining peaks with no interfering mods
+        pep.consume_peptide("PASSSMSSEFK", 2)
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0, 0, 1, 0], dtype=np.uint32),
+                                                np.array([0, 1, 0, 1, 0], dtype=np.uint32),
+                                                "b", 1)
+        true_mz = (np.array([336.09550747]), 
+                   np.array([256.12917647]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0, 0, 1, 0], dtype=np.uint32),
+                                                np.array([0, 1, 0, 1, 0], dtype=np.uint32),
+                                                "y", 1)
+        true_mz = (np.array([982.36345747]),                                          
+                   np.array([1062.32978847]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        # Site determining peaks with one interfering mods
+        pep.consume_peptide("PASSSMSSEFK", 2)
         calc_mz = pep.get_site_determining_ions(np.array([1, 0, 1, 0, 0], dtype=np.uint32),
                                                 np.array([0, 0, 1, 0, 1], dtype=np.uint32),
                                                 "b", 1)
-        true_mz = (np.array([336.09550747, 423.12753747, 590.12589847, 677.15792847]), 
-                   np.array([256.12917647, 343.16120647, 510.15956747, 597.19159747]))
+        true_mz = (np.array([336.09550747, 423.12753747, 590.12589847, 721.16638847, 808.19841847]),                                          
+                   np.array([256.12917647, 343.16120647, 510.15956747, 641.20005747, 728.23208747]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0, 1, 0, 0], dtype=np.uint32),
+                                                np.array([0, 0, 1, 0, 1], dtype=np.uint32),
+                                                "y", 1)
+        true_mz = (np.array([510.26054647, 597.29257647, 728.33306647, 895.33142747, 982.36345747]), 
+                   np.array([590.22687747, 677.25890747, 808.29939747, 975.29775847, 1062.32978847]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        # Site determining peaks with two interfering mods
+        pep.consume_peptide("PASSSMSSEFK", 2,
+                            np.array([6], dtype=np.uint32),
+                            np.array([15.9949146202], dtype=np.float32))
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0, 1, 0, 0], dtype=np.uint32),
+                                                np.array([0, 0, 1, 0, 1], dtype=np.uint32),
+                                                "b", 1)
+        true_mz = (np.array([336.09550747, 423.12753747, 590.12589847, 737.1613030902, 824.1933330902]),
+                   np.array([256.12917647, 343.16120647, 510.15956747, 657.1949720902, 744.2270020902]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0, 1, 0, 0], dtype=np.uint32),
+                                                np.array([0, 0, 1, 0, 1], dtype=np.uint32),
+                                                "y", 1)
+        true_mz = (np.array([510.26054647, 597.29257647, 744.3279810902, 911.32634209, 998.35837209]),  
+                   np.array([590.22687747, 677.25890747, 824.2943121, 991.29267309, 1078.324703]))
         for c, m in zip(calc_mz, true_mz):
             self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
 
