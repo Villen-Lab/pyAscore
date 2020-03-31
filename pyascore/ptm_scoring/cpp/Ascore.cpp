@@ -204,31 +204,39 @@ namespace ptmscoring {
         ScoreContainer & best_score = peptide_scores_.front();
         for ( ScoreContainer & competing_score : peptide_scores_ ) {
             size_t ndifferences = modified_peptide_ptr->getNumberOfMods() - std::inner_product(
-                best_score.signature.begin(), best_score.signature.end(), competing_score.signature.begin(), 0
+                best_score.signature.begin(), best_score.signature.end(), 
+                competing_score.signature.begin(), 0
             );
 
             if ( ndifferences != 1 ) continue;
 
-            size_t container_position = 0;
             size_t same_count = 0;
-            size_t competing_position = 0;
-            for (size_t ind = 0; ind < best_score.signature.size(); ind++) {
-                if (best_score.signature.at(ind) && competing_score.signature.at(ind)) {
+            size_t best_pos = 0;
+            size_t comp_pos = 0;
+            std::vector<size_t>::iterator best_it = best_score.signature.begin();
+            std::vector<size_t>::iterator comp_it = competing_score.signature.begin();
+            for (; best_it < best_score.signature.end(); best_it++, comp_it++) {
+                if (*best_it and *comp_it) {
                     same_count++;
-                } else if (best_score.signature.at(ind)){
-                    container_position = same_count;
-                } else if (competing_score.signature.at(ind)) {
-                    competing_position = ind;
+                } else if (*best_it and not *comp_it) {
+                    best_pos = same_count;
+                } else if (not *best_it and *comp_it) {
+                    comp_pos = same_count;
                 }
             }
 
-            AscoreContainer & cont = ascore_containers_.at(container_position);
-            if (cont.ascores.empty() || competing_score.weighted_score == cont.pep_scores.back() ) {
-
-                cont.competing_index.push_back( modified_peptide_ptr->getPosOfNthModifiable(competing_position) + 1 );
-                cont.pep_scores.push_back( competing_score.weighted_score );
-                cont.ascores.push_back( calculateAmbiguity(best_score, competing_score) );
-
+            AscoreContainer & cont = ascore_containers_.at(best_pos);
+            if (cont.ascores.empty() || 
+                competing_score.weighted_score == cont.pep_scores.back() ) {
+                cont.competing_index.push_back(
+                    modified_peptide_ptr->getPosOfNthModifiable(comp_pos) + 1 
+                );
+                cont.pep_scores.push_back( 
+                    competing_score.weighted_score 
+                );
+                cont.ascores.push_back( 
+                    calculateAmbiguity(best_score, competing_score) 
+                );
             }
         }   
     }
