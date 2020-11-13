@@ -26,5 +26,60 @@ If you would like to contribute, first fork the main repository, and then follow
 git clone https://github.com/YOUR-USERNAME/pyAscore.git
 cd pyAscore
 python setup.py build_ext --inplace
-python 
+python -m unittest 
+```
+### Usage
+
+The pyAscore package can be used straight from the command line as a module. 
+A full list of parameters is available by running with the `-h` flag.
+
+```
+$ python -m pyascore -h
+
+usage: pyAscore [-h] [--match_save] [--residues RESIDUES]
+                [--mod_mass MOD_MASS] [--mz_error MZ_ERROR]
+                [--mod_correction_tol MOD_CORRECTION_TOL]
+                [--zero_based ZERO_BASED] [--hit_depth HIT_DEPTH]
+                [--parameter_file PARAMETER_FILE]
+                [--ident_file_type IDENT_FILE_TYPE]
+                spec_file ident_file out_file
+
+The pyAscore module provides PTM localization analysis using a custom
+implementation of the Ascore algorithm. It employees pyteomics for efficient
+reading of spectra in mzML format and identifications in pepXML format. All
+scoring has been implemented in custom c++ code which is exposed to python via
+cython wrappers. Any PTM which be defined with a canonical amino acid and mass
+shift can be analyzed.
+
+positional arguments:
+  spec_file             MS Spectra file supplied as MzML
+  ident_file            Comet hits supplied as pepXML
+  out_file              Destination for Ascores
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --match_save
+  --residues RESIDUES   Residues which can be modified
+  --mod_mass MOD_MASS   Modification mass to match to identifications. This is
+                        often rounded by search engines so this argument
+                        should be considered the most accurate mass
+  --mz_error MZ_ERROR   Tolerance in mz for deciding whether a spectral peak
+                        matches to a theoretical peak.
+  --mod_correction_tol MOD_CORRECTION_TOL
+                        MZ tolerance for deciding whether a reported
+                        modification matches internal or user specified
+                        modifications. A wide tolerance can help overcome
+                        rounding. If more precission is needed, make sure to
+                        set this parameter and that your search engine
+                        provides for it.
+  --zero_based ZERO_BASED
+                        Mod positions are by default assumed to be 1 based
+  --hit_depth HIT_DEPTH
+                        Number of PSMS to take from each scan. Set to negative
+                        to always analyze all.
+  --parameter_file PARAMETER_FILE
+                        A file containing parameters. e.x. param = val
+  --ident_file_type IDENT_FILE_TYPE
+                        The type of file supplied for identifications. One of
+                        pepXML, percolatorTXT. Default: pepXML
 ```
