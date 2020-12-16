@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <cmath>
+#include <ctype.h>
 #include "Types.h"
 #include "ModifiedPeptide.h"
 
@@ -22,15 +23,26 @@ namespace ptmscoring {
     void ModifiedPeptide::initializeResidues () {
 
         // Dealloc if already full
-        residues.clear(); 
+        residues.clear();
+        neutral_losses.clear();
 
         // Iterate through characters of peptide
-        for (char res : peptide) {
+        for (char const& res : peptide) {
             residues.push_back({ StandardResidues.at(res) });
+
+            // If character is in neutral loss group, add neutral loss
+            neutral_losses.push_back({0.});
+            if (nl_groups.count(res)) {
+                neutral_losses.back().front() = nl_groups.at(res);
+            } 
 
             // If character is in mod group, add a modified residue
             if (mod_group.find(res) != std::string::npos) {
                 residues.back().push_back( StandardResidues.at(res) + mod_mass );
+                neutral_losses.back().push_back(0.);
+                if (nl_groups.count(std::tolower(res))) {
+                    neutral_losses.back().back() = nl_groups.at(std::tolower(res));
+                } 
             }
 
         }
@@ -46,12 +58,18 @@ namespace ptmscoring {
                           residues[aux_mod_pos[ind]].begin(),
                           bind2nd(std::plus<float>(), aux_mod_mass[ind]));
             } else {
-                residues[aux_mod_pos[ind] - 1].front() += aux_mod_mass[ind];
+                size_t pep_ind = aux_mod_pos[ind] - 1;
+                residues[pep_ind].front() += aux_mod_mass[ind];
                 // A residue with a non n-terminus aux mod cannot have a variable mod
-                residues[aux_mod_pos[ind] - 1].resize(1);
+                residues[pep_ind].resize(1);
+                
+                char res = peptide.at(aux_mod_pos[ind] - 1);
+                if (nl_groups.count(std::tolower(res))) {
+                    neutral_losses[pep_ind].front() = nl_groups.at(std::tolower(res));
+                    neutral_losses[pep_ind].resize(1);
+                }
             }
         }
-
     }
 
     void ModifiedPeptide::initializeFragments () {
@@ -72,6 +90,12 @@ namespace ptmscoring {
         std::sort(fragments.begin(), fragments.end());
     }
 
+    void ModifiedPeptide::addNeutralLoss(std::string group, float mass) {\
+        for (char const& aa : group) {
+           nl_groups[aa] = mass;
+        }
+    }
+
     void ModifiedPeptide::consumePeptide (std::string peptide, size_t n_of_mod,
                                           const unsigned int * aux_mod_pos,
                                           const float * aux_mod_mass,
@@ -88,7 +112,6 @@ namespace ptmscoring {
         initializeResidues();
         applyAuxMods();
         initializeFragments();
-
     }
 
     void ModifiedPeptide::consumePeak (float mz, size_t rank) {
@@ -207,30 +230,41 @@ namespace ptmscoring {
     std::vector<std::vector<float>> ModifiedPeptide::getSiteDeterminingIons (const std::vector<size_t> & signature_1,
                                                                              const std::vector<size_t> & signature_2,
                                                                              char fragment_type, size_t charge_state) const {
-        // Why is this so convoluted? 
-        // Theoretically a user could give a mod that gave one amino acid the same mass as multiple.
-        // S[Mass of A] = SA
-        ModifiedPeptide::FragmentGraph graph_1 = getFragmentGraph(fragment_type, charge_state);
-        ModifiedPeptide::FragmentGraph graph_2 = getFragmentGraph(fragment_type, charge_state);
-        graph_1.setSignature(signature_1), graph_2.setSignature(signature_2);
 
-        std::vector<std::vector<float>> ion_lists;
-        ion_lists.resize(2);
-        while (!graph_1.isFragmentEnd() and !graph_2.isFragmentEnd()) {
-            if ( std::abs(graph_1.getFragmentMZ() - graph_2.getFragmentMZ()) < mz_error ) { // Site determining ions should be outside tolerance
-                graph_1.incrFragment();
-                graph_2.incrFragment();
-            } else if (graph_1.getFragmentMZ() > graph_2.getFragmentMZ()) {
-                ion_lists[1].push_back(graph_2.getFragmentMZ());
-                graph_2.incrFragment();
-            } else {
-                ion_lists[0].push_back(graph_1.getFragmentMZ());
-                graph_1.incrFragment();
-            }
+        std::vector<std::tuple<float, size_t>> fragments;
+
+        // Gather fragments from the first signature
+        ModifiedPeptide::FragmentGraph graph_1 = getFragmentGraph(fragment_type, charge_state);
+        graph_1.setSignature(signature_1);
+        for(; !graph_1.isFragmentEnd();
+               graph_1.incrFragment()) {
+            fragments.push_back( {graph_1.getFragmentMZ(), 0} );
         }
 
-        for (;!graph_1.isFragmentEnd(); graph_1.incrFragment()) {ion_lists[0].push_back(graph_1.getFragmentMZ());}
-        for (;!graph_2.isFragmentEnd(); graph_2.incrFragment()) {ion_lists[1].push_back(graph_2.getFragmentMZ());}
+        // Gather fragments from the second signature
+        ModifiedPeptide::FragmentGraph graph_2 = getFragmentGraph(fragment_type, charge_state);
+        graph_2.setSignature(signature_2);
+        for(; !graph_2.isFragmentEnd();
+               graph_2.incrFragment()) {
+            fragments.push_back( {graph_2.getFragmentMZ(), 1} );
+        }
+
+        // Only store peaks that are different
+        std::sort(fragments.begin(), fragments.end());
+        std::vector<std::vector<float>> ion_lists(2);
+        for (size_t frag_ind = 0; frag_ind < fragments.size(); frag_ind++) {
+            bool keep = true;
+            if ( frag_ind > 0 ) {
+                keep = keep && std::abs(std::get<0>(fragments[frag_ind]) - std::get<0>(fragments[frag_ind - 1])) > mz_error;
+            }
+            if ( frag_ind + 1 < fragments.size() ) {
+                keep = keep && std::abs(std::get<0>(fragments[frag_ind]) - std::get<0>(fragments[frag_ind + 1])) > mz_error;
+            }
+            if ( keep ) {
+                ion_lists[ std::get<1>(fragments[frag_ind]) ].push_back( std::get<0>(fragments[frag_ind]) );
+            }
+
+        }
 
         return ion_lists;
     }
@@ -307,6 +341,22 @@ namespace ptmscoring {
         running_sequence.push_back( modified_peptide->peptide[residue_ind] );
     }
 
+    void ModifiedPeptide::FragmentGraph::updateLosses () {
+        size_t mod_state = 0;
+        if ( signature.count(residue_ind) ) {
+            mod_state = signature.at(residue_ind);
+        }
+
+        if (modified_peptide->neutral_losses[residue_ind][mod_state] != 0.) {
+            neutral_loss_stack.push_back( 
+                modified_peptide->neutral_losses[residue_ind][mod_state] 
+            );
+            neutral_loss_iter.reset(neutral_loss_stack, 2);
+        }
+        running_loss_count.push_back( neutral_loss_stack.size() );
+        neutral_loss_iter.reset(); // does nothing if already reset 
+    }
+
     void ModifiedPeptide::FragmentGraph::resetIterator () {
         // Intialize running state trackers
         // Makes sure enough space is available and
@@ -317,6 +367,11 @@ namespace ptmscoring {
 
         running_sequence.reserve(peptide_size);
         running_sequence.clear();
+
+        running_loss_count.reserve(peptide_size);
+        running_loss_count.clear();
+        neutral_loss_stack.clear();
+        neutral_loss_iter.reset(neutral_loss_stack, 2);
 
         modifiable.clear();
         signature.clear();
@@ -337,6 +392,7 @@ namespace ptmscoring {
         // Reset to first step
         resetResidueInd();
         calculateFragment();
+        updateLosses();
     }
 
     void ModifiedPeptide::FragmentGraph::incrSignature () {
@@ -370,7 +426,15 @@ namespace ptmscoring {
             setResidueInd(final_index);
             running_sum.resize(getResidueDistance());
             running_sequence.resize(getResidueDistance());
+
+            running_loss_count.resize(getResidueDistance());
+            if ( !running_loss_count.empty() ) {
+                neutral_loss_stack.resize(running_loss_count.back());
+            } else { neutral_loss_stack.clear(); }
+            neutral_loss_iter.reset(neutral_loss_stack, 2);
+
             calculateFragment();
+            updateLosses();
        }
     }
 
@@ -382,13 +446,24 @@ namespace ptmscoring {
         // Don't increment if fragment end or signature end
         if (isSignatureEnd() or isFragmentEnd()) {throw 40;}
 
-        // Otherwise, increment the residue ind
-        incrResidueInd();
-        if (!isFragmentEnd()) {calculateFragment();};
+        // Only increment residue if more losses are not available
+        if ( neutral_loss_iter.hasNext() ) {
+            neutral_loss_iter.next();
+        } else {
+            incrResidueInd();
+            if (!isFragmentEnd()) {
+                calculateFragment();
+                updateLosses();
+            }
+        }
     }
 
     bool ModifiedPeptide::FragmentGraph::isFragmentEnd () {
-        return isResidueEnd();
+        return isResidueEnd() && !neutral_loss_iter.hasNext();
+    }
+
+    bool ModifiedPeptide::FragmentGraph::isLoss () {
+        return neutral_loss_iter.getPos() > 0;
     }
 
     void ModifiedPeptide::FragmentGraph::setSignature (std::vector<size_t> new_signature) {
@@ -401,6 +476,9 @@ namespace ptmscoring {
         // Reset fragment state
         running_sum.clear();
         running_sequence.clear();
+        running_loss_count.clear();
+        neutral_loss_stack.clear();
+        neutral_loss_iter.reset(neutral_loss_stack, 2);
 
         auto sig_it = new_signature.begin();
         auto mod_it = modifiable.begin();
@@ -411,6 +489,7 @@ namespace ptmscoring {
         // Reset to first step
         resetResidueInd();
         calculateFragment();
+        updateLosses();
     }
 
     std::vector<size_t> ModifiedPeptide::FragmentGraph::getSignature () {
@@ -429,7 +508,7 @@ namespace ptmscoring {
 
     float ModifiedPeptide::FragmentGraph::getFragmentMZ () {
 
-        double fragment_mz = running_sum.back();
+        double fragment_mz = running_sum.back() - neutral_loss_iter.getSum();
         if (fragment_type == 'y') {
             fragment_mz += 18.01528;
         }

@@ -186,6 +186,34 @@ class TestPyModifiedPeptide(unittest.TestCase):
             y_graph.incr_signature()
             test(y_graph, c, np.array([146.11024, 247.15792, 407.1885734, 536.231164, 683.266569, 850.26493, 921.30204]))
 
+        # Add a neutral loss:
+        pep.add_neutral_loss("ST", 18.01528)
+        pep.consume_peptide("ASMTK", 1)
+        max_charge = 3
+        for c in range(max_charge + 1):
+            b_graph = pep.get_fragment_graph("b", c)
+            # First signature all the way through
+            test(b_graph, c, np.array([71.03711, 238.035471, 369.075961, 470.123641, 452.108361, 598.218601, 580.203321])) 
+            # Second signature, picking up from common node
+            b_graph.incr_signature()
+            test(b_graph, c, np.array([158.06914, 140.05386, 289.10963, 271.09435, 470.123641, 452.108361, 598.218601, 580.203321]))
+            # Second signature, from beginning
+            b_graph.reset_iterator()
+            b_graph.incr_signature()
+            test(b_graph, c, np.array([71.03711, 158.06914, 140.05386, 289.10963, 271.09435, 470.123641, 452.108361, 598.218601, 580.203321]))
+
+            y_graph = pep.get_fragment_graph("y", c)
+            # First signature all the way through
+            test(y_graph, c, np.array([146.11024, 327.124251, 458.164741, 545.196771, 527.181491, 616.233881, 598.218601]))
+            self.assertTrue(y_graph.is_fragment_end())
+            # Second signature, picking up from common node
+            y_graph.incr_signature()
+            test(y_graph, c, np.array([247.15792, 229.14264, 378.19841, 360.18313, 545.196771, 527.181491, 616.233881, 598.218601]))
+            # Second signature, from beginning
+            y_graph.reset_iterator()
+            y_graph.incr_signature()
+            test(y_graph, c, np.array([146.11024, 247.15792, 229.14264, 378.19841, 360.18313, 545.196771, 527.181491, 616.233881, 598.218601]))
+
     def test_site_determining_single(self):
         pep = PyModifiedPeptide("STY", 79.966331)
 
