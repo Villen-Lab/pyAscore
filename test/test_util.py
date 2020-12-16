@@ -3,7 +3,7 @@ import numpy as np
 from scipy.special import logsumexp
 from scipy.special import binom as binom_coef
 from scipy.stats import binom as binom_dist
-from pyascore import PyLogMath, PyBinomialDist
+from pyascore import PyLogMath, PyBinomialDist, PyPowerSetSum
 
 class TestLogMath(unittest.TestCase):
     lmath = PyLogMath()
@@ -64,4 +64,33 @@ class TestBinomDist(unittest.TestCase):
                     self.assertTrue(np.isclose(d.log10_pvalue(k, n),
                                                np.log10(np.exp(scipy_pvalue)),
                                                rtol=0, atol=5e-5))
- 
+
+class TestPowerSetSum(unittest.TestCase):
+    def test_empty_set(self):
+        pss = PyPowerSetSum()
+
+        self.assertFalse( pss.has_next() )
+        self.assertTrue( pss.get_sum() == 0.)
+
+    def test_simple_sums(self):
+        target = np.array([1., 2., 3.], dtype=np.float32)
+        pss = PyPowerSetSum(target, 2)
+
+        self.assertTrue( pss.has_next() )
+        self.assertTrue( pss.get_sum() == 0.)
+
+        true_sums = iter([1., 2., 3., 4., 5.])
+        while pss.has_next():
+            pss.next()
+            self.assertTrue( pss.get_sum() == next(true_sums) )
+
+        new_target = np.array([4., 5., 6.], dtype=np.float32)
+        pss.reset(new_target, 2)
+
+        self.assertTrue( pss.has_next() )
+        self.assertTrue( pss.get_sum() == 0.)
+
+        true_sums = iter([4., 5., 6., 9., 10, 11.])
+        while pss.has_next():
+            pss.next()
+            self.assertTrue( pss.get_sum() == next(true_sums) )

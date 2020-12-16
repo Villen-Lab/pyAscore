@@ -1,7 +1,7 @@
 # distutils: language = c++
 import cython
-
-from Util cimport LogMath, BinomialDist
+from libcpp.vector cimport vector
+from Util cimport LogMath, BinomialDist, PowerSetSum
 
 cdef class PyLogMath:
     """
@@ -51,7 +51,7 @@ cdef class PyBinomialDist:
 
     The caching of previously calculated distributional statistics leads to substantial
     speedups in scoring. This also means that a new object must be created anytime a new
-    probability is desired. However, since most analyses use a single probability for a
+    probability is desired. However, since most analyses use a single probability aor a
     whole file, this is no problem.
 
     Parameters
@@ -97,3 +97,38 @@ cdef class PyBinomialDist:
         """
         return self.binomial_dist_ptr[0].log10_pvalue(successes, trials)
 
+cdef class PyPowerSetSum:
+    cdef PowerSetSum * power_set_sum_ptr
+
+    def __cinit__(self, np.ndarray[float, ndim=1, mode="c"] target = None, int max_depth=0):
+        cdef vector[float] target_vector
+        cdef size_t ind
+
+        if target is None:
+            self.power_set_sum_ptr = new PowerSetSum()
+        else:
+            for ind in range(<size_t> target.size):
+                target_vector.push_back(<float> target[ind])
+
+            self.power_set_sum_ptr = new PowerSetSum(target_vector, max_depth)
+
+    def reset(self, np.ndarray[float, ndim=1, mode="c"] target = None, int max_depth=0):
+        cdef vector[float] target_vector
+        cdef size_t ind
+
+        if target is None:
+            self.power_set_sum_ptr[0].reset()
+        else:
+            for ind in range(<size_t> target.size):
+                target_vector.push_back(<float> target[ind])
+
+            self.power_set_sum_ptr[0].reset(target_vector, max_depth)
+
+    def has_next(self):
+        return self.power_set_sum_ptr[0].hasNext()
+
+    def next(self):
+        self.power_set_sum_ptr[0].next()
+
+    def get_sum(self):
+        return self.power_set_sum_ptr[0].getSum()

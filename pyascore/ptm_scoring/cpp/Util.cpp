@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <cmath>
 #include "Util.h"
 
@@ -81,4 +82,80 @@ namespace ptmscoring {
         return std::log10(std::exp(1)) * log_pvalue(successes, trials);
     }
 
+    /////////////////////////////////
+    // PowerSetSum Implementations //
+    /////////////////////////////////
+
+    PowerSetSum::PowerSetSum() {
+       this->max_depth = 0;
+       this->pos = 0;
+       this->sums.push_back(0.);
+    }
+
+    PowerSetSum::PowerSetSum(const std::vector<float>& target, size_t max_depth) {
+        reset(target, max_depth);
+    }
+
+    void PowerSetSum::initializeSums(const std::vector<float>& target, size_t start, size_t depth) {
+       float base_val = sums.back();
+       for (; start < target.size(); start++) {
+           sums.push_back(base_val + target.at(start));
+           if (start < target.size() - 1 && depth < max_depth - 1) {       
+               initializeSums(target, start + 1, depth + 1);
+           }
+       }
+    }
+
+    void PowerSetSum::deduplicateSums() {
+        std::sort(sums.begin(), sums.end());
+
+        auto front_iter = sums.begin();
+        auto back_iter = sums.begin();
+        size_t final_size = 1;
+        for (front_iter++; front_iter != sums.end(); front_iter++) {
+           if (*front_iter != *back_iter) {
+               final_size++;
+               back_iter++;
+               *back_iter = *front_iter;
+           } 
+        }
+        sums.resize(final_size);
+    }
+           
+    void PowerSetSum::reset() {
+        this->pos = 0;
+    }
+
+    void PowerSetSum::reset(const std::vector<float>& target, size_t max_depth) {
+       if (target.size() < max_depth) {
+           this->max_depth = target.size();
+       } else {
+           this->max_depth = max_depth;
+       }
+
+       sums.clear();
+       this->pos = 0;
+       this->sums.push_back(0.);
+       initializeSums(target, 0, 0);
+       deduplicateSums();    
+    }
+
+    size_t PowerSetSum::getPos() {
+        return pos;
+    }
+
+    bool PowerSetSum::hasNext() {
+        return pos < sums.size() - 1;
+    }
+
+    void PowerSetSum::next() {
+        if (!hasNext()) {
+             throw 40;
+        }
+        pos++;
+    }
+
+    float PowerSetSum::getSum() {
+        return sums.at(pos);
+    }
 }
