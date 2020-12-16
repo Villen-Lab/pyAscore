@@ -23,6 +23,7 @@ namespace ptmscoring {
             std::vector<size_t> counts;
             std::vector<float> scores;
             float weighted_score = -1;
+            size_t total_fragments;
         };
         std::vector<ScoreContainer> peptide_scores_;
 

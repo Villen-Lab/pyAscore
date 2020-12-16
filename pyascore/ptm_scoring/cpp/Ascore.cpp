@@ -57,11 +57,14 @@ namespace ptmscoring {
         std::unordered_map<long, ScoreContainer> score_cache;
         for (char fragment_type : {'b', 'y'}){
             // Initialize count stack with a zero count vector
-            std::unordered_map<size_t, std::vector<size_t>> count_cache; 
+            std::unordered_map<size_t, std::vector<size_t>> count_cache;
+            std::unordered_map<size_t, size_t> nfrag_cache;
             count_cache[1] = std::vector<size_t>(binned_spectra_ptr->getNTop());
+            nfrag_cache[1] = 0;
 
             // Iterate through signatures and accumulate scores
             std::vector<size_t> cur_count;
+            size_t cur_nfrag;
             ModifiedPeptide::FragmentGraph graph = modified_peptide_ptr->getFragmentGraph(
                 fragment_type, 1
             );
@@ -69,10 +72,12 @@ namespace ptmscoring {
 
                 // Copy last signature state
                 cur_count = count_cache[graph.getFragmentSize()];
+                cur_nfrag = nfrag_cache[graph.getFragmentSize()];
 
                 for (; !graph.isFragmentEnd(); graph.incrFragment()){
-                    if ( graph.isPositionModified() ) { 
-                        count_cache[graph.getFragmentSize()] = cur_count; 
+                    if ( graph.isPositionModified() && !graph.isLoss() ) { 
+                        count_cache[graph.getFragmentSize()] = cur_count;
+                        nfrag_cache[graph.getFragmentSize()] = cur_nfrag;
                     }
                     float fragment_mz = graph.getFragmentMZ();
                     if ( modified_peptide_ptr->hasMatch(fragment_mz) ){
@@ -81,6 +86,7 @@ namespace ptmscoring {
                         );
                         cur_count[std::get<1>(matched_peak)]++;
                     }
+                    cur_nfrag++;
                 }
 
                 // Write signature info
@@ -90,12 +96,13 @@ namespace ptmscoring {
                 }
 
                 if (!score_cache.count(index)) {
-                    score_cache[index] = { graph.getSignature(), cur_count, {} , -1};
+                    score_cache[index] = { graph.getSignature(), cur_count, {} , -1, cur_nfrag};
                 } else {
                     ScoreContainer & score_ref = score_cache[index];
                     for (size_t ind = 0; ind < cur_count.size(); ind++) {
                         score_ref.counts[ind] += cur_count[ind];
                     }
+                    score_ref.total_fragments += cur_nfrag;
                 }
             }
         }
@@ -111,13 +118,13 @@ namespace ptmscoring {
     }
 
     void Ascore::calculateFullScores () {
-        size_t peptide_size = modified_peptide_ptr->getBasePeptide().size();
+        //size_t peptide_size = modified_peptide_ptr->getBasePeptide().size();
         for ( ScoreContainer & score_cont : peptide_scores_ ) {
             for (size_t nions = 1; nions <= score_cont.counts.size(); nions++) {
                 score_cont.scores.push_back(
                     std::abs(
                         -10 * scoring_distributions.at(nions - 1).log10_pvalue(
-                            score_cont.counts.at(nions - 1), 2 * peptide_size
+                            score_cont.counts.at(nions - 1), score_cont.total_fragments
                         )
                     )
                 );
