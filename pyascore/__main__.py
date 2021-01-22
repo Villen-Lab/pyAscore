@@ -40,10 +40,17 @@ def build_identification_parser(arg_ref):
 
 
 def build_ascore(arg_ref):
-    return PyAscore(bin_size=100., n_top=10,
-                    mod_group=arg_ref.residues,
-                    mod_mass=arg_ref.mod_mass,
-                    mz_error=arg_ref.mz_error)
+    ascore = PyAscore(bin_size=100., n_top=10,
+                      mod_group=arg_ref.residues,
+                      mod_mass=arg_ref.mod_mass,
+                      mz_error=arg_ref.mz_error)
+
+    if arg_ref.neutral_loss_masses and arg_ref.neutral_loss_masses:
+        nl_groups = arg_ref.neutral_loss_groups.split(";")
+        nl_masses = [float(m) for m in arg_ref.neutral_loss_masses.split(";")]
+        [ascore.add_neutral_loss(g, m) for g,m in zip(nl_groups, nl_masses)]
+ 
+    return ascore
 
 def process_mods(arg_ref, positions, masses):
     variable_mod_count = 0
@@ -100,6 +107,15 @@ def main():
                              " engine provides for it.")
     parser.add_argument("--zero_based", type=bool, default=False,
                         help="Mod positions are by default assumed to be 1 based")
+    parser.add_argument("--neutral_loss_groups", type=str, default="",
+                        help="Comma separated clusters of amino acids"
+                             " which are expected to have a neutral loss."
+                             " To specify that the modified versions of the amino acids"
+                             " should have the neutral loss, use lower case letters."
+                             " e.g. 'st' vs 'ST'")
+    parser.add_argument("--neutral_loss_masses", type=str, default="",
+                        help="Mass of the neutral losses specified with neutral_loss_groups."
+                             "Should have one mass per group.")
     parser.add_argument("--hit_depth", type=int, default=1,
                         help="Number of PSMS to take from each scan."
                            " Set to negative to always analyze all.")

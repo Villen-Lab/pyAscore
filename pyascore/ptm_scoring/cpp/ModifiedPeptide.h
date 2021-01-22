@@ -6,6 +6,7 @@
 #include <tuple>
 #include <unordered_map>
 #include "Types.h"
+#include "Util.h"
 
 namespace ptmscoring {
 
@@ -14,12 +15,15 @@ namespace ptmscoring {
         float mod_mass;
         float mz_error;
 
+        std::unordered_map<char, float> nl_groups;
+
         std::string peptide;
         size_t n_of_mod;
         std::vector<unsigned int> aux_mod_pos;
         std::vector<float> aux_mod_mass;
 
         std::vector<std::vector<float>> residues;
+        std::vector<std::vector<float>> neutral_losses;
         std::vector<float> fragments;
         std::unordered_map<float, std::tuple<float, size_t>> fragment_scores;
 
@@ -29,6 +33,8 @@ namespace ptmscoring {
         public:
             ModifiedPeptide(std::string, float, float);
             ~ModifiedPeptide();
+
+            void addNeutralLoss(std::string, float);
 
             void consumePeptide(std::string, size_t, 
                                 const unsigned int * = NULL, 
@@ -57,7 +63,6 @@ namespace ptmscoring {
     };
 
     class ModifiedPeptide::FragmentGraph {
-        // Information that is abstracted away from user
         const ModifiedPeptide * modified_peptide;
         size_t residue_ind;
         void resetResidueInd();
@@ -66,7 +71,6 @@ namespace ptmscoring {
         bool isResidueEnd();
         size_t getResidueDistance();
 
-        // Information made public
         char fragment_type;
         size_t charge_state;
 
@@ -76,7 +80,11 @@ namespace ptmscoring {
 
         std::vector<float> running_sum;
         std::string running_sequence;
+        std::vector<size_t> running_loss_count;
+        std::vector<float> neutral_loss_stack;
+        PowerSetSum neutral_loss_iter;
         void calculateFragment();
+        void updateLosses();
         public:
             FragmentGraph(const ModifiedPeptide *, char, size_t);
             ~FragmentGraph();
@@ -89,6 +97,7 @@ namespace ptmscoring {
             bool isSignatureEnd();
             void incrFragment();
             bool isFragmentEnd();
+            bool isLoss();
 
             void setSignature(std::vector<size_t>);
             std::vector<size_t> getSignature();

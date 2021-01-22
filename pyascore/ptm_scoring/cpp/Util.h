@@ -2,6 +2,7 @@
 #define UTIL_H
 
 #include <tuple>
+#include <vector>
 #include <unordered_map>
 
 namespace ptmscoring {
@@ -23,6 +24,24 @@ namespace ptmscoring {
             float log_pvalue(size_t, size_t);
             float log10_pvalue(size_t, size_t);
             void initialize_cache(size_t, float);
+    };
+
+    class PowerSetSum {
+       size_t max_depth;
+       size_t pos;
+       std::vector<float> sums;
+
+       void initializeSums(const std::vector<float>&, size_t, size_t);
+       void deduplicateSums();
+       public:
+           PowerSetSum();
+           PowerSetSum(const std::vector<float>&, size_t);
+           void reset();
+           void reset(const std::vector<float>&, size_t);
+           size_t getPos();
+           bool hasNext();
+           void next();
+           float getSum();
     };
 }
 

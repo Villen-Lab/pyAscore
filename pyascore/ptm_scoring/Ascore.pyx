@@ -59,13 +59,18 @@ cdef class PyAscore:
                         str mod_group, float mod_mass,
                         float mz_error=.5):
         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
-        self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), mod_mass, mz_error)
+        self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), 
+                                                        mod_mass, 
+                                                        mz_error)
         self.ascore_ptr = new Ascore()
 
     def __dealloc__(self):
         del self.binned_spectra_ptr
         del self.modified_peptide_ptr
         del self.ascore_ptr
+
+    def add_neutral_loss(self, str group, float mass):
+        self.modified_peptide_ptr[0].addNeutralLoss(group.encode("utf8"), mass)
 
     @cython.boundscheck(False)
     @cython.wraparound(False)

@@ -39,6 +39,9 @@ cdef class PyModifiedPeptide:
     def __dealloc__(self):
         del self.modified_peptide_ptr
 
+    def add_neutral_loss(self, str group, float mass):
+        self.modified_peptide_ptr[0].addNeutralLoss(group.encode("utf8"), mass)
+
     @cython.boundscheck(False)
     @cython.wraparound(False)
     def consume_peptide(self, str peptide, size_t n_of_mod, 
