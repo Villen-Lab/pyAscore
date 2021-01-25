@@ -190,9 +190,9 @@ namespace ptmscoring {
                     std::get<1>(modified_peptide_ptr->getMatch(mz)) <= max_score_depth){
                     ion_counts[1]++;
                 }
-            }   
+            }
         }
-        
+
         std::vector<float> scores(2);
         for (size_t ind : {0, 1}) {
             scores[ind] = std::abs(
@@ -245,6 +245,7 @@ namespace ptmscoring {
                     calculateAmbiguity(best_score, competing_score) 
                 );
             }
+
         }   
     }
 

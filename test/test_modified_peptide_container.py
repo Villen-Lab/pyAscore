@@ -73,7 +73,7 @@ class TestPyModifiedPeptide(unittest.TestCase):
         b_graph = pep.get_fragment_graph("b", 1)
         b_graph.set_signature(np.array([0, 1, 1, 0, 0], dtype=np.uint32))
         true_b_masses = [97.05276, 168.08987, 255.1219, 422.120261, 589.118622, 676.150652, 
-                         763.182682, 892.225272, 1039.293682, 1167.388642]
+                         763.182682, 892.225272, 1039.293682]
         for m in true_b_masses:
             m = (m + 1.00727647)
             self.assertTrue(
@@ -85,7 +85,7 @@ class TestPyModifiedPeptide(unittest.TestCase):
         y_graph = pep.get_fragment_graph("y", 1)
         y_graph.set_signature(np.array([0, 1, 1, 0, 0], dtype=np.uint32))
         true_y_masses = [146.11024, 293.17865, 422.22124, 509.25327, 596.2853, 
-                         763.283661, 930.282022, 1017.314052, 1088.351162, 1185.403922]
+                         763.283661, 930.282022, 1017.314052, 1088.351162]
         for m in true_y_masses:
             m = (m + 1.00727647)
             self.assertTrue(
@@ -110,81 +110,87 @@ class TestPyModifiedPeptide(unittest.TestCase):
         for c in range(max_charge + 1):
             b_graph = pep.get_fragment_graph("b", c)
             # First signature all the way through
-            test(b_graph, c, np.array([71.03711 , 238.035471, 369.075961, 470.123641, 598.218601]))
+            test(b_graph, c, np.array([71.03711 , 238.035471, 369.075961, 470.123641]))
             self.assertTrue(b_graph.is_fragment_end())
             # Second signature, picking up from common node
             b_graph.incr_signature()
-            test(b_graph, c, np.array([158.06914 , 289.10963, 470.123641, 598.218601]))
+            test(b_graph, c, np.array([158.06914 , 289.10963, 470.123641]))
             # Second signature, from beginning
             b_graph.reset_iterator()
             b_graph.incr_signature()
-            test(b_graph, c, np.array([71.03711, 158.06914 , 289.10963, 470.123641, 598.218601]))
+            test(b_graph, c, np.array([71.03711, 158.06914 , 289.10963, 470.123641]))
 
             y_graph = pep.get_fragment_graph("y", c)
             # First signature all the way through
-            test(y_graph, c, np.array([146.11024, 327.124251, 458.164741, 545.196771, 616.233881]))
+            test(y_graph, c, np.array([146.11024, 327.124251, 458.164741, 545.196771]))
             self.assertTrue(y_graph.is_fragment_end())
             # Second signature, picking up from common node
             y_graph.incr_signature()          
-            test(y_graph, c, np.array([247.15792, 378.19841, 545.196771, 616.233881]))
+            test(y_graph, c, np.array([247.15792, 378.19841, 545.196771]))
             # Second signature, from beginning
             y_graph.reset_iterator()
             y_graph.incr_signature()
-            test(y_graph, c, np.array([146.11024, 247.15792, 378.19841, 545.196771, 616.233881]))
+            test(y_graph, c, np.array([146.11024, 247.15792, 378.19841, 545.196771]))
 
         pep.consume_peptide("ASMTK", 1, np.array([0, 3]).astype(np.uint32), np.array([42.010565, 15.994915]).astype(np.float32))
         max_charge = 3
         for c in range(max_charge + 1):
             b_graph = pep.get_fragment_graph("b", c)
             # First signature all the way through
-            test(b_graph, c, np.array([113.047675, 280.046036, 427.081441, 528.129121, 656.224081]))
+            test(b_graph, c, np.array([113.047675, 280.046036, 427.081441, 528.129121]))
             self.assertTrue(b_graph.is_fragment_end())
             # Second signature, picking up from common node
             b_graph.incr_signature()
-            test(b_graph, c, np.array([200.079705, 347.11510999999996, 528.1291209999999, 656.224081]))
+            test(b_graph, c, np.array([200.079705, 347.1151099, 528.12912099]))
             # Second signature, from beginning
             b_graph.reset_iterator()
             b_graph.incr_signature()
-            test(b_graph, c, np.array([113.047675, 200.079705, 347.11510999999996, 528.1291209999999, 656.224081]))
+            test(b_graph, c, np.array([113.047675, 200.079705, 347.11510999, 528.12912099]))
 
             y_graph = pep.get_fragment_graph("y", c)
             # First signature all the way through
-            test(y_graph, c, np.array([146.11024, 327.124251, 474.159656, 561.191686, 674.239361]))
+            test(y_graph, c, np.array([146.11024, 327.124251, 474.159656, 561.191686]))
             self.assertTrue(y_graph.is_fragment_end())
             # Second signature, picking up from common node
             y_graph.incr_signature()
-            test(y_graph, c, np.array([247.15792, 394.193325, 561.191686, 674.239361]))
+            test(y_graph, c, np.array([247.15792, 394.193325, 561.191686]))
             # Second signature, from beginning
             y_graph.reset_iterator()
             y_graph.incr_signature()
-            test(y_graph, c, np.array([146.11024, 247.15792, 394.193325, 561.191686, 674.239361]))
+            test(y_graph, c, np.array([146.11024, 247.15792, 394.193325, 561.191686]))
 
         pep.consume_peptide("ASMECTK", 1, np.array([3, 5]).astype(np.uint32), np.array([15.994915, 57.021464]).astype(np.float32))
         max_charge = 3
         for c in range(max_charge + 1):
             b_graph = pep.get_fragment_graph("b", c)
             # First signature all the way through
-            test(b_graph, c, np.array([71.03711, 238.035471, 385.070876, 514.113466, 674.14412, 775.1918, 903.28676]))
+            test(b_graph, c, np.array([71.03711, 238.035471, 385.070876, 
+                                       514.113466, 674.14412, 775.1918]))
             self.assertTrue(b_graph.is_fragment_end())
             # Second signature, picking up from common node
             b_graph.incr_signature()
-            test(b_graph, c, np.array([158.06914, 305.104545, 434.147135, 594.177789, 775.1918, 903.28676]))
+            test(b_graph, c, np.array([158.06914, 305.104545, 434.147135, 
+                                       594.177789, 775.1918]))
             # Second signature, from beginning
             b_graph.reset_iterator()
             b_graph.incr_signature()
-            test(b_graph, c, np.array([71.03711, 158.06914, 305.104545, 434.147135, 594.177789, 775.1918, 903.28676]))
+            test(b_graph, c, np.array([71.03711, 158.06914, 305.104545, 
+                                       434.147135, 594.177789, 775.1918]))
 
             y_graph = pep.get_fragment_graph("y", c)
             # First signature all the way through
-            test(y_graph, c, np.array([146.11024, 327.124251, 487.154905, 616.197495, 763.2329, 850.26493, 921.30204]))
+            test(y_graph, c, np.array([146.11024, 327.124251, 487.154905, 
+                                       616.197495, 763.2329, 850.26493]))
             self.assertTrue(y_graph.is_fragment_end())
             # Second signature, picking up from common node
             y_graph.incr_signature()
-            test(y_graph, c, np.array([247.15792, 407.1885734, 536.231164, 683.266569, 850.26493, 921.30204]))
+            test(y_graph, c, np.array([247.15792, 407.1885734, 536.231164, 
+                                       683.266569, 850.26493]))
             # Second signature, from beginning
             y_graph.reset_iterator()
             y_graph.incr_signature()
-            test(y_graph, c, np.array([146.11024, 247.15792, 407.1885734, 536.231164, 683.266569, 850.26493, 921.30204]))
+            test(y_graph, c, np.array([146.11024, 247.15792, 407.1885734, 
+                                       536.231164, 683.266569]))
 
         # Add a neutral loss:
         pep.add_neutral_loss("ST", 18.01528)
@@ -193,26 +199,31 @@ class TestPyModifiedPeptide(unittest.TestCase):
         for c in range(max_charge + 1):
             b_graph = pep.get_fragment_graph("b", c)
             # First signature all the way through
-            test(b_graph, c, np.array([71.03711, 238.035471, 369.075961, 470.123641, 452.108361, 598.218601, 580.203321])) 
+            test(b_graph, c, np.array([71.03711, 238.035471, 369.075961, 
+                                       470.123641, 452.108361])) 
             # Second signature, picking up from common node
             b_graph.incr_signature()
-            test(b_graph, c, np.array([158.06914, 140.05386, 289.10963, 271.09435, 470.123641, 452.108361, 598.218601, 580.203321]))
+            test(b_graph, c, np.array([158.06914, 140.05386, 289.10963, 
+                                       271.09435, 470.123641, 452.108361]))
             # Second signature, from beginning
             b_graph.reset_iterator()
             b_graph.incr_signature()
-            test(b_graph, c, np.array([71.03711, 158.06914, 140.05386, 289.10963, 271.09435, 470.123641, 452.108361, 598.218601, 580.203321]))
+            test(b_graph, c, np.array([71.03711, 158.06914, 140.05386, 289.10963, 
+                                       271.09435, 470.123641, 452.108361]))
 
             y_graph = pep.get_fragment_graph("y", c)
             # First signature all the way through
-            test(y_graph, c, np.array([146.11024, 327.124251, 458.164741, 545.196771, 527.181491, 616.233881, 598.218601]))
+            test(y_graph, c, np.array([146.11024, 327.124251, 458.164741, 
+                                       545.196771, 527.181491]))
             self.assertTrue(y_graph.is_fragment_end())
             # Second signature, picking up from common node
             y_graph.incr_signature()
-            test(y_graph, c, np.array([247.15792, 229.14264, 378.19841, 360.18313, 545.196771, 527.181491, 616.233881, 598.218601]))
+            test(y_graph, c, np.array([247.15792, 229.14264, 378.19841, 360.18313, 545.196771, 527.181491]))
             # Second signature, from beginning
             y_graph.reset_iterator()
             y_graph.incr_signature()
-            test(y_graph, c, np.array([146.11024, 247.15792, 229.14264, 378.19841, 360.18313, 545.196771, 527.181491, 616.233881, 598.218601]))
+            test(y_graph, c, np.array([146.11024, 247.15792, 229.14264, 378.19841, 
+                                       360.18313, 545.196771, 527.181491]))
 
     def test_site_determining_single(self):
         pep = PyModifiedPeptide("STY", 79.966331)

@@ -459,7 +459,13 @@ namespace ptmscoring {
     }
 
     bool ModifiedPeptide::FragmentGraph::isFragmentEnd () {
-        return isResidueEnd() && !neutral_loss_iter.hasNext();
+        bool last_fragment;
+        if ( fragment_type == 'b' ) {
+            last_fragment = residue_ind == modified_peptide->residues.size() - 1;
+        } else if ( fragment_type == 'y' ) {
+            last_fragment = residue_ind == 0;
+        } else { throw 30; }
+        return last_fragment && !neutral_loss_iter.hasNext();
     }
 
     bool ModifiedPeptide::FragmentGraph::isLoss () {
