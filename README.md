@@ -39,8 +39,10 @@ $ python -m pyascore -h
 usage: pyAscore [-h] [--match_save] [--residues RESIDUES]
                 [--mod_mass MOD_MASS] [--mz_error MZ_ERROR]
                 [--mod_correction_tol MOD_CORRECTION_TOL]
-                [--zero_based ZERO_BASED] [--hit_depth HIT_DEPTH]
-                [--parameter_file PARAMETER_FILE]
+                [--zero_based ZERO_BASED]
+                [--neutral_loss_groups NEUTRAL_LOSS_GROUPS]
+                [--neutral_loss_masses NEUTRAL_LOSS_MASSES]
+                [--hit_depth HIT_DEPTH] [--parameter_file PARAMETER_FILE]
                 [--ident_file_type IDENT_FILE_TYPE]
                 spec_file ident_file out_file
 
@@ -74,6 +76,15 @@ optional arguments:
                         provides for it.
   --zero_based ZERO_BASED
                         Mod positions are by default assumed to be 1 based
+  --neutral_loss_groups NEUTRAL_LOSS_GROUPS
+                        Comma separated clusters of amino acids which are
+                        expected to have a neutral loss. To specify that the
+                        modified versions of the amino acids should have the
+                        neutral loss, use lower case letters. e.g. 'st' vs
+                        'ST'
+  --neutral_loss_masses NEUTRAL_LOSS_MASSES
+                        Mass of the neutral losses specified with
+                        neutral_loss_groups.Should have one mass per group.
   --hit_depth HIT_DEPTH
                         Number of PSMS to take from each scan. Set to negative
                         to always analyze all.
