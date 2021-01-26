@@ -92,5 +92,5 @@ optional arguments:
                         A file containing parameters. e.x. param = val
   --ident_file_type IDENT_FILE_TYPE
                         The type of file supplied for identifications. One of
-                        pepXML, percolatorTXT. Default: pepXML
+                        pepXML, percolatorTXT, or mokapotTXT. Default: pepXML
 ```

@@ -116,13 +116,23 @@ class MassCorrector:
 
 class PercolatorTXT:
     """
-    Simple wrapper to provide standardized access to Percolator ouput csvs.
+    Simple wrapper to provide standardized access to Percolator ouput csvs.    
     """
     def __init__(self, file_path):
         self._internal_csv = read_csv(file_path, sep="\t")
 
     def map(self, func):
         return self._internal_csv.groupby("scan").apply(func).to_list()
+
+class MokapotTXT:
+    """
+    Simple wrapper to provide standardized access to Mokapot ouput csvs.    
+    """
+    def __init__(self, file_path):
+        self._internal_csv = read_csv(file_path, sep="\t")
+
+    def map(self, func):
+        return self._internal_csv.groupby("ScanNr").apply(func).to_list()
 
 class IDExtractor:
     """
@@ -266,6 +276,47 @@ class PercolatorTXTExtractor(IDExtractor):
                 pos.append(ind)
         return np.array(pos, dtype=np.int32), np.array(mass, dtype=np.float32)
 
+class MokapotTXTExtractor(IDExtractor):
+    def _get_matches(self):
+        return [id for id in self.entry.transpose().to_dict().values()]
+
+    def _get_scans(self):
+        return self._match["ScanNr"]
+
+    def _get_charge(self):
+        return None
+
+    def _get_score(self):
+        return self._match["mokapot score"]
+
+    def _get_peptide(self):
+        seq = re.sub("(^.\.)|(\..$)", "", self._match["Peptide"])
+        return re.sub("n|(\[[^A-z]+\])", "", seq)
+
+    def _get_mod_info(self):
+        mass = []
+        pos = []
+        seq = re.sub("(^.\.)|(\..$)", "", self._match["Peptide"])
+        # Extract n terminus first
+        n_term_mod = re.match("n?\[[^A-z]+\]", seq)
+        if n_term_mod is not None:
+            mass.append(
+                re.search("(?<=\[)[^A-z]+(?=\])", n_term_mod.group()).group()
+            )
+            pos.append(0)
+
+        # Extract the rest of the sequence
+        residues = [res.group() for res in re.finditer("[A-Z](\[[^A-z]+\])?", seq)]
+        for ind, res in enumerate(residues, 1):
+            extracted_mod = re.search("(?<=\[)[^A-z]+(?=\])", res)
+            if extracted_mod is not None:
+                mass.append(STD_AA_MASS[res[0]] + float(extracted_mod.group()))
+                pos.append(ind)
+            elif res[0] in CONSTANT_MODS:
+                mass.append(STD_AA_MASS[res[0]] + CONSTANT_MODS[res[0]])
+                pos.append(ind)
+        return np.array(pos, dtype=np.int32), np.array(mass, dtype=np.float32)
+
 class IdentificationParser:
     """
     Parser for modification information coming from .pep.xmls.
@@ -295,7 +346,10 @@ class IdentificationParser:
             self._extractor = PepXMLExtractor(score_string)
         elif id_file_format == "percolatorTXT":
             self._reader = PercolatorTXT(id_file_name)
-            self._extractor = PercolatorTXTExtractor() 
+            self._extractor = PercolatorTXTExtractor()
+        elif id_file_format == "mokapotTXT":
+            self._reader = MokapotTXT(id_file_name)
+            self._extractor = MokapotTXTExtractor() 
         else:
             raise ValueError("{} not supported at this time.".format(id_file_format))
         
