@@ -218,25 +218,25 @@ namespace ptmscoring {
             if ( ndifferences != 1 ) continue;
 
             size_t same_count = 0;
-            size_t best_pos = 0;
-            size_t comp_pos = 0;
+            size_t ascore_ind = 0;
+            size_t comp_sig_ind = 0;
             std::vector<size_t>::iterator best_it = best_score.signature.begin();
             std::vector<size_t>::iterator comp_it = competing_score.signature.begin();
             for (; best_it < best_score.signature.end(); best_it++, comp_it++) {
                 if (*best_it and *comp_it) {
                     same_count++;
                 } else if (*best_it and not *comp_it) {
-                    best_pos = same_count;
+                    ascore_ind = same_count;
                 } else if (not *best_it and *comp_it) {
-                    comp_pos = same_count;
+                    comp_sig_ind = comp_it - competing_score.signature.begin();
                 }
             }
 
-            AscoreContainer & cont = ascore_containers_.at(best_pos);
+            AscoreContainer & cont = ascore_containers_.at(ascore_ind);
             if (cont.ascores.empty() || 
                 competing_score.weighted_score == cont.pep_scores.back() ) {
                 cont.competing_index.push_back(
-                    modified_peptide_ptr->getPosOfNthModifiable(comp_pos) + 1 
+                    modified_peptide_ptr->getPosOfNthModifiable(comp_sig_ind) + 1 
                 );
                 cont.pep_scores.push_back( 
                     competing_score.weighted_score 
@@ -246,7 +246,7 @@ namespace ptmscoring {
                 );
             }
 
-        }   
+        }
     }
 
     void Ascore::score (const BinnedSpectra & binned_spectra, 
