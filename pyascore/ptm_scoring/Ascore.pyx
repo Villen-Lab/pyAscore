@@ -3,7 +3,7 @@ import cython
 import numpy as np
 cimport numpy as np
 
-from Ascore cimport Ascore
+from Ascore cimport Ascore, ScoreContainer
 from ModifiedPeptide cimport ModifiedPeptide
 from Spectra cimport BinnedSpectra
 
@@ -128,6 +128,33 @@ cdef class PyAscore:
     @property
     def best_score(self):
         return self.ascore_ptr[0].getBestScore()
+
+    @property
+    def pep_scores(self):
+        cdef vector[ScoreContainer] raw_score_conts = self.ascore_ptr[0].getAllPepScores();
+        cdef vector[string] sequences = self.ascore_ptr[0].getAllSequences();
+
+        proc_score_conts = []
+        cdef size_t i, j
+        for i in range(raw_score_conts.size()):
+            score_cont = {}
+
+            score_cont["signature"] = []
+            for j in range(raw_score_conts[i].signature.size()):
+                score_cont["signature"].append(raw_score_conts[i].signature[j])
+
+            score_cont["counts"] = []
+            score_cont["scores"] = []
+            for j in range(raw_score_conts[i].counts.size()):
+                score_cont["counts"].append(raw_score_conts[i].counts[j])
+                score_cont["scores"].append(raw_score_conts[i].scores[j])
+
+            score_cont["weighted_score"] = raw_score_conts[i].weighted_score
+            score_cont["total_fragments"] = raw_score_conts[i].total_fragments
+            score_cont["sequence"] = sequences[i]
+            proc_score_conts.append(score_cont)
+
+        return proc_score_conts;
 
     @property
     def ascores(self):
