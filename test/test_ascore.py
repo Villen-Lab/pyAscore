@@ -66,6 +66,7 @@ class TestPyAscore(unittest.TestCase):
             with open(os.path.join("test", "match_spectra_pairs", match_file), "rb") as src:
                 match_list = pickle.load(src)
 
+
             with open(os.path.join("test", "match_spectra_pairs", spec_file), "rb") as src:
                 spectra_list = pickle.load(src)
 
@@ -93,3 +94,38 @@ class TestPyAscore(unittest.TestCase):
         test_consistency("velos_matches_1_mods.pkl", "velos_spectra_1_mods.pkl")
         test_consistency("velos_matches_2_mods.pkl", "velos_spectra_2_mods.pkl")
         test_consistency("velos_matches_3_mods.pkl", "velos_spectra_3_mods.pkl")
+
+    def test_pepscore_return(self):
+        ascore = PyAscore(bin_size=100., n_top=10,
+                          mod_group="STY", mod_mass=79.966331)
+        def test_return(match_file, spec_file):
+            with open(os.path.join("test", "match_spectra_pairs", match_file), "rb") as src:
+                match_list = pickle.load(src)
+
+            with open(os.path.join("test", "match_spectra_pairs", spec_file), "rb") as src:
+                spectra_list = pickle.load(src)
+
+            for match, spectra in zip(match_list, spectra_list):
+                ascore = PyAscore(bin_size=100., n_top=10,
+                                  mod_group="STY", mod_mass=79.966331)
+                ascore.score(spectra["mz_values"],
+                             spectra["intensity_values"],
+                             match["peptide"],
+                             len(match["mod_positions"]))
+
+                pep_scores = ascore.pep_scores
+                nslots = len(pep_scores[0]["signature"])
+                nmods = len(match["mod_positions"])
+                ncombinations = np.math.factorial(nslots)/np.math.factorial(nmods)/np.math.factorial(nslots - nmods)
+                self.assertEqual(
+                    len(pep_scores), 
+                    ncombinations
+                )
+
+                self.assertTrue(
+                    np.all(np.diff([p["weighted_score"] for p in pep_scores]) <= 0)
+                )
+
+        test_return("velos_matches_1_mods.pkl", "velos_spectra_1_mods.pkl")
+        test_return("velos_matches_2_mods.pkl", "velos_spectra_2_mods.pkl")
+        test_return("velos_matches_3_mods.pkl", "velos_spectra_3_mods.pkl")
