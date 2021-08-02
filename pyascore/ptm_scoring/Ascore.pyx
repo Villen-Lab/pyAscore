@@ -45,7 +45,11 @@ cdef class PyAscore:
     best_sequence : str
         Peptide sequence with modifications included in brackets for the best scoring localization.
     best_score : float
-        The best Pep score among all possible localization permutations.
+        The best PepScore among all possible localization permutations.
+    pep_scores : list of dict
+        Python dict representations of internal PepScore objects. Each object contains the sequence
+        of the underlying peptide and all information necessary to calculate the ambiguity scores.
+        The list is sorted by decreasing weighted_score which is also known as the PepScore.
     ascores : ndarray of float32
         Ascores for each individual non-static site in the peptide.
     alt_sites : list of ndarry of uint32
@@ -79,7 +83,7 @@ cdef class PyAscore:
                     str peptide, size_t n_of_mod,
                     np.ndarray[np.uint32_t, ndim=1, mode="c"] aux_mod_pos = None,
                     np.ndarray[np.float32_t, ndim=1, mode="c"] aux_mod_mass = None):
-        """Consumer spectra and associated peptide information and score PTM localization
+        """Consume spectra and associated peptide information and score PTM localization
 
         Parameters
         ----------
@@ -162,6 +166,24 @@ cdef class PyAscore:
         return cont
 
     def calculate_ambiguity(self, dict ref_score, dict other_score):
+        """Calculate ambiguity between 2 competing localizations
+
+        Inputs to this function should come directly from the pep_scores attribute.
+        For this score to be possitive, the score dict with the highest weighted_score
+        should come first. When the weighted_score for both is equal, this will return 0.
+
+        Parameters
+        ----------
+        ref_score : dict
+            PepScore object for one localization.
+        other_score : dict
+            PepScore object for competing localization.
+
+        Returns
+        -------
+        float
+            The ambiguity score (ascore) between 2 localizations
+        """
         cdef ScoreContainer ref_score_cont = self._pyobj_to_score_cont(ref_score)
         cdef ScoreContainer other_score_cont = self._pyobj_to_score_cont(other_score)
 
