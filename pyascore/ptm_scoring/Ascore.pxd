@@ -17,6 +17,7 @@ cdef extern from "cpp/Ascore.h" namespace "ptmscoring":
     cdef cppclass Ascore:
         Ascore() except +;
         void score(const BinnedSpectra &, const ModifiedPeptide &);
+        float calculateAmbiguity(const ScoreContainer&, const ScoreContainer&);
         string getBestSequence();
         vector[string] getAllSequences();
         float getBestScore();

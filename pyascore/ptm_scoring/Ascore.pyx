@@ -121,6 +121,52 @@ cdef class PyAscore:
 
         self.ascore_ptr[0].score(self.binned_spectra_ptr[0], self.modified_peptide_ptr[0])
 
+    def _score_cont_to_pyobj(self, ScoreContainer cont):
+        cdef size_t i
+        pyobj = {}
+
+        pyobj["signature"] = np.zeros(cont.signature.size(),
+                                      dtype=np.int32)
+        for i in range(cont.signature.size()):
+            pyobj["signature"][i] = cont.signature[i]
+ 
+        pyobj["counts"] = np.zeros(cont.counts.size(),
+                                   dtype=np.int32)
+        pyobj["scores"] = np.zeros(cont.scores.size(),
+                                   dtype=np.float32)
+        for i in range(cont.counts.size()):
+            pyobj["counts"][i] = cont.counts[i]
+            pyobj["scores"][i] = cont.scores[i]
+ 
+        pyobj["weighted_score"] = cont.weighted_score
+        pyobj["total_fragments"] = cont.total_fragments
+
+        return pyobj
+
+    def _pyobj_to_score_cont(self, dict pyobj):
+        cdef size_t i, nitems
+        cdef ScoreContainer cont
+
+        nitems = pyobj["signature"].shape[0]
+        for i in range(nitems):
+            cont.signature.push_back(pyobj["signature"][i])
+
+        nitems = pyobj["counts"].shape[0]
+        for i in range(nitems):
+            cont.counts.push_back(pyobj["counts"][i])
+            cont.scores.push_back(pyobj["scores"][i])
+
+        cont.weighted_score = pyobj["weighted_score"]
+        cont.total_fragments = pyobj["total_fragments"]
+
+        return cont
+
+    def calculate_ambiguity(self, dict ref_score, dict other_score):
+        cdef ScoreContainer ref_score_cont = self._pyobj_to_score_cont(ref_score)
+        cdef ScoreContainer other_score_cont = self._pyobj_to_score_cont(other_score)
+
+        return self.ascore_ptr[0].calculateAmbiguity(ref_score_cont, other_score_cont)
+
     @property
     def best_sequence(self):
         return self.ascore_ptr[0].getBestSequence().decode("utf8")
@@ -135,24 +181,11 @@ cdef class PyAscore:
         cdef vector[string] sequences = self.ascore_ptr[0].getAllSequences();
 
         proc_score_conts = []
-        cdef size_t i, j
+        cdef size_t i
         for i in range(raw_score_conts.size()):
-            score_cont = {}
-
-            score_cont["signature"] = []
-            for j in range(raw_score_conts[i].signature.size()):
-                score_cont["signature"].append(raw_score_conts[i].signature[j])
-
-            score_cont["counts"] = []
-            score_cont["scores"] = []
-            for j in range(raw_score_conts[i].counts.size()):
-                score_cont["counts"].append(raw_score_conts[i].counts[j])
-                score_cont["scores"].append(raw_score_conts[i].scores[j])
-
-            score_cont["weighted_score"] = raw_score_conts[i].weighted_score
-            score_cont["total_fragments"] = raw_score_conts[i].total_fragments
-            score_cont["sequence"] = sequences[i]
-            proc_score_conts.append(score_cont)
+            pyobj_cont = self._score_cont_to_pyobj(raw_score_conts[i])
+            pyobj_cont["sequence"] = sequences[i]
+            proc_score_conts.append(pyobj_cont)
 
         return proc_score_conts;
 
