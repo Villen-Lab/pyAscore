@@ -3,7 +3,7 @@ import cython
 import numpy as np
 cimport numpy as np
 
-from Ascore cimport Ascore
+from Ascore cimport Ascore, ScoreContainer
 from ModifiedPeptide cimport ModifiedPeptide
 from Spectra cimport BinnedSpectra
 
@@ -45,7 +45,11 @@ cdef class PyAscore:
     best_sequence : str
         Peptide sequence with modifications included in brackets for the best scoring localization.
     best_score : float
-        The best Pep score among all possible localization permutations.
+        The best PepScore among all possible localization permutations.
+    pep_scores : list of dict
+        Python dict representations of internal PepScore objects. Each object contains the sequence
+        of the underlying peptide and all information necessary to calculate the ambiguity scores.
+        The list is sorted by decreasing weighted_score which is also known as the PepScore.
     ascores : ndarray of float32
         Ascores for each individual non-static site in the peptide.
     alt_sites : list of ndarry of uint32
@@ -79,7 +83,7 @@ cdef class PyAscore:
                     str peptide, size_t n_of_mod,
                     np.ndarray[np.uint32_t, ndim=1, mode="c"] aux_mod_pos = None,
                     np.ndarray[np.float32_t, ndim=1, mode="c"] aux_mod_mass = None):
-        """Consumer spectra and associated peptide information and score PTM localization
+        """Consume spectra and associated peptide information and score PTM localization
 
         Parameters
         ----------
@@ -121,6 +125,70 @@ cdef class PyAscore:
 
         self.ascore_ptr[0].score(self.binned_spectra_ptr[0], self.modified_peptide_ptr[0])
 
+    def _score_cont_to_pyobj(self, ScoreContainer cont):
+        cdef size_t i
+        pyobj = {}
+
+        pyobj["signature"] = np.zeros(cont.signature.size(),
+                                      dtype=np.int32)
+        for i in range(cont.signature.size()):
+            pyobj["signature"][i] = cont.signature[i]
+ 
+        pyobj["counts"] = np.zeros(cont.counts.size(),
+                                   dtype=np.int32)
+        pyobj["scores"] = np.zeros(cont.scores.size(),
+                                   dtype=np.float32)
+        for i in range(cont.counts.size()):
+            pyobj["counts"][i] = cont.counts[i]
+            pyobj["scores"][i] = cont.scores[i]
+ 
+        pyobj["weighted_score"] = cont.weighted_score
+        pyobj["total_fragments"] = cont.total_fragments
+
+        return pyobj
+
+    def _pyobj_to_score_cont(self, dict pyobj):
+        cdef size_t i, nitems
+        cdef ScoreContainer cont
+
+        nitems = pyobj["signature"].shape[0]
+        for i in range(nitems):
+            cont.signature.push_back(pyobj["signature"][i])
+
+        nitems = pyobj["counts"].shape[0]
+        for i in range(nitems):
+            cont.counts.push_back(pyobj["counts"][i])
+            cont.scores.push_back(pyobj["scores"][i])
+
+        cont.weighted_score = pyobj["weighted_score"]
+        cont.total_fragments = pyobj["total_fragments"]
+
+        return cont
+
+    def calculate_ambiguity(self, dict ref_score, dict other_score):
+        """Calculate ambiguity between 2 competing localizations
+
+        Inputs to this function should come directly from the pep_scores attribute.
+        For this score to be possitive, the score dict with the highest weighted_score
+        should come first. When the weighted_score for both is equal, this will return 0.
+
+        Parameters
+        ----------
+        ref_score : dict
+            PepScore object for one localization.
+        other_score : dict
+            PepScore object for competing localization.
+
+        Returns
+        -------
+        float
+            The ambiguity score (ascore) between 2 localizations
+        """
+        cdef ScoreContainer ref_score_cont = self._pyobj_to_score_cont(ref_score)
+        cdef ScoreContainer other_score_cont = self._pyobj_to_score_cont(other_score)
+
+        return self.ascore_ptr[0].calculateAmbiguity(ref_score_cont, other_score_cont)
+
     @property
     def best_sequence(self):
         return self.ascore_ptr[0].getBestSequence().decode("utf8")
@@ -128,6 +196,20 @@ cdef class PyAscore:
     @property
     def best_score(self):
         return self.ascore_ptr[0].getBestScore()
+
+    @property
+    def pep_scores(self):
+        cdef vector[ScoreContainer] raw_score_conts = self.ascore_ptr[0].getAllPepScores();
+        cdef vector[string] sequences = self.ascore_ptr[0].getAllSequences();
+
+        proc_score_conts = []
+        cdef size_t i
+        for i in range(raw_score_conts.size()):
+            pyobj_cont = self._score_cont_to_pyobj(raw_score_conts[i])
+            pyobj_cont["sequence"] = sequences[i]
+            proc_score_conts.append(pyobj_cont)
+
+        return proc_score_conts;
 
     @property
     def ascores(self):

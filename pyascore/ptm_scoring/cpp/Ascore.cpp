@@ -273,11 +273,27 @@ namespace ptmscoring {
         }
     }
 
+    std::vector<std::string> Ascore::getAllSequences () {
+        std::vector<std::string> sequences;
+        for (ScoreContainer cont : peptide_scores_) {
+            sequences.push_back(modified_peptide_ptr->getPeptide(cont.signature));
+        }
+        return sequences;
+    }
+
     float Ascore::getBestScore () {
         if ( peptide_scores_.size() ) {
             return peptide_scores_.front().weighted_score;
         } else {
             return -1;
+        }
+    }
+
+    std::vector<ScoreContainer> Ascore::getAllPepScores () {
+        if ( peptide_scores_.size() ) {
+            return peptide_scores_;
+        } else {
+            return {};
         }
     }
 
