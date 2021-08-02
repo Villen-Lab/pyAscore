@@ -42,13 +42,13 @@ namespace ptmscoring {
         void sortScores();
         bool isUnambiguous();
         void findModifiedPos();
-        float calculateAmbiguity(const ScoreContainer&, const ScoreContainer&);
         void calculateAscores();
         public:
             Ascore();
             ~Ascore();
 
             void score(const BinnedSpectra &, const ModifiedPeptide &);
+            float calculateAmbiguity(const ScoreContainer&, const ScoreContainer&);
             std::string getBestSequence();
             std::vector<std::string> getAllSequences();
             float getBestScore();
