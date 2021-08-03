@@ -7990,7 +7990,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_10pep_scores___get__
  *         cdef size_t i
  *         for i in range(raw_score_conts.size()):             # <<<<<<<<<<<<<<
  *             pyobj_cont = self._score_cont_to_pyobj(raw_score_conts[i])
- *             pyobj_cont["sequence"] = sequences[i]
+ *             pyobj_cont["sequence"] = sequences[i].decode("utf8")
  */
   __pyx_t_2 = __pyx_v_raw_score_conts.size();
   __pyx_t_3 = __pyx_t_2;
@@ -8001,7 +8001,7 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_10pep_scores___get__
  *         cdef size_t i
  *         for i in range(raw_score_conts.size()):
  *             pyobj_cont = self._score_cont_to_pyobj(raw_score_conts[i])             # <<<<<<<<<<<<<<
- *             pyobj_cont["sequence"] = sequences[i]
+ *             pyobj_cont["sequence"] = sequences[i].decode("utf8")
  *             proc_score_conts.append(pyobj_cont)
  */
     __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_score_cont_to_pyobj); if (unlikely(!__pyx_t_5)) __PYX_ERR(3, 208, __pyx_L1_error)
@@ -8030,18 +8030,18 @@ static PyObject *__pyx_pf_8pyascore_11ptm_scoring_8PyAscore_10pep_scores___get__
     /* "pyascore/ptm_scoring/Ascore.pyx":209
  *         for i in range(raw_score_conts.size()):
  *             pyobj_cont = self._score_cont_to_pyobj(raw_score_conts[i])
- *             pyobj_cont["sequence"] = sequences[i]             # <<<<<<<<<<<<<<
+ *             pyobj_cont["sequence"] = sequences[i].decode("utf8")             # <<<<<<<<<<<<<<
  *             proc_score_conts.append(pyobj_cont)
  * 
  */
-    __pyx_t_1 = __pyx_convert_PyBytes_string_to_py_std__in_string((__pyx_v_sequences[__pyx_v_i])); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 209, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_decode_cpp_string((__pyx_v_sequences[__pyx_v_i]), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 209, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (unlikely(PyObject_SetItem(__pyx_v_pyobj_cont, __pyx_n_u_sequence, __pyx_t_1) < 0)) __PYX_ERR(3, 209, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "pyascore/ptm_scoring/Ascore.pyx":210
  *             pyobj_cont = self._score_cont_to_pyobj(raw_score_conts[i])
- *             pyobj_cont["sequence"] = sequences[i]
+ *             pyobj_cont["sequence"] = sequences[i].decode("utf8")
  *             proc_score_conts.append(pyobj_cont)             # <<<<<<<<<<<<<<
  * 
  *         return proc_score_conts;

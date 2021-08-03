@@ -206,7 +206,7 @@ cdef class PyAscore:
         cdef size_t i
         for i in range(raw_score_conts.size()):
             pyobj_cont = self._score_cont_to_pyobj(raw_score_conts[i])
-            pyobj_cont["sequence"] = sequences[i]
+            pyobj_cont["sequence"] = sequences[i].decode("utf8")
             proc_score_conts.append(pyobj_cont)
 
         return proc_score_conts;
