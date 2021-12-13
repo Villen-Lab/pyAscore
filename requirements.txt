@@ -1,2 +1,6 @@
 numpy
+scipy
+pandas
 Cython
+lxml
+pyteomics
