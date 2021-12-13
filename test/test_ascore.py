@@ -56,7 +56,6 @@ class TestPyAscore(unittest.TestCase):
         test_match_pairs("velos_matches_1_mods.pkl", "velos_spectra_1_mods.pkl")
         test_match_pairs("velos_matches_2_mods.pkl", "velos_spectra_2_mods.pkl")
         test_match_pairs("velos_matches_3_mods.pkl", "velos_spectra_3_mods.pkl")
-        test_match_pairs("dump_match.pkl", "dump_spectra.pkl")
         test_match_pairs("velos_matches_aux.pkl", "velos_spectra_aux.pkl")
 
     def test_alternative_site_consistency(self):
