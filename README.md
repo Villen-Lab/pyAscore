@@ -1,5 +1,7 @@
 <img src="https://raw.githubusercontent.com/AnthonyOfSeattle/pyAscore/main/static/logo.png" width="300" title="pyAscore Logo">
 
+![Linux Build](https://github.com/AnthonyOfSeattle/pyAscore/actions/workflows/linux-build.yml/badge.svg)
+
 ## Intro
 
 The **pyAscore** package provides a blazingly fast implementation of the Ascore algorithm for localizing peptide post-translational modifications from mass spectrometry data.
