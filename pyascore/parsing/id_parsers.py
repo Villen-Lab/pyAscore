@@ -11,6 +11,7 @@ STD_AA_MASS = mass.std_aa_mass
 # In case a set of custom mods is not supplied
 COMMON_MODS = {"n": 42.010565,
                "M": 15.9949,
+               "K": 8.014199,
                "S": 79.966331,
                "T": 79.966331,
                "Y": 79.966331,
