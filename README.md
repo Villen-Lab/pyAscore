@@ -38,61 +38,41 @@ A full list of parameters is available by running with the `-h` flag.
 ```
 $ python -m pyascore -h
 
-usage: pyAscore [-h] [--match_save] [--residues RESIDUES]
-                [--mod_mass MOD_MASS] [--mz_error MZ_ERROR]
-                [--mod_correction_tol MOD_CORRECTION_TOL]
-                [--zero_based ZERO_BASED]
-                [--neutral_loss_groups NEUTRAL_LOSS_GROUPS]
-                [--neutral_loss_masses NEUTRAL_LOSS_MASSES]
-                [--hit_depth HIT_DEPTH] [--parameter_file PARAMETER_FILE]
+usage: pyAscore [-h] [--match_save] [--residues RESIDUES] [--mod_mass MOD_MASS] [--mz_error MZ_ERROR] [--mod_correction_tol MOD_CORRECTION_TOL] [--zero_based ZERO_BASED]
+                [--neutral_loss_groups NEUTRAL_LOSS_GROUPS] [--neutral_loss_masses NEUTRAL_LOSS_MASSES] [--hit_depth HIT_DEPTH] [--parameter_file PARAMETER_FILE]
                 [--ident_file_type IDENT_FILE_TYPE]
                 spec_file ident_file out_file
 
-The pyAscore module provides PTM localization analysis using a custom
-implementation of the Ascore algorithm. It employees pyteomics for efficient
-reading of spectra in mzML format and identifications in pepXML format. All
-scoring has been implemented in custom c++ code which is exposed to python via
-cython wrappers. Any PTM which be defined with a canonical amino acid and mass
-shift can be analyzed.
+The pyAscore module provides PTM localization analysis using a custom implementation of the Ascore algorithm. It employees pyteomics for efficient reading of spectra in mzML format and
+identifications in pepXML format. All scoring has been implemented in custom c++ code which is exposed to python via cython wrappers. Any PTM which be defined with a canonical amino acid and
+mass shift can be analyzed.
 
 positional arguments:
-  spec_file             MS Spectra file supplied as MzML
-  ident_file            Comet hits supplied as pepXML
-  out_file              Destination for Ascores
+  spec_file             MS Spectra file supplied as MzML.
+  ident_file            Results of database search.
+  out_file              Destination for Ascores.
 
 optional arguments:
   -h, --help            show this help message and exit
   --match_save
-  --residues RESIDUES   Residues which can be modified
-  --mod_mass MOD_MASS   Modification mass to match to identifications. This is
-                        often rounded by search engines so this argument
-                        should be considered the most accurate mass
-  --mz_error MZ_ERROR   Tolerance in mz for deciding whether a spectral peak
-                        matches to a theoretical peak.
+  --residues RESIDUES   Residues which can be modified.
+  --mod_mass MOD_MASS   Modification mass to match to identifications. This is often rounded by search engines so this argument should be considered the most accurate mass.
+  --mz_error MZ_ERROR   Tolerance in mz for deciding whether a spectral peak matches to a theoretical peak.
   --mod_correction_tol MOD_CORRECTION_TOL
-                        MZ tolerance for deciding whether a reported
-                        modification matches internal or user specified
-                        modifications. A wide tolerance can help overcome
-                        rounding. If more precission is needed, make sure to
-                        set this parameter and that your search engine
-                        provides for it.
+                        MZ tolerance for deciding whether a reported modification matches internal or user specified modifications. A wide tolerance can help overcome rounding. If more
+                        precission is needed, make sure to set this parameter and that your search engine provides for it.
   --zero_based ZERO_BASED
-                        Mod positions are by default assumed to be 1 based
+                        Mod positions are by default assumed to be 1 based.
   --neutral_loss_groups NEUTRAL_LOSS_GROUPS
-                        Comma separated clusters of amino acids which are
-                        expected to have a neutral loss. To specify that the
-                        modified versions of the amino acids should have the
-                        neutral loss, use lower case letters. e.g. 'st' vs
-                        'ST'
+                        Comma separated clusters of amino acids which are expected to have a neutral loss. To specify that the modified versions of the amino acids should have the neutral loss,
+                        use lower case letters. Example: 'st' vs 'ST'.
   --neutral_loss_masses NEUTRAL_LOSS_MASSES
-                        Mass of the neutral losses specified with
-                        neutral_loss_groups.Should have one mass per group.
+                        Comma separated neutral loss masses for each of the neutral_loss_groups. Should have one mass per group. Positive masses indicate a loss, e.g. '18.0153' for water loss,
+                        while negative masses can be used to indicate a gain.
   --hit_depth HIT_DEPTH
-                        Number of PSMS to take from each scan. Set to negative
-                        to always analyze all.
+                        Number of PSMS to take from each scan. Set to negative to always analyze all.
   --parameter_file PARAMETER_FILE
-                        A file containing parameters. e.x. param = val
+                        A file containing parameters. Example: 'residues = STY'.
   --ident_file_type IDENT_FILE_TYPE
-                        The type of file supplied for identifications. One of
-                        pepXML, percolatorTXT, or mokapotTXT. Default: pepXML
+                        The type of file supplied for identifications. One of pepXML, percolatorTXT, or mokapotTXT. Default: pepXML.
 ```
