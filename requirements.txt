@@ -3,4 +3,5 @@ scipy
 pandas
 Cython
 lxml
+tqdm
 pyteomics
