@@ -41,7 +41,7 @@ def build_identification_parser(arg_ref):
 
 def build_ascore(arg_ref):
     ascore = PyAscore(bin_size=100., n_top=10,
-                      mod_group=arg_ref.residues,
+                      mod_group=arg_ref.residues.upper(),
                       mod_mass=arg_ref.mod_mass,
                       mz_error=arg_ref.mz_error)
 
