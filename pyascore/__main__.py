@@ -41,13 +41,13 @@ def build_identification_parser(arg_ref):
 
 def build_ascore(arg_ref):
     ascore = PyAscore(bin_size=100., n_top=10,
-                      mod_group=arg_ref.residues,
+                      mod_group=arg_ref.residues.upper(),
                       mod_mass=arg_ref.mod_mass,
                       mz_error=arg_ref.mz_error)
 
     if arg_ref.neutral_loss_masses and arg_ref.neutral_loss_masses:
-        nl_groups = arg_ref.neutral_loss_groups.split(";")
-        nl_masses = [float(m) for m in arg_ref.neutral_loss_masses.split(";")]
+        nl_groups = arg_ref.neutral_loss_groups.split(",")
+        nl_masses = [float(m) for m in arg_ref.neutral_loss_masses.split(",")]
         [ascore.add_neutral_loss(g, m) for g,m in zip(nl_groups, nl_masses)]
  
     return ascore
@@ -90,11 +90,11 @@ def main():
     )
     parser.add_argument("--match_save", action="store_true")
     parser.add_argument("--residues", type=str, default="STY",
-                        help="Residues which can be modified")
+                        help="Residues which can be modified.")
     parser.add_argument("--mod_mass", type=float, default=79.966331,
                         help="Modification mass to match to identifications."
                              " This is often rounded by search engines so this"
-                             " argument should be considered the most accurate mass")
+                             " argument should be considered the most accurate mass.")
     parser.add_argument("--mz_error", type=float, default=0.5,
                         help="Tolerance in mz for deciding whether a spectral peak"
                              " matches to a theoretical peak.")
@@ -106,30 +106,32 @@ def main():
                              " set this parameter and that your search"
                              " engine provides for it.")
     parser.add_argument("--zero_based", type=bool, default=False,
-                        help="Mod positions are by default assumed to be 1 based")
+                        help="Mod positions are by default assumed to be 1 based.")
     parser.add_argument("--neutral_loss_groups", type=str, default="",
                         help="Comma separated clusters of amino acids"
                              " which are expected to have a neutral loss."
                              " To specify that the modified versions of the amino acids"
                              " should have the neutral loss, use lower case letters."
-                             " e.g. 'st' vs 'ST'")
+                             " Example: 'st' vs 'ST'.")
     parser.add_argument("--neutral_loss_masses", type=str, default="",
-                        help="Mass of the neutral losses specified with neutral_loss_groups."
-                             "Should have one mass per group.")
+                        help="Comma separated neutral loss masses for each of the neutral_loss_groups."
+                             " Should have one mass per group."
+                             " Positive masses indicate a loss, e.g. '18.0153' for water loss,"
+                             " while negative masses can be used to indicate a gain.")
     parser.add_argument("--hit_depth", type=int, default=1,
                         help="Number of PSMS to take from each scan."
                            " Set to negative to always analyze all.")
     parser.add_argument("--parameter_file", type=str, default="",
-                        help="A file containing parameters. e.x. param = val")
+                        help="A file containing parameters. Example: 'residues = STY'.")
     parser.add_argument("--ident_file_type", type=str, default="pepXML",
                         help="The type of file supplied for identifications."
-                             " One of pepXML, percolatorTXT. Default: pepXML")
+                             " One of pepXML, percolatorTXT, or mokapotTXT. Default: pepXML.")
     parser.add_argument("spec_file", type=str,
-                        help="MS Spectra file supplied as MzML")
+                        help="MS Spectra file supplied as MzML.")
     parser.add_argument("ident_file", type=str,
-                        help="Comet hits supplied as pepXML")
+                        help="Results of database search.")
     parser.add_argument("out_file", type=str,
-                        help="Destination for Ascores")
+                        help="Destination for Ascores.")
     args = parser.parse_args()
 
     if args.parameter_file:
