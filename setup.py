@@ -5,14 +5,14 @@ from os import path
 import numpy as np
 
 NAME = "pyascore"
-VERSION = 0.1
-DESCR = "A Python wrapped Ascore implementation."
+VERSION = 0.2
+DESCR = "A python module for fast post translational modification localization."
 REQUIRES = ['cython']
 
 AUTHOR = "Anthony Valente"
 EMAIL = "valenta4@uw.edu"
 
-LICENSE = "Apache 2.0"
+LICENSE = "MIT"
 
 SRC_DIR = "pyascore"
 PACKAGES = [SRC_DIR, SRC_DIR + ".parsing"]
