@@ -85,6 +85,8 @@ optional arguments:
                         neutral_loss_groups. Should have one mass per group. Positive masses
                         indicate a loss, e.g. '18.0153' for water loss, while negative masses
                         can be used to indicate a gain.
+  --fragment_types FRAGMENT_TYPES
+                        Fragment ion types to score. Supported: bcyz.
   --hit_depth HIT_DEPTH
                         Number of PSMS to take from each scan. Set to negative to always
                         analyze all.

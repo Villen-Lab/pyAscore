@@ -61,11 +61,13 @@ cdef class PyAscore:
 
     def __cinit__(self, float bin_size, size_t n_top,
                         str mod_group, float mod_mass,
-                        float mz_error=.5):
+                        float mz_error=.5,
+                        str fragment_types="by"):
         self.binned_spectra_ptr = new BinnedSpectra(bin_size, n_top)
         self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), 
                                                         mod_mass, 
-                                                        mz_error)
+                                                        mz_error,
+                                                        fragment_types.encode("utf8"))
         self.ascore_ptr = new Ascore()
 
     def __dealloc__(self):

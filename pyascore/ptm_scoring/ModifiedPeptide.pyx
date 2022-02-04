@@ -33,8 +33,11 @@ cdef class PyModifiedPeptide:
     """
     cdef ModifiedPeptide * modified_peptide_ptr
 
-    def __cinit__(self, str mod_group, float mod_mass, float mz_error = .5):
-        self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), mod_mass, mz_error)
+    def __cinit__(self, str mod_group, float mod_mass, float mz_error = .5, str fragment_types = "by"):
+        self.modified_peptide_ptr = new ModifiedPeptide(mod_group.encode("utf8"), 
+                                                        mod_mass, 
+                                                        mz_error, 
+                                                        fragment_types.encode("utf8"))
 
     def __dealloc__(self):
         del self.modified_peptide_ptr

@@ -43,7 +43,8 @@ def build_ascore(arg_ref):
     ascore = PyAscore(bin_size=100., n_top=10,
                       mod_group=arg_ref.residues.upper(),
                       mod_mass=arg_ref.mod_mass,
-                      mz_error=arg_ref.mz_error)
+                      mz_error=arg_ref.mz_error,
+                      fragment_types=arg_ref.fragment_types.lower())
 
     if arg_ref.neutral_loss_masses and arg_ref.neutral_loss_masses:
         nl_groups = arg_ref.neutral_loss_groups.split(",")
@@ -118,6 +119,8 @@ def main():
                              " Should have one mass per group."
                              " Positive masses indicate a loss, e.g. '18.0153' for water loss,"
                              " while negative masses can be used to indicate a gain.")
+    parser.add_argument("--fragment_types", type=str, default="by",
+                        help="Fragment ion types to score. Supported: bcyz.")
     parser.add_argument("--hit_depth", type=int, default=1,
                         help="Number of PSMS to take from each scan."
                            " Set to negative to always analyze all.")
