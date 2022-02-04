@@ -14,6 +14,7 @@ namespace ptmscoring {
         std::string mod_group;
         float mod_mass;
         float mz_error;
+        std::string fragment_types;
 
         std::unordered_map<char, float> nl_groups;
 
@@ -31,7 +32,7 @@ namespace ptmscoring {
         void applyAuxMods();
         void initializeFragments();
         public:
-            ModifiedPeptide(std::string, float, float);
+            ModifiedPeptide(std::string, float, float, std::string);
             ~ModifiedPeptide();
 
             void addNeutralLoss(std::string, float);
