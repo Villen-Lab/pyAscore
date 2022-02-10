@@ -55,7 +55,7 @@ namespace ptmscoring {
 
     void Ascore::accumulateCounts () {
         std::unordered_map<long, ScoreContainer> score_cache;
-        for (char fragment_type : {'b', 'y'}){
+        for (char fragment_type : modified_peptide_ptr->getFragmentTypes()){
             // Initialize count stack with a zero count vector
             std::unordered_map<size_t, std::vector<size_t>> count_cache;
             std::unordered_map<size_t, size_t> nfrag_cache;
@@ -171,7 +171,7 @@ namespace ptmscoring {
         // Calculate ascore
         std::vector<size_t> ion_counts(2);
         std::vector<size_t> ion_trials(2);
-        for (char fragment_type : {'b', 'y'}) {
+        for (char fragment_type : modified_peptide_ptr->getFragmentTypes()) {
             std::vector<std::vector<float>> ions = modified_peptide_ptr->getSiteDeterminingIons(
                 ref.signature, other.signature, fragment_type, 1
             );

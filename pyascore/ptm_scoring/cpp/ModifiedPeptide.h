@@ -48,6 +48,7 @@ namespace ptmscoring {
             std::string getModGroup() const;
             float getModMass() const;
             float getMZError() const;
+            std::string getFragmentTypes() const;
             size_t getNumberOfMods() const;
             size_t getNumberModifiable() const;
             size_t getPosOfNthModifiable(size_t) const;

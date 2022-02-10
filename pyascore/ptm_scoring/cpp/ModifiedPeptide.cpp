@@ -152,6 +152,10 @@ namespace ptmscoring {
         return mz_error;
     }
 
+    std::string ModifiedPeptide::getFragmentTypes () const {
+        return fragment_types;
+    }
+
     size_t ModifiedPeptide::getNumberOfMods () const {
         return n_of_mod;
     }
