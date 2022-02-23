@@ -96,7 +96,11 @@ namespace ptmscoring {
                 }
 
                 if (!score_cache.count(index)) {
-                    score_cache[index] = { graph.getSignature(), cur_count, {} , -1, cur_nfrag};
+                    score_cache[index] = {};
+                    score_cache[index].signature = graph.getSignature();
+                    score_cache[index].counts = cur_count;
+                    score_cache[index].total_fragments = cur_nfrag;
+                    //score_cache[index] = { graph.getSignature(), cur_count, {} , -1, cur_nfrag};
                 } else {
                     ScoreContainer & score_ref = score_cache[index];
                     for (size_t ind = 0; ind < cur_count.size(); ind++) {
