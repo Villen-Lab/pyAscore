@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <cmath>
 #include <ctype.h>
+#include <functional>
 #include "Types.h"
 #include "ModifiedPeptide.h"
 
