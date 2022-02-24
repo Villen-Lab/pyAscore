@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <cmath>
 #include <ctype.h>
-#include <functional>
 #include "Types.h"
 #include "ModifiedPeptide.h"
 
@@ -55,10 +54,15 @@ namespace ptmscoring {
 
         for (size_t ind = 0; ind < aux_mod_pos.size(); ind++) {
             if (aux_mod_pos[ind] == 0) {
-                transform(residues[aux_mod_pos[ind]].begin(), 
-                          residues[aux_mod_pos[ind]].end(), 
-                          residues[aux_mod_pos[ind]].begin(),
-                          bind2nd(std::plus<float>(), aux_mod_mass[ind]));
+                for (auto m = residues[aux_mod_pos[ind]].begin();
+                     m == residues[aux_mod_pos[ind]].end();
+                     m++) {
+                    m += aux_mod_mass[ind];
+                }    
+                //transform(residues[aux_mod_pos[ind]].begin(), 
+                //          residues[aux_mod_pos[ind]].end(), 
+                //          residues[aux_mod_pos[ind]].begin(),
+                //          bind2nd(std::plus<float>(), aux_mod_mass[ind]));
             } else {
                 size_t pep_ind = aux_mod_pos[ind] - 1;
                 residues[pep_ind].front() += aux_mod_mass[ind];
