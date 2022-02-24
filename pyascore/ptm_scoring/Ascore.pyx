@@ -83,8 +83,8 @@ cdef class PyAscore:
     def score(self, np.ndarray[double, ndim=1, mode="c"] mz_arr not None, 
                     np.ndarray[double, ndim=1, mode="c"] int_arr not None,
                     str peptide, size_t n_of_mod,
-                    np.ndarray[np.uint32_t, ndim=1, mode="c"] aux_mod_pos = None,
-                    np.ndarray[np.float32_t, ndim=1, mode="c"] aux_mod_mass = None):
+                    np.ndarray[unsigned int, ndim=1, mode="c"] aux_mod_pos = None,
+                    np.ndarray[float, ndim=1, mode="c"] aux_mod_mass = None):
         """Consume spectra and associated peptide information and score PTM localization
 
         Parameters
