@@ -26,7 +26,7 @@ EXT = [Extension(
           SRC_DIR + ".ptm_scoring", 
           [SRC_DIR + "/ptm_scoring/PTMScoring.pyx"],
           include_dirs=[np.get_include(), "/ptm_scoring/lib"],
-          extra_compile_args=[]
+          extra_compile_args=["/std:c++latest"]
       )]
 
 setup(
