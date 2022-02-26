@@ -14,6 +14,21 @@ class TestSpectraParser(unittest.TestCase):
         parser = spec_parsers.SpectraParser(target_file, "mzML")
         spectra_list = parser.to_list()
 
+        self.assertEqual(len(spectra_list), len(SCAN_NUMBERS))
+        for ind in range(len(spectra_list)):
+            self.assertEqual(spectra_list[ind]["scan"], SCAN_NUMBERS[ind])
+            self.assertEqual(spectra_list[ind]["ms_level"], 2)
+            self.assertEqual(spectra_list[ind]["precursor_mz"], PRECURSOR_MZ[ind])
+            self.assertEqual(spectra_list[ind]["precursor_charge"], 3)
+            self.assertTrue(spectra_list[ind]["mz_values"].shape[0] > 0)
+            self.assertTrue(spectra_list[ind]["intensity_values"].shape[0] > 0)
+
+    def test_mzxml_reader(self):
+        target_file="test/example_inputs/spectra/test_spectra.mzXML"
+        parser = spec_parsers.SpectraParser(target_file, "mzXML")
+        spectra_list = parser.to_list()
+
+        self.assertEqual(len(spectra_list), len(SCAN_NUMBERS))
         for ind in range(len(spectra_list)):
             self.assertEqual(spectra_list[ind]["scan"], SCAN_NUMBERS[ind])
             self.assertEqual(spectra_list[ind]["ms_level"], 2)
