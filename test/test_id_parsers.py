@@ -151,3 +151,61 @@ class TestIDExtractors(unittest.TestCase):
                 self.assertEqual(extracted_data["charge_states"][0], answers[ind]["charge_states"])
                 self.assertEqual(extracted_data["peptides"][0], answers[ind]["peptides"])
                 self.assertTrue(np.all(extracted_data["peptides"][0] == answers[ind]["peptides"])) # Comparing arrays
+
+
+class TestIdnetificationParser(unittest.TestCase):
+
+    tide_answers = [{"scan": 14760, "charge_state": 3, "score": 4.48925829, "peptide": "KMSDDEDDDEEEYGKEEHEK",
+                     "mod_positions": np.array([3]), "mod_masses": np.array([79.966331])},
+                    {"scan": 14760, "charge_state": 3, "score": 1.60863817, "peptide": "KMSDDEDDDEEEYGKEEHEK",
+                     "mod_positions": np.array([13]), "mod_masses": np.array([79.966331])},
+                    {"scan": 18330, "charge_state": 3, "score": 2.81006455, "peptide": "EDLPAENGETKTEESPASDEAGEK",
+                     "mod_positions": np.array([18]), "mod_masses": np.array([79.966331])},
+                    {"scan": 18330, "charge_state": 3, "score": 2.54836297, "peptide": "EDLPAENGETKTEESPASDEAGEK",
+                     "mod_positions": np.array([15]), "mod_masses": np.array([79.966331])},
+                    {"scan": 20462, "charge_state": 3, "score": 3.30343485, "peptide": "RRASWASENGETDAEGTQMTPAK",
+                     "mod_positions": np.array([4]), "mod_masses": np.array([79.966331])},
+                    {"scan": 20462, "charge_state": 3, "score": 2.74408746, "peptide": "RRASWASENGETDAEGTQMTPAK",
+                     "mod_positions": np.array([7]), "mod_masses": np.array([79.966331])},
+                    {"scan": 21996, "charge_state": 3, "score": 3.88421941, "peptide": "AEEPPSQLDQDTQVQDMDEGSDDEEEGQK",
+                     "mod_positions": np.array([17, 21]), "mod_masses": np.array([15.9949  , 79.966331])},
+                    {"scan": 21996, "charge_state": 3, "score": 2.35982895, "peptide": "AEEPPSQLDQDTQVQDMDEGSDDEEEGQK",
+                     "mod_positions": np.array([12, 17]), "mod_masses": np.array([79.966331, 15.9949  ])},
+                    {"scan": 26219, "charge_state": 3, "score": 3.62030768, "peptide": "GKEELAEAEIIKDSPDSPEPPNK",
+                     "mod_positions": np.array([17]), "mod_masses": np.array([79.966331])},
+                    {"scan": 26219, "charge_state": 3, "score": 3.5756743, "peptide": "GKEELAEAEIIKDSPDSPEPPNK",
+                     "mod_positions": np.array([14]), "mod_masses": np.array([79.966331])},
+                    {"scan": 26962, "charge_state": 3, "score": 3.6686945, "peptide": "KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK",
+                     "mod_positions": np.array([ 4, 12]), "mod_masses": np.array([79.966331, 79.966331])},
+                    {"scan": 26962, "charge_state": 3, "score": 0.7472344, "peptide": "NASNVKHHDSSALGVYSYIPLVENPYFSSWPPSGTSSK",
+                     "mod_positions": np.array([11, 29]), "mod_masses": np.array([79.966331, 79.966331])},
+                    {"scan": 27845, "charge_state": 3, "score": 2.49656582, "peptide": "DLGSTEDGDGTDDFLTDKEDEK",
+                     "mod_positions": np.array([16]), "mod_masses": np.array([79.966331])},
+                    {"scan": 27845, "charge_state": 3, "score": 2.15698767, "peptide": "DLGSTEDGDGTDDFLTDKEDEK",
+                     "mod_positions": np.array([11]), "mod_masses": np.array([79.966331])},
+                    {"scan": 31328, "charge_state": 3, "score": 5.46427345, "peptide": "EGHSLEMENENLVENGADSDEDDNSFLK",
+                     "mod_positions": np.array([ 7, 19]), "mod_masses": np.array([15.9949  , 79.966331])},
+                    {"scan": 31328, "charge_state": 3, "score": 4.58486271, "peptide": "EGHSLEMENENLVENGADSDEDDNSFLK",
+                     "mod_positions": np.array([ 7, 25]), "mod_masses": np.array([15.9949  , 79.966331])},
+                    {"scan": 32257, "charge_state": 3, "score": 3.3405838, "peptide": "KPATPAEDDEDDDIDLFGSDNEEEDK",
+                     "mod_positions": np.array([ 4, 19]), "mod_masses": np.array([79.966331, 79.966331])},
+                    {"scan": 32257, "charge_state": 3, "score": 1.01620567, "peptide": "AGDMGNCVSGQQQEGGVSEEMKGPVQEDK",
+                     "mod_positions": np.array([7]), "mod_masses": np.array([57.021464])},
+                    {"scan": 35669, "charge_state": 3, "score": 3.87117219, "peptide": "VEEESTGDPFGFDSDDESLPVSSK",
+                     "mod_positions": np.array([14]), "mod_masses": np.array([79.966331])},
+                    {"scan": 35669, "charge_state": 3, "score": 3.24795341, "peptide": "VEEESTGDPFGFDSDDESLPVSSK",
+                     "mod_positions": np.array([18]), "mod_masses": np.array([79.966331])}]
+
+    def test_pepxml_reader(self):
+        target_file="test/example_inputs/psms/test_psms.pep.xml"
+        parser = id_parsers.IdentificationParser(target_file, "pepXML", score_string="xcorr_score")
+        psm_list = parser.to_list()
+
+        self.assertEqual(len(psm_list), 20)
+        for psm, answer in zip(psm_list, self.tide_answers):
+            self.assertEqual(psm["scan"], answer["scan"])
+            self.assertEqual(psm["charge_state"], answer["charge_state"])
+            self.assertEqual(psm["score"], answer["score"])
+            self.assertEqual(psm["peptide"], answer["peptide"])
+            self.assertTrue(np.all(psm["mod_positions"] == answer["mod_positions"]))
+            self.assertTrue(np.all(psm["mod_masses"] == answer["mod_masses"]))
