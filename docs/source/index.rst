@@ -108,6 +108,10 @@ going to our command line interface page.
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :hidden:
+   :maxdepth: 1
+   :caption: pyAscore
+   :titlesonly:
 
+   self
+   cli.rst
