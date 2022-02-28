@@ -131,7 +131,7 @@ def main():
                              " One of mzML or mzXML. Default: mzXML.")
     parser.add_argument("--ident_file_type", type=str, default="pepXML",
                         help="The type of file supplied for identifications."
-                             " One of pepXML, percolatorTXT, or mokapotTXT. Default: pepXML.")
+                             " One of pepXML, mzIdentML, percolatorTXT, or mokapotTXT. Default: pepXML.")
     parser.add_argument("spec_file", type=str,
                         help="MS Spectra file.")
     parser.add_argument("ident_file", type=str,

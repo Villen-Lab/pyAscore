@@ -108,5 +108,6 @@ optional arguments:
                         mzXML. Default: mzXML.
   --ident_file_type IDENT_FILE_TYPE
                         The type of file supplied for identifications. One of
-                        pepXML, percolatorTXT, or mokapotTXT. Default: pepXML.
+                        pepXML, mzIdentML, percolatorTXT, or mokapotTXT.
+                        Default: pepXML.
 ```
