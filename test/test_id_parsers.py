@@ -209,3 +209,19 @@ class TestIdnetificationParser(unittest.TestCase):
             self.assertEqual(psm["peptide"], answer["peptide"])
             self.assertTrue(np.all(psm["mod_positions"] == answer["mod_positions"]))
             self.assertTrue(np.all(psm["mod_masses"] == answer["mod_masses"]))
+   
+    def test_mzidml_reader(self):
+        target_file="test/example_inputs/psms/test_psms.mzid"
+        parser = id_parsers.IdentificationParser(target_file, "mzIdentML", score_string="SEQUEST:xcorr")
+        psm_list = parser.to_list()
+
+        self.assertEqual(len(psm_list), 20)
+        # mzIdentMLs from tide collapse localizations,
+        # so the following will only look at every other hit.
+        for psm, answer in zip(psm_list[::2], self.tide_answers[::2]):
+            self.assertEqual(psm["scan"], answer["scan"])
+            self.assertEqual(psm["charge_state"], answer["charge_state"])
+            self.assertEqual(psm["score"], answer["score"])
+            self.assertEqual(psm["peptide"], answer["peptide"])
+            self.assertTrue(np.all(psm["mod_positions"] == answer["mod_positions"]))
+            self.assertTrue(np.all(psm["mod_masses"] == answer["mod_masses"]))

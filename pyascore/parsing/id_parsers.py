@@ -2,6 +2,7 @@ import re
 import numpy as np
 from numpy import isclose
 from pandas import read_csv
+from pyteomics.mzid import MzIdentML
 from pyteomics.pepxml import PepXML
 from pyteomics import mass
 
@@ -194,6 +195,51 @@ class IDExtractor:
             self.results["mod_positions"][ind], self.results["mod_masses"][ind] = self._get_mod_info()
         return self.results
 
+class MzIdentMLExtractor(IDExtractor):
+    def _get_matches(self):
+        try:
+            return self.entry["SpectrumIdentificationItem"]
+        except KeyError:
+            return []
+
+    def _get_scans(self):
+        try:
+            return int(re.search("[0-9]+", self.entry["spectrumID"]).group())
+        except KeyError:
+            return -1
+
+    def _get_charge(self):
+        try:
+            return int(self._match["chargeState"])
+        except KeyError:
+            return 0
+
+    def _get_score(self):
+        try:
+            return float(self._match[self.score_string])
+        except KeyError:
+            return None
+
+    def _get_peptide(self):
+        try:
+            return self._match["PeptideEvidenceRef"][0]["PeptideSequence"]
+        except KeyError:
+            return ""
+
+    def _get_mod_info(self):
+        try:
+            mod_list = self._match["Modification"]
+            pos = np.zeros(len(mod_list), dtype=np.int32)
+            mass = np.zeros(len(mod_list), dtype=np.float32)
+            for ind, mod in enumerate(mod_list):
+                pos[ind] = int(mod["location"])
+                aa = mod["residues"][0]
+                mass[ind] = STD_AA_MASS[aa] + float(mod["monoisotopicMassDelta"])
+            return pos, mass
+
+        except KeyError:
+            return np.zeros(0, dtype=np.int32), np.zeros(0, dtype=np.float32)
+
 class PepXMLExtractor(IDExtractor):
     def _get_matches(self):
         try:
@@ -342,7 +388,10 @@ class IdentificationParser:
                  spec_file_name=None):
 
         # Define a bridge to ID file handling classes
-        if id_file_format == "pepXML":
+        if id_file_format == "mzIdentML":
+            self._reader = MzIdentML(id_file_name)
+            self._extractor = MzIdentMLExtractor(score_string)
+        elif id_file_format == "pepXML":
             self._reader = PepXML(id_file_name)
             self._extractor = PepXMLExtractor(score_string)
         elif id_file_format == "percolatorTXT":
@@ -352,7 +401,9 @@ class IdentificationParser:
             self._reader = MokapotTXT(id_file_name)
             self._extractor = MokapotTXTExtractor() 
         else:
-            raise ValueError("{} not supported at this time.".format(id_file_format))
+            raise ValueError("{} not supported at this time."
+                             " Must be on of: mzIdentML, pepXML,"
+                             " percolatorTXT, or mokapotTXT".format(id_file_format))
         
         # Define containers for modification information
         # TODO: Allow for absolute modification masses
