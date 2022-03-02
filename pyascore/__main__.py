@@ -26,7 +26,7 @@ def args_from_file(file_path):
 
 def build_spectra_parser(arg_ref):
     print("{} -- Reading spectra from: {}".format(get_time_stamp(), arg_ref.spec_file))
-    spec_parser = SpectraParser(arg_ref.spec_file, "mzML")
+    spec_parser = SpectraParser(arg_ref.spec_file, arg_ref.spec_file_type)
     return spec_parser.to_dict()
 
 
@@ -126,11 +126,14 @@ def main():
                            " Set to negative to always analyze all.")
     parser.add_argument("--parameter_file", type=str, default="",
                         help="A file containing parameters. Example: 'residues = STY'.")
+    parser.add_argument("--spec_file_type", type=str, default="mzML",
+                        help="The type of file supplied for spectra."
+                             " One of mzML or mzXML. Default: mzXML.")
     parser.add_argument("--ident_file_type", type=str, default="pepXML",
                         help="The type of file supplied for identifications."
-                             " One of pepXML, percolatorTXT, or mokapotTXT. Default: pepXML.")
+                             " One of pepXML, mzIdentML, percolatorTXT, or mokapotTXT. Default: pepXML.")
     parser.add_argument("spec_file", type=str,
-                        help="MS Spectra file supplied as MzML.")
+                        help="MS Spectra file.")
     parser.add_argument("ident_file", type=str,
                         help="Results of database search.")
     parser.add_argument("out_file", type=str,

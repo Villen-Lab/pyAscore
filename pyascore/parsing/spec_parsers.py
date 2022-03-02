@@ -1,6 +1,7 @@
 import re
 import numpy as np
 from pyteomics.mzml import MzML
+from pyteomics.mzxml import MzXML
 
 
 class SpectraExtractor:
@@ -54,9 +55,41 @@ class MzMLExtractor(SpectraExtractor):
             return np.array([], dtype=np.float64), np.array([], dtype=np.float64)
 
 
+class MzXMLExtractor(SpectraExtractor):
+    def _get_scan(self):
+        try:
+            return int(self.scan["num"])
+        except KeyError:
+            return -1
+
+    def _get_ms_level(self):
+        try:
+            return int(self.scan["msLevel"])
+        except KeyError:
+            return 0
+
+    def _get_precursor(self):
+        try:
+            precursor_list = self.scan["precursorMz"]
+            nprecursors = len(precursor_list)
+            if nprecursors > 1:
+                 raise ValueError("Multiple precursors not supported at this time")
+
+            return precursor_list[0]["precursorMz"], precursor_list[0]["precursorCharge"]
+
+        except KeyError:
+            return None, None
+
+    def _get_spectra(self):
+        try:
+            return self.scan["m/z array"], self.scan["intensity array"]
+        except:
+            return np.array([], dtype=np.float64), np.array([], dtype=np.float64)
+
+
 class SpectraParser:
     """
-    Parser for spectra information coming from .mzMLs.
+    Parser for spectra information coming from mzMLs or mzXMLs.
     """
     def __init__(self,
                  spec_file_name,
@@ -68,8 +101,12 @@ class SpectraParser:
         if spec_file_format == "mzML":
             self._reader = MzML(spec_file_name)
             self._extractor = MzMLExtractor()
+        elif spec_file_format == "mzXML":
+            self._reader = MzXML(spec_file_name)
+            self._extractor = MzXMLExtractor()
         else:
-            raise ValueError("{} not supported at this time.".format(spec_file_format))
+            raise ValueError("{} not supported at this time."
+                             " Should be one of: mzML or mzXML".format(spec_file_format))
 
 
         # Store filtering criteria

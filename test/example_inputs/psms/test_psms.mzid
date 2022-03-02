@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<MzIdentML id="" creationDate="2022-02-27T19:03:59Z" version="1.1.0" xsi:schemaLocation="http://psidev.info/psi/pi/mzIdentML/1.1 http://psidev.info/files/mzIdentML1.1.0.xsd" xmlns="http://psidev.info/psi/pi/mzIdentML/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SequenceCollection>
+    <DBSequence id="DBS_0" length="22" accession="sp|Q15527|SURF2_HUMAN">
+      <Seq>DLGSTEDGDGTDDFLTDKEDEK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_1" length="20" accession="sp|Q7KZ85|SPT6H_HUMAN">
+      <Seq>KMSDDEDDDEEEYGKEEHEK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_2" length="23" accession="sp|Q12789|TF3C1_HUMAN">
+      <Seq>RRASWASENGETDAEGTQMTPAK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_3" length="23" accession="sp|Q9NVM9|INT13_HUMAN">
+      <Seq>GKEELAEAEIIKDSPDSPEPPNK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_4" length="23" accession="tr|H0YH12|H0YH12_HUMAN">
+      <Seq>GKEELAEAEIIKDSPDSPEPPNK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_5" length="24" accession="tr|A6NL93|A6NL93_HUMAN">
+      <Seq>EDLPAENGETKTEESPASDEAGEK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_6" length="24" accession="sp|P05114|HMGN1_HUMAN">
+      <Seq>EDLPAENGETKTEESPASDEAGEK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_7" length="24" accession="tr|A6NEL0|A6NEL0_HUMAN">
+      <Seq>EDLPAENGETKTEESPASDEAGEK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_8" length="24" accession="sp|Q7Z5K2|WAPL_HUMAN">
+      <Seq>VEEESTGDPFGFDSDDESLPVSSK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_9" length="26" accession="tr|E9PQZ1|E9PQZ1_HUMAN">
+      <Seq>KPATPAEDDEDDDIDLFGSDNEEEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_10" length="26" accession="tr|E9PQ49|E9PQ49_HUMAN">
+      <Seq>KPATPAEDDEDDDIDLFGSDNEEEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_11" length="26" accession="tr|E9PL71|E9PL71_HUMAN">
+      <Seq>KPATPAEDDEDDDIDLFGSDNEEEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_12" length="26" accession="tr|A0A087X1X7|A0A087X1X7_HUMAN">
+      <Seq>KPATPAEDDEDDDIDLFGSDNEEEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_13" length="26" accession="tr|E9PK01|E9PK01_HUMAN">
+      <Seq>KPATPAEDDEDDDIDLFGSDNEEEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_14" length="26" accession="tr|E9PI39|E9PI39_HUMAN">
+      <Seq>KPATPAEDDEDDDIDLFGSDNEEEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_15" length="26" accession="tr|E9PRY8|E9PRY8_HUMAN">
+      <Seq>KPATPAEDDEDDDIDLFGSDNEEEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_16" length="26" accession="sp|P29692|EF1D_HUMAN">
+      <Seq>KPATPAEDDEDDDIDLFGSDNEEEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_17" length="29" accession="sp|Q14699|RFTN1_HUMAN">
+      <Seq>AGDMGNCVSGQQQEGGVSEEMKGPVQEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_18" length="29" accession="tr|G3XAJ6|G3XAJ6_HUMAN">
+      <Seq>AGDMGNCVSGQQQEGGVSEEMKGPVQEDK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_19" length="28" accession="sp|Q9UHB6|LIMA1_HUMAN">
+      <Seq>EGHSLEMENENLVENGADSDEDDNSFLK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_20" length="28" accession="tr|F8VQE1|F8VQE1_HUMAN">
+      <Seq>EGHSLEMENENLVENGADSDEDDNSFLK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_21" length="28" accession="tr|F8VS07|F8VS07_HUMAN">
+      <Seq>EGHSLEMENENLVENGADSDEDDNSFLK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_22" length="29" accession="tr|H7C1L2|H7C1L2_HUMAN">
+      <Seq>AEEPPSQLDQDTQVQDMDEGSDDEEEGQK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_23" length="29" accession="sp|Q15459|SF3A1_HUMAN">
+      <Seq>AEEPPSQLDQDTQVQDMDEGSDDEEEGQK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_24" length="35" accession="tr|A0A7I2V428|A0A7I2V428_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_25" length="35" accession="tr|H7BY16|H7BY16_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_26" length="35" accession="tr|A0A7I2V2S8|A0A7I2V2S8_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_27" length="35" accession="sp|P19338|NUCL_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_28" length="35" accession="tr|A0A7I2V3F3|A0A7I2V3F3_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_29" length="35" accession="tr|C9JLB1|C9JLB1_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_30" length="35" accession="tr|A0A7I2V2U7|A0A7I2V2U7_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_31" length="35" accession="tr|A0A7I2V699|A0A7I2V699_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_32" length="35" accession="tr|A0A7I2V506|A0A7I2V506_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_33" length="35" accession="tr|A0A7I2V349|A0A7I2V349_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_34" length="35" accession="tr|A0A7I2V5M5|A0A7I2V5M5_HUMAN">
+      <Seq>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_35" length="38" accession="tr|A0A0B4J1S7|A0A0B4J1S7_HUMAN">
+      <Seq>NASNVKHHDSSALGVYSYIPLVENPYFSSWPPSGTSSK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_36" length="38" accession="sp|Q9Y2R2|PTN22_HUMAN">
+      <Seq>NASNVKHHDSSALGVYSYIPLVENPYFSSWPPSGTSSK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_37" length="38" accession="tr|E9PMT0|E9PMT0_HUMAN">
+      <Seq>NASNVKHHDSSALGVYSYIPLVENPYFSSWPPSGTSSK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_38" length="38" accession="tr|F5H2S8|F5H2S8_HUMAN">
+      <Seq>NASNVKHHDSSALGVYSYIPLVENPYFSSWPPSGTSSK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_39" length="38" accession="tr|A0A0A0MTE6|A0A0A0MTE6_HUMAN">
+      <Seq>NASNVKHHDSSALGVYSYIPLVENPYFSSWPPSGTSSK</Seq>
+    </DBSequence>
+    <DBSequence id="DBS_40" length="38" accession="tr|A0A0A0MTD9|A0A0A0MTD9_HUMAN">
+      <Seq>NASNVKHHDSSALGVYSYIPLVENPYFSSWPPSGTSSK</Seq>
+    </DBSequence>
+    <Peptide id="PEP_0">
+      <PeptideSequence>DLGSTEDGDGTDDFLTDKEDEK</PeptideSequence>
+      <Modification location="16" residues="T" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_1">
+      <PeptideSequence>KMSDDEDDDEEEYGKEEHEK</PeptideSequence>
+      <Modification location="3" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_2">
+      <PeptideSequence>RRASWASENGETDAEGTQMTPAK</PeptideSequence>
+      <Modification location="4" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_3">
+      <PeptideSequence>GKEELAEAEIIKDSPDSPEPPNK</PeptideSequence>
+      <Modification location="17" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_4">
+      <PeptideSequence>EDLPAENGETKTEESPASDEAGEK</PeptideSequence>
+      <Modification location="18" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_5">
+      <PeptideSequence>VEEESTGDPFGFDSDDESLPVSSK</PeptideSequence>
+      <Modification location="14" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_6">
+      <PeptideSequence>KPATPAEDDEDDDIDLFGSDNEEEDK</PeptideSequence>
+      <Modification location="4" residues="T" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+      <Modification location="19" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_7">
+      <PeptideSequence>AGDMGNCVSGQQQEGGVSEEMKGPVQEDK</PeptideSequence>
+      <Modification location="4" residues="M" monoisotopicMassDelta="15.99">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_8">
+      <PeptideSequence>EGHSLEMENENLVENGADSDEDDNSFLK</PeptideSequence>
+      <Modification location="7" residues="M" monoisotopicMassDelta="15.99">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+      <Modification location="19" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_9">
+      <PeptideSequence>AEEPPSQLDQDTQVQDMDEGSDDEEEGQK</PeptideSequence>
+      <Modification location="17" residues="M" monoisotopicMassDelta="15.99">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+      <Modification location="21" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_10">
+      <PeptideSequence>AEEPPSQLDQDTQVQDMDEGSDDEEEGQK</PeptideSequence>
+      <Modification location="12" residues="T" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+      <Modification location="17" residues="M" monoisotopicMassDelta="15.99">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_11">
+      <PeptideSequence>KEDSDEEEDDDSEEDEEDDEDEDEDEDEIEPAAMK</PeptideSequence>
+      <Modification location="4" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+      <Modification location="12" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <Peptide id="PEP_12">
+      <PeptideSequence>NASNVKHHDSSALGVYSYIPLVENPYFSSWPPSGTSSK</PeptideSequence>
+      <Modification location="11" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+      <Modification location="29" residues="S" monoisotopicMassDelta="79.97">
+        <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
+      </Modification>
+    </Peptide>
+    <PeptideEvidence id="PE_0" peptide_ref="PEP_0" dBSequence_ref="DBS_0" start="0" end="22" isDecoy="false"/>
+    <PeptideEvidence id="PE_1" peptide_ref="PEP_0" dBSequence_ref="DBS_0" start="0" end="22" isDecoy="false"/>
+    <PeptideEvidence id="PE_2" peptide_ref="PEP_1" dBSequence_ref="DBS_1" start="0" end="20" isDecoy="false"/>
+    <PeptideEvidence id="PE_3" peptide_ref="PEP_1" dBSequence_ref="DBS_1" start="0" end="20" isDecoy="false"/>
+    <PeptideEvidence id="PE_4" peptide_ref="PEP_2" dBSequence_ref="DBS_2" start="0" end="23" isDecoy="false"/>
+    <PeptideEvidence id="PE_5" peptide_ref="PEP_2" dBSequence_ref="DBS_2" start="0" end="23" isDecoy="false"/>
+    <PeptideEvidence id="PE_6" peptide_ref="PEP_3" dBSequence_ref="DBS_3" start="0" end="23" isDecoy="false"/>
+    <PeptideEvidence id="PE_7" peptide_ref="PEP_3" dBSequence_ref="DBS_4" start="0" end="23" isDecoy="false"/>
+    <PeptideEvidence id="PE_8" peptide_ref="PEP_3" dBSequence_ref="DBS_3" start="0" end="23" isDecoy="false"/>
+    <PeptideEvidence id="PE_9" peptide_ref="PEP_3" dBSequence_ref="DBS_4" start="0" end="23" isDecoy="false"/>
+    <PeptideEvidence id="PE_10" peptide_ref="PEP_4" dBSequence_ref="DBS_5" start="0" end="24" isDecoy="false"/>
+    <PeptideEvidence id="PE_11" peptide_ref="PEP_4" dBSequence_ref="DBS_6" start="0" end="24" isDecoy="false"/>
+    <PeptideEvidence id="PE_12" peptide_ref="PEP_4" dBSequence_ref="DBS_7" start="0" end="24" isDecoy="false"/>
+    <PeptideEvidence id="PE_13" peptide_ref="PEP_4" dBSequence_ref="DBS_5" start="0" end="24" isDecoy="false"/>
+    <PeptideEvidence id="PE_14" peptide_ref="PEP_4" dBSequence_ref="DBS_6" start="0" end="24" isDecoy="false"/>
+    <PeptideEvidence id="PE_15" peptide_ref="PEP_4" dBSequence_ref="DBS_7" start="0" end="24" isDecoy="false"/>
+    <PeptideEvidence id="PE_16" peptide_ref="PEP_5" dBSequence_ref="DBS_8" start="0" end="24" isDecoy="false"/>
+    <PeptideEvidence id="PE_17" peptide_ref="PEP_5" dBSequence_ref="DBS_8" start="0" end="24" isDecoy="false"/>
+    <PeptideEvidence id="PE_18" peptide_ref="PEP_6" dBSequence_ref="DBS_9" start="0" end="26" isDecoy="false"/>
+    <PeptideEvidence id="PE_19" peptide_ref="PEP_6" dBSequence_ref="DBS_10" start="0" end="26" isDecoy="false"/>
+    <PeptideEvidence id="PE_20" peptide_ref="PEP_6" dBSequence_ref="DBS_11" start="0" end="26" isDecoy="false"/>
+    <PeptideEvidence id="PE_21" peptide_ref="PEP_6" dBSequence_ref="DBS_12" start="0" end="26" isDecoy="false"/>
+    <PeptideEvidence id="PE_22" peptide_ref="PEP_6" dBSequence_ref="DBS_13" start="0" end="26" isDecoy="false"/>
+    <PeptideEvidence id="PE_23" peptide_ref="PEP_6" dBSequence_ref="DBS_14" start="0" end="26" isDecoy="false"/>
+    <PeptideEvidence id="PE_24" peptide_ref="PEP_6" dBSequence_ref="DBS_15" start="0" end="26" isDecoy="false"/>
+    <PeptideEvidence id="PE_25" peptide_ref="PEP_6" dBSequence_ref="DBS_16" start="0" end="26" isDecoy="false"/>
+    <PeptideEvidence id="PE_26" peptide_ref="PEP_7" dBSequence_ref="DBS_17" start="0" end="29" isDecoy="false"/>
+    <PeptideEvidence id="PE_27" peptide_ref="PEP_7" dBSequence_ref="DBS_18" start="0" end="29" isDecoy="false"/>
+    <PeptideEvidence id="PE_28" peptide_ref="PEP_8" dBSequence_ref="DBS_19" start="0" end="28" isDecoy="false"/>
+    <PeptideEvidence id="PE_29" peptide_ref="PEP_8" dBSequence_ref="DBS_20" start="0" end="28" isDecoy="false"/>
+    <PeptideEvidence id="PE_30" peptide_ref="PEP_8" dBSequence_ref="DBS_21" start="0" end="28" isDecoy="false"/>
+    <PeptideEvidence id="PE_31" peptide_ref="PEP_8" dBSequence_ref="DBS_19" start="0" end="28" isDecoy="false"/>
+    <PeptideEvidence id="PE_32" peptide_ref="PEP_8" dBSequence_ref="DBS_20" start="0" end="28" isDecoy="false"/>
+    <PeptideEvidence id="PE_33" peptide_ref="PEP_8" dBSequence_ref="DBS_21" start="0" end="28" isDecoy="false"/>
+    <PeptideEvidence id="PE_34" peptide_ref="PEP_9" dBSequence_ref="DBS_22" start="0" end="29" isDecoy="false"/>
+    <PeptideEvidence id="PE_35" peptide_ref="PEP_9" dBSequence_ref="DBS_23" start="0" end="29" isDecoy="false"/>
+    <PeptideEvidence id="PE_36" peptide_ref="PEP_10" dBSequence_ref="DBS_22" start="0" end="29" isDecoy="false"/>
+    <PeptideEvidence id="PE_37" peptide_ref="PEP_10" dBSequence_ref="DBS_23" start="0" end="29" isDecoy="false"/>
+    <PeptideEvidence id="PE_38" peptide_ref="PEP_11" dBSequence_ref="DBS_24" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_39" peptide_ref="PEP_11" dBSequence_ref="DBS_25" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_40" peptide_ref="PEP_11" dBSequence_ref="DBS_26" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_41" peptide_ref="PEP_11" dBSequence_ref="DBS_27" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_42" peptide_ref="PEP_11" dBSequence_ref="DBS_28" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_43" peptide_ref="PEP_11" dBSequence_ref="DBS_29" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_44" peptide_ref="PEP_11" dBSequence_ref="DBS_30" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_45" peptide_ref="PEP_11" dBSequence_ref="DBS_31" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_46" peptide_ref="PEP_11" dBSequence_ref="DBS_32" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_47" peptide_ref="PEP_11" dBSequence_ref="DBS_33" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_48" peptide_ref="PEP_11" dBSequence_ref="DBS_34" start="0" end="35" isDecoy="false"/>
+    <PeptideEvidence id="PE_49" peptide_ref="PEP_12" dBSequence_ref="DBS_35" start="0" end="38" isDecoy="false"/>
+    <PeptideEvidence id="PE_50" peptide_ref="PEP_12" dBSequence_ref="DBS_36" start="0" end="38" isDecoy="false"/>
+    <PeptideEvidence id="PE_51" peptide_ref="PEP_12" dBSequence_ref="DBS_37" start="0" end="38" isDecoy="false"/>
+    <PeptideEvidence id="PE_52" peptide_ref="PEP_12" dBSequence_ref="DBS_38" start="0" end="38" isDecoy="false"/>
+    <PeptideEvidence id="PE_53" peptide_ref="PEP_12" dBSequence_ref="DBS_39" start="0" end="38" isDecoy="false"/>
+    <PeptideEvidence id="PE_54" peptide_ref="PEP_12" dBSequence_ref="DBS_40" start="0" end="38" isDecoy="false"/>
+  </SequenceCollection>
+  <AnalysisCollection>
+    <SpectrumIdentification id="SpecIdent_1" spectrumIdentificationProtocol_ref="SearchProtocol_1" spectrumIdentificationList_ref="SIL_0" activityDate="">
+      <InputSpectra spectraData_ref="test_spectra.mzML"/>
+    </SpectrumIdentification>
+  </AnalysisCollection>
+  <AnalysisProtocolCollection>
+    <SpectrumIdentificationProtocol id="SearchProtocol_1">
+      <ModificationParams>
+        <SearchModification fixedMod="true" massDelta="57.02" residues="C"/>
+        <SearchModification fixedMod="false" massDelta="79.97" residues="S T Y"/>
+        <SearchModification fixedMod="false" massDelta="15.99" residues="M"/>
+      </ModificationParams>
+      <Enzymes independent="false">
+      </Enzymes>
+      <Threshold>
+        <cvParam cvRef="MS" accession="MS:1001494" name="no threshold" value=""/>
+      </Threshold>
+    </SpectrumIdentificationProtocol>
+  </AnalysisProtocolCollection>
+  <DataCollection>
+    <Inputs>
+      <SpectraData id="test_spectra.mzML" name="test_spectra.mzML" location="">
+      </SpectraData>
+    </Inputs>
+    <AnalysisData>
+      <SpectrumIdentificationList id="SIL_0" numSequencesSearched="0">
+        <SpectrumIdentificationResult id="SIR_0" spectrumID="27845-27845">
+          <SpectrumIdentificationItem id="SII_0" rank="1" chargeState="3" peptide_ref="PEP_0" experimentalMassToCharge="827.992004394531" calculatedMassToCharge="827.993713378906" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_0"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="2.49656582"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.136017993"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_1" rank="2" chargeState="3" peptide_ref="PEP_0" experimentalMassToCharge="827.992004394531" calculatedMassToCharge="827.993713378906" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_1"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="2.15698767"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.312209994"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_1" spectrumID="14760-14760">
+          <SpectrumIdentificationItem id="SII_2" rank="1" chargeState="3" peptide_ref="PEP_1" experimentalMassToCharge="846.306457519531" calculatedMassToCharge="846.310852050781" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_2"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="4.48925829"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.641668975"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_3" rank="2" chargeState="3" peptide_ref="PEP_1" experimentalMassToCharge="846.306457519531" calculatedMassToCharge="846.310852050781" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_3"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="1.60863817"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.306879014"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_2" spectrumID="20462-20462">
+          <SpectrumIdentificationItem id="SII_4" rank="1" chargeState="3" peptide_ref="PEP_2" experimentalMassToCharge="858.378601074219" calculatedMassToCharge="858.374389648438" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_4"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.30343485"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.169322997"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_5" rank="2" chargeState="3" peptide_ref="PEP_2" experimentalMassToCharge="858.378601074219" calculatedMassToCharge="858.374389648438" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_5"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="2.74408746"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.342974007"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_3" spectrumID="26219-26219">
+          <SpectrumIdentificationItem id="SII_6" rank="1" chargeState="3" peptide_ref="PEP_3" experimentalMassToCharge="858.408142089844" calculatedMassToCharge="858.405456542969" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_6"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_7"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.62030768"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.0123285996"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_7" rank="2" chargeState="3" peptide_ref="PEP_3" experimentalMassToCharge="858.408142089844" calculatedMassToCharge="858.405456542969" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_8"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_9"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.5756743"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.752956986"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_4" spectrumID="18330-18330">
+          <SpectrumIdentificationItem id="SII_8" rank="1" chargeState="3" peptide_ref="PEP_4" experimentalMassToCharge="871.696166992188" calculatedMassToCharge="871.695617675781" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_10"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_11"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_12"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="2.81006455"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.0931300968"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_9" rank="2" chargeState="3" peptide_ref="PEP_4" experimentalMassToCharge="871.696166992188" calculatedMassToCharge="871.695617675781" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_13"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_14"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_15"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="2.54836297"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.0404415987"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_5" spectrumID="35669-35669">
+          <SpectrumIdentificationItem id="SII_10" rank="1" chargeState="3" peptide_ref="PEP_5" experimentalMassToCharge="885.028625488281" calculatedMassToCharge="885.028503417969" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_16"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.87117219"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.16099"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_11" rank="2" chargeState="3" peptide_ref="PEP_5" experimentalMassToCharge="885.028625488281" calculatedMassToCharge="885.028503417969" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_17"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.24795341"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.239798993"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_6" spectrumID="32257-32257">
+          <SpectrumIdentificationItem id="SII_12" rank="1" chargeState="3" peptide_ref="PEP_6" experimentalMassToCharge="1023.712707519531" calculatedMassToCharge="1023.714477539063" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_18"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_19"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_20"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_21"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_22"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_23"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_24"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_25"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.3405838"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.695800006"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_13" rank="2" chargeState="3" peptide_ref="PEP_7" experimentalMassToCharge="1023.712707519531" calculatedMassToCharge="1023.106018066406" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_26"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_27"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="1.01620567"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.239544004"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_7" spectrumID="31328-31328">
+          <SpectrumIdentificationItem id="SII_14" rank="1" chargeState="3" peptide_ref="PEP_8" experimentalMassToCharge="1078.43017578125" calculatedMassToCharge="1078.42919921875" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_28"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_29"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_30"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="5.46427345"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.160937995"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_15" rank="2" chargeState="3" peptide_ref="PEP_8" experimentalMassToCharge="1078.43017578125" calculatedMassToCharge="1078.42919921875" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_31"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_32"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_33"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="4.58486271"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.615577996"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_8" spectrumID="21996-21996">
+          <SpectrumIdentificationItem id="SII_16" rank="1" chargeState="3" peptide_ref="PEP_9" experimentalMassToCharge="1116.095703125" calculatedMassToCharge="1115.762817382813" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_34"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_35"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.88421941"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.392457008"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_17" rank="2" chargeState="3" peptide_ref="PEP_10" experimentalMassToCharge="1116.095703125" calculatedMassToCharge="1115.762817382813" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_36"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_37"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="2.35982895"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.298994988"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+        <SpectrumIdentificationResult id="SIR_9" spectrumID="26962-26962">
+          <SpectrumIdentificationItem id="SII_18" rank="1" chargeState="3" peptide_ref="PEP_11" experimentalMassToCharge="1427.79736328125" calculatedMassToCharge="1427.129638671875" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_38"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_39"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_40"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_41"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_42"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_43"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_44"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_45"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_46"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_47"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_48"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.6686945"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.796320975"/>
+          </SpectrumIdentificationItem>
+          <SpectrumIdentificationItem id="SII_19" rank="2" chargeState="3" peptide_ref="PEP_12" experimentalMassToCharge="1427.79736328125" calculatedMassToCharge="1428.309814453125" passThreshold="true">
+            <PeptideEvidenceRef peptideEvidence_ref="PE_49"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_50"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_51"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_52"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_53"/>
+            <PeptideEvidenceRef peptideEvidence_ref="PE_54"/>
+            <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="0.747234404"/>
+            <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.000220001006"/>
+          </SpectrumIdentificationItem>
+        </SpectrumIdentificationResult>
+      </SpectrumIdentificationList>
+    </AnalysisData>
+  </DataCollection>
+</MzIdentML>

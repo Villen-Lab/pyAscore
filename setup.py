@@ -5,7 +5,7 @@ from os import path
 import numpy as np
 
 NAME = "pyascore"
-VERSION = 0.2
+VERSION = 0.3
 DESCR = "A python module for fast post translational modification localization."
 REQUIRES = ['cython']
 
