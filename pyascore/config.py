@@ -65,9 +65,12 @@ def build_parser():
                            " Set to negative to always analyze all.")
     parser.add_argument("--parameter_file", type=str, default="",
                         help="A file containing parameters. Example: 'residues = STY'.")
+    parser.add_argument("--spec_file_type", type=str, default="mzML",
+                        help="The type of file supplied for spectra."
+                             " One of mzML or mzXML. Default: mzML.")
     parser.add_argument("--ident_file_type", type=str, default="pepXML",
                         help="The type of file supplied for identifications."
-                             " One of pepXML, percolatorTXT, or mokapotTXT. Default: pepXML.")
+                             " One of pepXML, mzIdentML, percolatorTXT, or mokapotTXT. Default: pepXML.")
     parser.add_argument("spec_file", type=str,
                         help="MS Spectra file supplied as MzML.")
     parser.add_argument("ident_file", type=str,
