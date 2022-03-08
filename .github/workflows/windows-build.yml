@@ -38,6 +38,7 @@ jobs:
         pip install -r requirements.txt
     - name: Build cython extension
       run: |
+        $env:PYASCORE_COMPILE_ARGS = '/std:c++latest'
         python setup.py build_ext --inplace
     - name: Run python unittest
       run:

@@ -1,6 +1,6 @@
 from setuptools import setup, Extension
 from Cython.Build import cythonize
-from os import path
+from os import path, environ
 
 import numpy as np
 
@@ -22,11 +22,15 @@ HERE = path.abspath(path.dirname(__file__))
 with open(path.join(HERE, 'README.md'), encoding='utf-8') as f:
     LONG_DESCR = f.read()
 
+extra_compile_args=[]
+if "PYASCORE_COMPILE_ARGS" in environ:
+    extra_compile_args=environ["PYASCORE_COMPILE_ARGS"].split()
+
 EXT = [Extension(
           SRC_DIR + ".ptm_scoring", 
           [SRC_DIR + "/ptm_scoring/PTMScoring.pyx"],
           include_dirs=[np.get_include(), "/ptm_scoring/lib"],
-          extra_compile_args=[]
+          extra_compile_args=extra_compile_args
       )]
 
 setup(
