@@ -28,21 +28,23 @@ namespace ptmscoring {
         neutral_losses.clear();
 
         // Iterate through characters of peptide
-        for (char const& res : peptide) {
-            residues.push_back({ StandardResidues.at(res) });
+        for (std::string::iterator res_it = peptide.begin();
+	     res_it != peptide.end();
+	     res_it ++) {
+            residues.push_back({ StandardResidues.at(*res_it) });
 
             // If character is in neutral loss group, add neutral loss
             neutral_losses.push_back({0.});
-            if (nl_groups.count(res)) {
-                neutral_losses.back().front() = nl_groups.at(res);
+            if (nl_groups.count(*res_it)) {
+                neutral_losses.back().front() = nl_groups.at(*res_it);
             } 
 
             // If character is in mod group, add a modified residue
-            if (mod_group.find(res) != std::string::npos) {
-                residues.back().push_back( StandardResidues.at(res) + mod_mass );
+            if (mod_group.find(*res_it) != std::string::npos) {
+                residues.back().push_back( StandardResidues.at(*res_it) + mod_mass );
                 neutral_losses.back().push_back(0.);
-                if (nl_groups.count(std::tolower(res))) {
-                    neutral_losses.back().back() = nl_groups.at(std::tolower(res));
+                if (nl_groups.count(std::tolower(*res_it))) {
+                    neutral_losses.back().back() = nl_groups.at(std::tolower(*res_it));
                 } 
             }
 
