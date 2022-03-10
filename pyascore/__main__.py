@@ -13,16 +13,25 @@ from .config import *
 def get_time_stamp():
     return datetime.now().strftime("%m/%d/%y %H:%M:%S")
 
-def build_spectra_parser(arg_ref):
+def parse_spectra(arg_ref):
     print("{} -- Reading spectra from: {}".format(get_time_stamp(), arg_ref.spec_file))
     spec_parser = SpectraParser(arg_ref.spec_file, arg_ref.spec_file_type)
     return spec_parser.to_dict()
 
 
-def build_identification_parser(arg_ref):
+def parse_identifications(arg_ref):
     print("{} -- Reading identifications from: {}".format(get_time_stamp(), arg_ref.ident_file))
+
+    # Build mass corrector
+    mods = COMMON_MODS.copy()
+    mods.update({aa : arg_ref.mod_mass for aa in arg_ref.residues})
+    mass_corrector = MassCorrector(mod_mass_dict=mods)
+    
+    # Parse
     id_parser = iter(
-        sorted(IdentificationParser(arg_ref.ident_file, arg_ref.ident_file_type).to_list(),
+        sorted(IdentificationParser(arg_ref.ident_file,
+                                    arg_ref.ident_file_type,
+                                    mass_corrector).to_list(),
                key=lambda spec: spec["scan"])
     )
     return id_parser
@@ -93,8 +102,8 @@ def main():
 
     print("{} -- Ascore Started".format(get_time_stamp()))
 
-    spectra_map = build_spectra_parser(args)
-    psms = build_identification_parser(args)
+    spectra_map = parse_spectra(args)
+    psms = parse_identifications(args)
 
     print("{} -- Anlyzing PSMs".format(get_time_stamp()))
     ascore = build_ascore(args)

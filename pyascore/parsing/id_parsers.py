@@ -1,4 +1,5 @@
 import re
+import warnings
 import numpy as np
 from numpy import isclose
 from pandas import read_csv
@@ -96,7 +97,9 @@ class MassCorrector:
             return (res,), (pos,), (mod_mass,)
 
         else:
-            raise ValueError("Unrecognized mod on {} at position {} with mass: {}".format(res, pos, mass))
+            warnings.warn("Unrecognized mod on {} at position {} with mass: {}"
+                          " Using uncorrected mass.".format(res, pos, mass))
+            return (res,), (pos,), (mass,)
 
     def correct_multiple(self, peptide, positions, masses):
         """Run the correction function on a list of mods for a single peptide
