@@ -40,7 +40,11 @@ namespace ptmscoring {
             } 
 
             // If character is in mod group, add a modified residue
-            if (mod_group.find(*res_it) != std::string::npos) {
+	    // Also, if terminal mods are allowed and is terminal aa, add a modified residue
+	    bool is_mod_aa = mod_group.find(*res_it) != std::string::npos;
+	    bool allow_nterm_mod = mod_group.find('n') != std::string::npos && res_it == peptide.begin();
+	    bool allow_cterm_mod = mod_group.find('c') != std::string::npos && res_it + 1 == peptide.end();
+            if (is_mod_aa || allow_nterm_mod || allow_cterm_mod) {
                 residues.back().push_back( StandardResidues.at(*res_it) + mod_mass );
                 neutral_losses.back().push_back(0.);
                 if (nl_groups.count(std::tolower(*res_it))) {
