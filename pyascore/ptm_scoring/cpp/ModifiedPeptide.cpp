@@ -54,10 +54,9 @@ namespace ptmscoring {
 
         for (size_t ind = 0; ind < aux_mod_pos.size(); ind++) {
             if (aux_mod_pos[ind] == 0) {
-                transform(residues[aux_mod_pos[ind]].begin(), 
-                          residues[aux_mod_pos[ind]].end(), 
-                          residues[aux_mod_pos[ind]].begin(),
-                          bind2nd(std::plus<float>(), aux_mod_mass[ind]));
+		for (float& m : residues[aux_mod_pos[ind]]) {
+                    m += aux_mod_mass[ind];
+                }
             } else {
                 size_t pep_ind = aux_mod_pos[ind] - 1;
                 residues[pep_ind].front() += aux_mod_mass[ind];

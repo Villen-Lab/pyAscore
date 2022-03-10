@@ -14,7 +14,7 @@ class TestPyBinnedSpectra(unittest.TestCase):
 
     def test_spectral_processing(self):
         masses = np.array([100., 300., 325., 350., 375., 400., 425., 450., 475., 500., 550., 1000.])
-        intensities = np.array([50., 200., 100., 1000., 500., 100., 1000., 200., 300., 400., 500., 50.])
+        intensities = np.array([50., 200., 100., 1000., 500., 100., 1200., 200., 300., 400., 500., 50.])
 
         true_n_peaks = iter([1, 6, 2, 1])
         true_rank_0 = iter([100., 425., 550., 1000.])

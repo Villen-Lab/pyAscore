@@ -1,6 +1,7 @@
 <img src="https://raw.githubusercontent.com/AnthonyOfSeattle/pyAscore/main/static/logo.png" width="300" title="pyAscore Logo">
 
 ![Linux Build](https://github.com/AnthonyOfSeattle/pyAscore/actions/workflows/linux-build.yml/badge.svg)
+[![Windows Build](https://github.com/AnthonyOfSeattle/pyAscore/actions/workflows/windows-build.yml/badge.svg)](https://github.com/AnthonyOfSeattle/pyAscore/actions/workflows/windows-build.yml)
 [![Documentation Status](https://readthedocs.org/projects/pyascore/badge/?version=latest)](https://pyascore.readthedocs.io/en/latest/?badge=latest)
 
 ## Intro
