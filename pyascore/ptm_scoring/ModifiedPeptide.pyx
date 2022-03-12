@@ -110,7 +110,7 @@ cdef class PyModifiedPeptide:
 
     def get_site_determining_ions(self, np.ndarray[unsigned int, ndim=1, mode="c"] sig_1,
                                         np.ndarray[unsigned int, ndim=1, mode="c"] sig_2,
-                                        str fragment_type, size_t charge_state):
+                                        str fragment_type, size_t max_charge):
         """Determine the non-overlapping theoretical fragments of two peptides.
 
         Parameters
@@ -121,8 +121,8 @@ cdef class PyModifiedPeptide:
             Encodes the modification state that each modifiable amino acid should have in the second peptide.
         fragment_type : char
             The type of fragment graph to create, e.g. 'b'.
-        charge_state : integer > 0
-            The charge state of all fragments.
+        max_charge : integer > 0
+            Site determining ions are produced for all charge states from 1 to max_charge inclusive.
 
         Returns
         -------
@@ -139,7 +139,7 @@ cdef class PyModifiedPeptide:
             sig_vec_2.push_back(<size_t> sig_2[ind])
 
         cdef vector[vector[float]] ions = self.modified_peptide_ptr[0].getSiteDeterminingIons(
-            sig_vec_1, sig_vec_2, fragment_type.encode("utf8")[0], charge_state
+            sig_vec_1, sig_vec_2, fragment_type.encode("utf8")[0], max_charge
         )
 
         ion_arrays = (np.zeros(ions[0].size(), dtype=np.float32),

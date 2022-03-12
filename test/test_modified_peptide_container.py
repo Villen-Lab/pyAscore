@@ -426,6 +426,26 @@ class TestPyModifiedPeptide(unittest.TestCase):
         for c, m in zip(calc_mz, true_mz):
             self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
 
+    def test_site_determining_high_charge(self):
+        pep = PyModifiedPeptide("STY", 79.966331)
+
+        pep.consume_peptide("ASMHSK", 1)
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
+                                                np.array([0, 1], dtype=np.uint32),
+                                                "b", 2)
+        true_mz = (np.array([120.02556, 185.545805, 239.0427475, 254.07526, 370.083786, 507.142696]),
+                   np.array([80.042395, 145.56264, 159.076965, 214.092095, 290.117455, 427.176365]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
+                                                np.array([0, 1], dtype=np.uint32),
+                                                "y", 2)
+        true_mz = (np.array([117.576602, 186.106057, 234.14537, 251.626302, 371.20428, 502.24477]),
+                   np.array([157.559767, 226.089222, 291.609468, 314.111710, 451.17062, 582.211111]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
     def test_peptide_print(self):
         pep = PyModifiedPeptide("STY", 79.966331)
 
