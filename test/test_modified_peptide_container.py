@@ -173,6 +173,45 @@ class TestPyModifiedPeptide(unittest.TestCase):
             z_graph.incr_signature()
             test(z_graph, c, np.array([129.07897, 230.12665, 361.16714, 528.16550]))
 
+    def test_fragment_incr_terminal(self):
+        pep = PyModifiedPeptide("nKc", 42.010565)
+
+        def test(graph, charge, neutral_masses):
+            for m in neutral_masses:
+                m = (m + charge * 1.007825) / max(1, charge)
+                self.assertTrue(
+                    np.isclose(graph.get_fragment_mz(), m, rtol=1e-6, atol=0)
+                )
+                graph.incr_fragment()
+
+        # Test unmodified peptide
+        pep.consume_peptide("ASKTR", 1)
+        max_charge = 3
+        for c in range(max_charge + 1):
+            # Test b fragments
+            b_graph = pep.get_fragment_graph("b", c)
+            # First signature all the way through
+            test(b_graph, c, np.array([113.047675, 200.079705, 328.174664, 429.222344]))
+            self.assertTrue(b_graph.is_fragment_end())
+            # Second signature, picking up from common node
+            b_graph.incr_signature()
+            test(b_graph, c, np.array([71.03711, 158.06914, 328.174664, 429.222344]))
+            # Third signature, picking up from common node
+            b_graph.incr_signature()
+            test(b_graph, c, np.array([286.16409, 387.21178]))
+
+            # Test y fragments
+            y_graph = pep.get_fragment_graph("y", c)
+            # First signature all the way through
+            test(y_graph, c, np.array([216.12223, 317.16992, 445.26487, 532.29691]))
+            self.assertTrue(y_graph.is_fragment_end())
+            # Second signature, picking up from common node
+            y_graph.incr_signature()
+            test(y_graph, c, np.array([174.11167, 275.15935, 445.26487, 532.2969]))
+            # Third signature, picking up from common node
+            y_graph.incr_signature()
+            test(y_graph, c, np.array([403.254314, 490.286345]))
+
     def test_fragment_incr_mod(self):
         pep = PyModifiedPeptide("STY", 79.966331)
 

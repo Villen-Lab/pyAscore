@@ -28,21 +28,27 @@ namespace ptmscoring {
         neutral_losses.clear();
 
         // Iterate through characters of peptide
-        for (char const& res : peptide) {
-            residues.push_back({ StandardResidues.at(res) });
+        for (std::string::iterator res_it = peptide.begin();
+	     res_it != peptide.end();
+	     res_it ++) {
+            residues.push_back({ StandardResidues.at(*res_it) });
 
             // If character is in neutral loss group, add neutral loss
             neutral_losses.push_back({0.});
-            if (nl_groups.count(res)) {
-                neutral_losses.back().front() = nl_groups.at(res);
-            } 
+            if (nl_groups.count(*res_it)) {
+                neutral_losses.back().front() = nl_groups.at(*res_it);
+            }
 
             // If character is in mod group, add a modified residue
-            if (mod_group.find(res) != std::string::npos) {
-                residues.back().push_back( StandardResidues.at(res) + mod_mass );
+	    // Also, if terminal mods are allowed and is terminal aa, add a modified residue
+	    bool is_mod_aa = mod_group.find(*res_it) != std::string::npos;
+	    bool allow_nterm_mod = mod_group.find('n') != std::string::npos && res_it == peptide.begin();
+	    bool allow_cterm_mod = mod_group.find('c') != std::string::npos && res_it + 1 == peptide.end();
+            if (is_mod_aa || allow_nterm_mod || allow_cterm_mod) {
+                residues.back().push_back( residues.back().back() + mod_mass );
                 neutral_losses.back().push_back(0.);
-                if (nl_groups.count(std::tolower(res))) {
-                    neutral_losses.back().back() = nl_groups.at(std::tolower(res));
+                if (nl_groups.count(std::tolower(*res_it))) {
+                    neutral_losses.back().back() = nl_groups.at(std::tolower(*res_it));
                 } 
             }
 
@@ -51,25 +57,25 @@ namespace ptmscoring {
     }
 
     void ModifiedPeptide::applyAuxMods () {
-
         for (size_t ind = 0; ind < aux_mod_pos.size(); ind++) {
-            if (aux_mod_pos[ind] == 0) {
-		for (float& m : residues[aux_mod_pos[ind]]) {
-                    m += aux_mod_mass[ind];
-                }
-            } else {
-                size_t pep_ind = aux_mod_pos[ind] - 1;
-                residues[pep_ind].front() += aux_mod_mass[ind];
-                // A residue with a non n-terminus aux mod cannot have a variable mod
-                residues[pep_ind].resize(1);
-                
-                char res = peptide.at(aux_mod_pos[ind] - 1);
-                if (nl_groups.count(std::tolower(res))) {
-                    neutral_losses[pep_ind].front() = nl_groups.at(std::tolower(res));
-                    neutral_losses[pep_ind].resize(1);
-                }
+	    // Correct indices
+	    size_t pep_ind = aux_mod_pos[ind];
+	    if (pep_ind > 0) {
+                pep_ind -= 1;
+	    }
+
+            // Apply aux mod to both modified and unmodified
+	    for (float& m : residues[pep_ind]) {
+                m += aux_mod_mass[ind];
             }
-        }
+
+	    // Add NL groups
+	    char res = peptide.at(pep_ind);
+            if (nl_groups.count(std::tolower(res))) {
+                neutral_losses[pep_ind].front() = nl_groups.at(std::tolower(res));
+                neutral_losses[pep_ind].resize(1);
+            }
+	}
     }
 
     void ModifiedPeptide::initializeFragments () {
@@ -185,44 +191,56 @@ namespace ptmscoring {
     std::string ModifiedPeptide::getPeptide(std::vector<size_t> signature) const {
         // If no signature is given, just use first signature
         if ( signature.size() == 0 ) {
-            signature = std::vector<size_t>(n_of_mod, 1);
+	    size_t fake_sig_size = std::min(n_of_mod, getNumberModifiable());
+            signature = std::vector<size_t>(fake_sig_size, 1);
         }
 
+        std::vector<float> all_mod_masses = std::vector<float>(peptide.size() + 2, 0.);
+
+	// Add overflow mod
+	if (n_of_mod > getNumberModifiable()) {
+	    if (mod_group.find("n") != std::string::npos) {
+                all_mod_masses.front() += mod_mass;
+	    } else {
+                all_mod_masses.back() +=  mod_mass;
+	    }
+	}
+
+        // Add internal variable mods
+	for (size_t sig_ind = 0; sig_ind < signature.size(); sig_ind++) {
+            if (signature[sig_ind] == 1) {
+	        size_t mod_pos = getPosOfNthModifiable(sig_ind);
+		char aa = peptide[mod_pos];
+		if (mod_group.find(aa) != std::string::npos) {
+                    all_mod_masses[mod_pos + 1] += mod_mass;
+		} else if (mod_pos == 0) {
+		    all_mod_masses.front() += mod_mass;
+		} else if (mod_pos + 1 == peptide.size()) {
+                    all_mod_masses.back() += mod_mass;
+		}
+	    }
+	}
+
+	// Add internal fixed mods
+	for (size_t aux_ind = 0; aux_ind < aux_mod_pos.size(); aux_ind++) {
+            all_mod_masses[aux_mod_pos[aux_ind]] += aux_mod_mass[aux_ind];
+	}
+
+	// Write peptide
+	size_t start_ind = 0;
+	size_t end_ind = all_mod_masses.size();
+	if (all_mod_masses.front() == 0.) start_ind++;
+	if (all_mod_masses.back() == 0.) end_ind--;
+	std::string full_peptide = "n" + peptide + "c";     
         std::string mod_peptide = "";
-
-        // If an n terminal mod is present, pin it to the front
-        size_t aux_ind = 0;
-        if (!aux_mod_pos.empty() and aux_mod_pos.front() == 0) {
-            mod_peptide += "n";
-
-            char mod_buffer[10];
-            std::sprintf(mod_buffer, "[%d]", (int) std::round(aux_mod_mass[0]));
-            mod_peptide += mod_buffer;
-
-            aux_ind++;
-        }
-
-        size_t sig_ind = 0;
-        for (size_t pep_ind = 0; pep_ind < peptide.size(); pep_ind++) { 
-            char aa = peptide[pep_ind];
-            mod_peptide += aa;
-
-            if (mod_group.find(aa) != std::string::npos 
-                and sig_ind < signature.size() 
-                and signature[sig_ind++] == 1) {
-                // Add a modification mass
+	for (size_t ind = start_ind; ind < end_ind; ind++) {
+	    mod_peptide += full_peptide[ind];
+	    if (all_mod_masses[ind] > 0.) {
                 char mod_buffer[10];
-                std::sprintf(mod_buffer, "[%d]", (int) std::round(mod_mass));
+                std::sprintf(mod_buffer, "[%d]", (int) std::round(all_mod_masses[ind]));
                 mod_peptide += mod_buffer;
-            } else if (aux_ind < aux_mod_pos.size()
-                       and (pep_ind + 1) == aux_mod_pos[aux_ind]) {
-                // Add a mass specified in aux_masses
-                char mod_buffer[10];
-                std::sprintf(mod_buffer, "[%d]", (int) std::round(aux_mod_mass[aux_ind]));
-                mod_peptide += mod_buffer;
-                aux_ind++;
-            }
-        }
+	    }
+	}
         return mod_peptide;
     }
 

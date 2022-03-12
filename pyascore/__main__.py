@@ -13,27 +13,52 @@ from .config import *
 def get_time_stamp():
     return datetime.now().strftime("%m/%d/%y %H:%M:%S")
 
-def build_spectra_parser(arg_ref):
+def parse_spectra(arg_ref):
     print("{} -- Reading spectra from: {}".format(get_time_stamp(), arg_ref.spec_file))
     spec_parser = SpectraParser(arg_ref.spec_file, arg_ref.spec_file_type)
     return spec_parser.to_dict()
 
 
-def build_identification_parser(arg_ref):
+def parse_identifications(arg_ref):
     print("{} -- Reading identifications from: {}".format(get_time_stamp(), arg_ref.ident_file))
+
+    # Build mass corrector
+    mods = COMMON_MODS.copy()
+    mods.update({aa : arg_ref.mod_mass for aa in arg_ref.residues})
+    mass_corrector = MassCorrector(mod_mass_dict=mods)
+    
+    # Parse
     id_parser = iter(
-        sorted(IdentificationParser(arg_ref.ident_file, arg_ref.ident_file_type).to_list(),
+        sorted(IdentificationParser(arg_ref.ident_file,
+                                    arg_ref.ident_file_type,
+                                    mass_corrector).to_list(),
                key=lambda spec: spec["scan"])
     )
     return id_parser
 
 
+def validate_args(arg_ref):
+    # Check modifiable resiudes
+    allowed_residues = "ncACDEFGHIKLMNOPQRSTUVWY"
+    for aa in arg_ref.residues:
+        if aa not in allowed_residues:
+            raise ValueError("The residue inputed, {}, is not allowed."
+                             " Must be one of: {}".format(aa, allowed_residues))
+
+    # Check fragment types
+    allowed_fragments = "cbyz"
+    for frag in arg_ref.fragment_types:
+        if frag not in allowed_fragments:
+            raise ValueError("The fragment type inputed, {}, is not allowed."
+                             " Must be one of: {}".format(frag, allowed_fragments))
+
+
 def build_ascore(arg_ref):
     ascore = PyAscore(bin_size=100., n_top=10,
-                      mod_group=arg_ref.residues.upper(),
+                      mod_group=arg_ref.residues,
                       mod_mass=arg_ref.mod_mass,
                       mz_error=arg_ref.mz_error,
-                      fragment_types=arg_ref.fragment_types.lower())
+                      fragment_types=arg_ref.fragment_types)
 
     if arg_ref.neutral_loss_masses and arg_ref.neutral_loss_masses:
         nl_groups = arg_ref.neutral_loss_groups.split(",")
@@ -41,6 +66,7 @@ def build_ascore(arg_ref):
         [ascore.add_neutral_loss(g, m) for g,m in zip(nl_groups, nl_masses)]
  
     return ascore
+
 
 def process_mods(arg_ref, positions, masses):
     variable_mod_count = 0
@@ -70,14 +96,14 @@ def save_match(spectra, match):
 def main():
     parser = build_parser()
     args = parser.parse_args()
-
     if args.parameter_file:
         args = parser.parse_args(args_from_file(args.parameter_file) + sys.argv[1:])
+    validate_args(args)
 
     print("{} -- Ascore Started".format(get_time_stamp()))
 
-    spectra_map = build_spectra_parser(args)
-    psms = build_identification_parser(args)
+    spectra_map = parse_spectra(args)
+    psms = parse_identifications(args)
 
     print("{} -- Anlyzing PSMs".format(get_time_stamp()))
     ascore = build_ascore(args)
