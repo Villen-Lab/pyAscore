@@ -47,7 +47,8 @@ cdef class PyModifiedPeptide:
 
     @cython.boundscheck(False)
     @cython.wraparound(False)
-    def consume_peptide(self, str peptide, size_t n_of_mod, 
+    def consume_peptide(self, str peptide, size_t n_of_mod,
+                        size_t max_fragment_charge=1,
                         np.ndarray[unsigned int, ndim=1, mode="c"] aux_mod_pos = None, 
                         np.ndarray[float, ndim=1, mode="c"] aux_mod_mass = None):
         """Consumes a single peptide sequence and creates it's internal representation
@@ -58,6 +59,8 @@ cdef class PyModifiedPeptide:
             The peptide string without any modifications or n-terminal markings
         n_of_mod : int > 0
             Number of unlocalized modifications on the sequence
+        max_fragment_charge : int > 0
+            Fragments will be considered from charge 1 to max_fragment_charge
         aux_mod_pos : ndarray of uint32
             Positions of fixed modifications. Most modification positions should start at 1 with 0 being
             reserved for n-terminal modifications, as seems to be the field prefered encoding.
@@ -65,11 +68,14 @@ cdef class PyModifiedPeptide:
             Masses of individual fixed postion modifications.
         """
         if aux_mod_pos is not None and aux_mod_mass is not None:
-            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,
-                                                        &aux_mod_pos[0], &aux_mod_mass[0], 
+            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"),
+                                                        n_of_mod,
+                                                        max_fragment_charge,
+                                                        &aux_mod_pos[0], 
+                                                        &aux_mod_mass[0], 
                                                         aux_mod_pos.size)
         else:
-            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
+            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod, max_fragment_charge)
 
     def get_peptide(self, np.ndarray[unsigned int, ndim=1, mode="c"] signature = np.ndarray(0, dtype=np.uint32)):
         """Prints the modified sequence (residues plus mod mass) of the consumed peptide
@@ -110,7 +116,7 @@ cdef class PyModifiedPeptide:
 
     def get_site_determining_ions(self, np.ndarray[unsigned int, ndim=1, mode="c"] sig_1,
                                         np.ndarray[unsigned int, ndim=1, mode="c"] sig_2,
-                                        str fragment_type, size_t charge_state):
+                                        str fragment_type, size_t max_charge):
         """Determine the non-overlapping theoretical fragments of two peptides.
 
         Parameters
@@ -121,8 +127,8 @@ cdef class PyModifiedPeptide:
             Encodes the modification state that each modifiable amino acid should have in the second peptide.
         fragment_type : char
             The type of fragment graph to create, e.g. 'b'.
-        charge_state : integer > 0
-            The charge state of all fragments.
+        max_charge : integer > 0
+            Site determining ions are produced for all charge states from 1 to max_charge inclusive.
 
         Returns
         -------
@@ -139,7 +145,7 @@ cdef class PyModifiedPeptide:
             sig_vec_2.push_back(<size_t> sig_2[ind])
 
         cdef vector[vector[float]] ions = self.modified_peptide_ptr[0].getSiteDeterminingIons(
-            sig_vec_1, sig_vec_2, fragment_type.encode("utf8")[0], charge_state
+            sig_vec_1, sig_vec_2, fragment_type.encode("utf8")[0], max_charge
         )
 
         ion_arrays = (np.zeros(ions[0].size(), dtype=np.float32),

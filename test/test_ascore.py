@@ -26,7 +26,8 @@ class TestPyAscore(unittest.TestCase):
                 ascore.score(spectra["mz_values"], 
                              spectra["intensity_values"], 
                              match["peptide"], 
-                             len(match["mod_positions"]))
+                             len(match["mod_positions"]),
+                             match["charge_state"] - 1)
                 running_time += time.time()
                 n += 1
 
@@ -44,7 +45,8 @@ class TestPyAscore(unittest.TestCase):
                 ascore.score(spectra["mz_values"],
                              spectra["intensity_values"],
                              match["peptide"],
-                             len(match["mod_positions"]))
+                             len(match["mod_positions"]),
+                             match["charge_state"] - 1)
                 running_time += time.time()
                 n += 1
 

@@ -52,6 +52,10 @@ def validate_args(arg_ref):
             raise ValueError("The fragment type inputed, {}, is not allowed."
                              " Must be one of: {}".format(frag, allowed_fragments))
 
+    # Check max fragment charge
+    if arg_ref.max_fragment_charge < 1:
+        raise ValueError("The max fragment charge must be greater than or equal to 1")
+
 
 def build_ascore(arg_ref):
     ascore = PyAscore(bin_size=100., n_top=10,
@@ -116,6 +120,16 @@ def main():
             const_mod_pos, const_mod_masses, n_variable = process_mods(
                 args, match["mod_positions"], match["mod_masses"]
             )
+
+            # Try and figure out PSM charge
+            if match["charge_state"] is not None and match["charge_state"] != 0:
+                psm_charge = match["charge_state"]
+            elif spectra["precursor_charge"] is not None and spectra["precursor_charge"] != 0:
+                psm_charge = spectra["precursor_charge"]
+            else:
+                psm_charge = 2
+            psm_charge = max(psm_charge, 2)
+
             if n_variable > 0:
                 if args.match_save:
                     save_match(spectra, match)
@@ -123,6 +137,8 @@ def main():
                     spectra["mz_values"], 
                     spectra["intensity_values"], 
                     match["peptide"], n_variable,
+                    min(args.max_fragment_charge,
+                        psm_charge - 1),
                     const_mod_pos, const_mod_masses
                 )
                 alt_sites = [",".join([str(site) for site in site_list]) 

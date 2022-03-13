@@ -56,60 +56,62 @@ namespace ptmscoring {
     void Ascore::accumulateCounts () {
         std::unordered_map<long, ScoreContainer> score_cache;
         for (char fragment_type : modified_peptide_ptr->getFragmentTypes()){
-            // Initialize count stack with a zero count vector
-            std::unordered_map<size_t, std::vector<size_t>> count_cache;
-            std::unordered_map<size_t, size_t> nfrag_cache;
-            count_cache[1] = std::vector<size_t>(binned_spectra_ptr->getNTop());
-            nfrag_cache[1] = 0;
+	    for (size_t charge = 1; charge <= modified_peptide_ptr->getMaxFragmentCharge(); charge++) {
+                // Initialize count stack with a zero count vector
+                std::unordered_map<size_t, std::vector<size_t>> count_cache;
+                std::unordered_map<size_t, size_t> nfrag_cache;
+                count_cache[1] = std::vector<size_t>(binned_spectra_ptr->getNTop());
+                nfrag_cache[1] = 0;
 
-            // Iterate through signatures and accumulate scores
-            std::vector<size_t> cur_count;
-            size_t cur_nfrag;
-            ModifiedPeptide::FragmentGraph graph = modified_peptide_ptr->getFragmentGraph(
-                fragment_type, 1
-            );
-            for (; !graph.isSignatureEnd(); graph.incrSignature()){
+                // Iterate through signatures and accumulate scores
+                std::vector<size_t> cur_count;
+                size_t cur_nfrag;
+                ModifiedPeptide::FragmentGraph graph = modified_peptide_ptr->getFragmentGraph(
+                    fragment_type, charge
+                );
+                for (; !graph.isSignatureEnd(); graph.incrSignature()){
 
-                // Copy last signature state
-                cur_count = count_cache[graph.getFragmentSize()];
-                cur_nfrag = nfrag_cache[graph.getFragmentSize()];
+                    // Copy last signature state
+                    cur_count = count_cache[graph.getFragmentSize()];
+                    cur_nfrag = nfrag_cache[graph.getFragmentSize()];
 
-                for (; !graph.isFragmentEnd(); graph.incrFragment()){
-                    if ( graph.isPositionModified() && !graph.isLoss() ) { 
-                        count_cache[graph.getFragmentSize()] = cur_count;
-                        nfrag_cache[graph.getFragmentSize()] = cur_nfrag;
+                    for (; !graph.isFragmentEnd(); graph.incrFragment()){
+                        if ( graph.isPositionModified() && !graph.isLoss() ) { 
+                            count_cache[graph.getFragmentSize()] = cur_count;
+                            nfrag_cache[graph.getFragmentSize()] = cur_nfrag;
+                        }
+                        float fragment_mz = graph.getFragmentMZ();
+                        if ( modified_peptide_ptr->hasMatch(fragment_mz) ){
+                            std::tuple<float, size_t> matched_peak = modified_peptide_ptr->getMatch(
+                                fragment_mz
+                            );
+                            cur_count[std::get<1>(matched_peak)]++;
+                        }
+                        cur_nfrag++;
                     }
-                    float fragment_mz = graph.getFragmentMZ();
-                    if ( modified_peptide_ptr->hasMatch(fragment_mz) ){
-                        std::tuple<float, size_t> matched_peak = modified_peptide_ptr->getMatch(
-                            fragment_mz
-                        );
-                        cur_count[std::get<1>(matched_peak)]++;
-                    }
-                    cur_nfrag++;
-                }
 
-                // Write signature info
-                long index = 0;
-                for (size_t sig_pos : graph.getSignature()) {
-                    index = (index<<1) | sig_pos;
-                }
-
-                if (!score_cache.count(index)) {
-                    score_cache[index] = {};
-                    score_cache[index].signature = graph.getSignature();
-                    score_cache[index].counts = cur_count;
-                    score_cache[index].total_fragments = cur_nfrag;
-                    //score_cache[index] = { graph.getSignature(), cur_count, {} , -1, cur_nfrag};
-                } else {
-                    ScoreContainer & score_ref = score_cache[index];
-                    for (size_t ind = 0; ind < cur_count.size(); ind++) {
-                        score_ref.counts[ind] += cur_count[ind];
+                    // Write signature info
+                    long index = 0;
+                    for (size_t sig_pos : graph.getSignature()) {
+                        index = (index<<1) | sig_pos;
                     }
-                    score_ref.total_fragments += cur_nfrag;
+
+                    if (!score_cache.count(index)) {
+                        score_cache[index] = {};
+                        score_cache[index].signature = graph.getSignature();
+                        score_cache[index].counts = cur_count;
+                        score_cache[index].total_fragments = cur_nfrag;
+                        //score_cache[index] = { graph.getSignature(), cur_count, {} , -1, cur_nfrag};
+                    } else {
+                        ScoreContainer & score_ref = score_cache[index];
+                        for (size_t ind = 0; ind < cur_count.size(); ind++) {
+                            score_ref.counts[ind] += cur_count[ind];
+                        }
+                        score_ref.total_fragments += cur_nfrag;
+                    }
                 }
             }
-        }
+	}
         
         peptide_scores_.reserve(score_cache.size());
         for (auto & cached_pair : score_cache) {
@@ -177,7 +179,8 @@ namespace ptmscoring {
         std::vector<size_t> ion_trials(2);
         for (char fragment_type : modified_peptide_ptr->getFragmentTypes()) {
             std::vector<std::vector<float>> ions = modified_peptide_ptr->getSiteDeterminingIons(
-                ref.signature, other.signature, fragment_type, 1
+                ref.signature, other.signature, fragment_type,
+		modified_peptide_ptr->getMaxFragmentCharge()
             );
 
             ion_trials[0] += ions[0].size();

@@ -82,15 +82,16 @@ namespace ptmscoring {
         fragment_scores.clear();
         fragments.clear();
         for (char t : fragment_types){
-            // Only supporting charge 1 for now
-            for (FragmentGraph graph = getFragmentGraph(t, 1);
-                 !graph.isSignatureEnd();
-                 graph.incrSignature()) {
-                for(; !graph.isFragmentEnd();
-                      graph.incrFragment()) {
-                    fragments.push_back(graph.getFragmentMZ());
+            for (size_t charge=1; charge <= max_fragment_charge; charge++) {
+                for (FragmentGraph graph = getFragmentGraph(t, charge);
+                     !graph.isSignatureEnd();
+                     graph.incrSignature()) {
+                    for(; !graph.isFragmentEnd();
+                          graph.incrFragment()) {
+                        fragments.push_back(graph.getFragmentMZ());
+                    }
                 }
-            }
+	    }
         }
         std::sort(fragments.begin(), fragments.end());
     }
@@ -101,13 +102,16 @@ namespace ptmscoring {
         }
     }
 
-    void ModifiedPeptide::consumePeptide (std::string peptide, size_t n_of_mod,
+    void ModifiedPeptide::consumePeptide (std::string peptide,
+		                          size_t n_of_mod,
+					  size_t max_fragment_charge,
                                           const unsigned int * aux_mod_pos,
                                           const float * aux_mod_mass,
                                           size_t n_aux_mods) {
 
         this->peptide = peptide;
         this->n_of_mod = n_of_mod;
+	this->max_fragment_charge = max_fragment_charge;
 
         this->aux_mod_pos.resize(n_aux_mods);
         std::copy(aux_mod_pos, aux_mod_pos + n_aux_mods, this->aux_mod_pos.begin());
@@ -163,6 +167,10 @@ namespace ptmscoring {
 
     size_t ModifiedPeptide::getNumberOfMods () const {
         return n_of_mod;
+    }
+
+    size_t ModifiedPeptide::getMaxFragmentCharge () const {
+        return max_fragment_charge;
     }
 
     size_t ModifiedPeptide::getNumberModifiable () const {
@@ -250,44 +258,65 @@ namespace ptmscoring {
 
     std::vector<std::vector<float>> ModifiedPeptide::getSiteDeterminingIons (const std::vector<size_t> & signature_1,
                                                                              const std::vector<size_t> & signature_2,
-                                                                             char fragment_type, size_t charge_state) const {
+                                                                             char fragment_type, size_t max_charge) const {
+	// Generate candidate fragments for each charge state up to max
+        std::vector<float> candidate_fragments_1;
+	std::vector<float> candidate_fragments_2;
+	for (size_t charge = 1; charge <= max_charge; charge++) {
+	    // Generate fragments for signature 1
+            ModifiedPeptide::FragmentGraph graph_1 = getFragmentGraph(fragment_type, charge);
+	    graph_1.setSignature(signature_1);
+            for(; !graph_1.isFragmentEnd();
+                  graph_1.incrFragment()) {
+              candidate_fragments_1.push_back( graph_1.getFragmentMZ() );
+	    }
 
-        std::vector<std::tuple<float, size_t>> fragments;
-
-        // Gather fragments from the first signature
-        ModifiedPeptide::FragmentGraph graph_1 = getFragmentGraph(fragment_type, charge_state);
-        graph_1.setSignature(signature_1);
-        for(; !graph_1.isFragmentEnd();
-               graph_1.incrFragment()) {
-            fragments.push_back( {graph_1.getFragmentMZ(), 0} );
+	    // Generate fragments for signature 2
+	    ModifiedPeptide::FragmentGraph graph_2 = getFragmentGraph(fragment_type, charge);
+            graph_2.setSignature(signature_2);
+            for(; !graph_2.isFragmentEnd();
+                  graph_2.incrFragment()) {
+              candidate_fragments_2.push_back( graph_2.getFragmentMZ() );
+            }
         }
 
-        // Gather fragments from the second signature
-        ModifiedPeptide::FragmentGraph graph_2 = getFragmentGraph(fragment_type, charge_state);
-        graph_2.setSignature(signature_2);
-        for(; !graph_2.isFragmentEnd();
-               graph_2.incrFragment()) {
-            fragments.push_back( {graph_2.getFragmentMZ(), 1} );
-        }
+        // Sort fragments
+	std::sort(candidate_fragments_1.begin(), candidate_fragments_1.end());
+        std::sort(candidate_fragments_2.begin(), candidate_fragments_2.end());
 
-        // Only store peaks that are different
-        std::sort(fragments.begin(), fragments.end());
-        std::vector<std::vector<float>> ion_lists(2);
-        for (size_t frag_ind = 0; frag_ind < fragments.size(); frag_ind++) {
-            bool keep = true;
-            if ( frag_ind > 0 ) {
-                keep = keep && std::abs(std::get<0>(fragments[frag_ind]) - std::get<0>(fragments[frag_ind - 1])) > mz_error;
-            }
-            if ( frag_ind + 1 < fragments.size() ) {
-                keep = keep && std::abs(std::get<0>(fragments[frag_ind]) - std::get<0>(fragments[frag_ind + 1])) > mz_error;
-            }
-            if ( keep ) {
-                ion_lists[ std::get<1>(fragments[frag_ind]) ].push_back( std::get<0>(fragments[frag_ind]) );
-            }
+        // Determine non-overlapping fragments
+	std::vector<std::vector<float>> ion_lists(2);
+	std::vector<float>::iterator fragment_iter_1 = candidate_fragments_1.begin();
+	std::vector<float>::iterator fragment_iter_2 = candidate_fragments_2.begin();
+	while (fragment_iter_1 < candidate_fragments_1.end() ||
+	       fragment_iter_2 < candidate_fragments_2.end()) {
+	    // 1st and 2nd: 
+	    //   Check if one list is just finished. Just grab the rest of the other list.
+	    // 3rd:
+	    //   Check if fragments are equal given mz_error. These we will discard.
+	    // 4th and 5th:
+	    //   Check which list to take a fragment from. These are site determining peaks. 
+            if (fragment_iter_2 == candidate_fragments_2.end()) {
+                ion_lists[0].push_back(*fragment_iter_1);
+                fragment_iter_1++;
+            } else if (fragment_iter_1 == candidate_fragments_1.end()) {
+                ion_lists[1].push_back(*fragment_iter_2);
+                fragment_iter_2++;
+            } else if (std::abs(*fragment_iter_1 - *fragment_iter_2) < mz_error) {
+                fragment_iter_1++;
+                fragment_iter_2++;
+	    } else if (*fragment_iter_1 < *fragment_iter_2) { 
+	        ion_lists[0].push_back(*fragment_iter_1);
+		fragment_iter_1++;
+	    } else {
+	        ion_lists[1].push_back(*fragment_iter_2);
+		fragment_iter_2++;
+	    }
 
-        }
+	}
 
         return ion_lists;
+
     }
 
     ////////////////////////////////////////

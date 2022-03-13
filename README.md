@@ -99,6 +99,13 @@ optional arguments:
                         indicate a gain.
   --fragment_types FRAGMENT_TYPES
                         Fragment ion types to score. Supported: bcyz.
+  --max_fragment_charge MAX_FRAGMENT_CHARGE
+                        Max fragment charge to use for calculating theoretical
+                        peaks. Internally, the max fragment charge will not be
+                        allowed to be greater than the PSM charge - 1.
+                        However, if a more stringent limit needs to be set,
+                        this argument can be used.
+
   --hit_depth HIT_DEPTH
                         Number of PSMS to take from each scan. Set to negative
                         to always analyze all.

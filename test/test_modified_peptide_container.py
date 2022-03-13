@@ -22,7 +22,7 @@ class TestPyModifiedPeptide(unittest.TestCase):
         pep.consume_peptide("PASSEFK", 2)
         test(pep)
 
-        pep.consume_peptide("ASK", 1, np.array([0]).astype(np.uint32), np.array([20.]).astype(np.float32))
+        pep.consume_peptide("ASK", 1, 1, np.array([0]).astype(np.uint32), np.array([20.]).astype(np.float32))
         test(pep)
 
     def test_signature_incr(self):
@@ -225,7 +225,7 @@ class TestPyModifiedPeptide(unittest.TestCase):
                 graph.incr_fragment()
 
         # Test modified peptide
-        pep.consume_peptide("ASMTK", 1, np.array([0, 3]).astype(np.uint32), np.array([42.010565, 15.994915]).astype(np.float32))
+        pep.consume_peptide("ASMTK", 1, 1, np.array([0, 3]).astype(np.uint32), np.array([42.010565, 15.994915]).astype(np.float32))
         max_charge = 3
         for c in range(max_charge + 1):
             # Test b fragments
@@ -348,7 +348,7 @@ class TestPyModifiedPeptide(unittest.TestCase):
             self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
 
         # Site determining peaks with a single straddling constant modification
-        pep.consume_peptide("ASMSK", 1,
+        pep.consume_peptide("ASMSK", 1, 1,
                             np.array([3], dtype=np.uint32),
                             np.array([15.9949146202], dtype=np.float32))
         calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
@@ -407,7 +407,7 @@ class TestPyModifiedPeptide(unittest.TestCase):
             self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
 
         # Site determining peaks with two interfering mods
-        pep.consume_peptide("PASSSMSSEFK", 2,
+        pep.consume_peptide("PASSSMSSEFK", 2, 1,
                             np.array([6], dtype=np.uint32),
                             np.array([15.9949146202], dtype=np.float32))
         calc_mz = pep.get_site_determining_ions(np.array([1, 0, 1, 0, 0], dtype=np.uint32),
@@ -426,10 +426,30 @@ class TestPyModifiedPeptide(unittest.TestCase):
         for c, m in zip(calc_mz, true_mz):
             self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
 
+    def test_site_determining_high_charge(self):
+        pep = PyModifiedPeptide("STY", 79.966331)
+
+        pep.consume_peptide("ASMHSK", 1, 2)
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
+                                                np.array([0, 1], dtype=np.uint32),
+                                                "b", 2)
+        true_mz = (np.array([120.02556, 185.545805, 239.0427475, 254.07526, 370.083786, 507.142696]),
+                   np.array([80.042395, 145.56264, 159.076965, 214.092095, 290.117455, 427.176365]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
+        calc_mz = pep.get_site_determining_ions(np.array([1, 0], dtype=np.uint32),
+                                                np.array([0, 1], dtype=np.uint32),
+                                                "y", 2)
+        true_mz = (np.array([117.576602, 186.106057, 234.14537, 251.626302, 371.20428, 502.24477]),
+                   np.array([157.559767, 226.089222, 291.609468, 314.111710, 451.17062, 582.211111]))
+        for c, m in zip(calc_mz, true_mz):
+            self.assertTrue(np.all(np.isclose(c, m, rtol=1e-05, atol=0)))
+
     def test_peptide_print(self):
         pep = PyModifiedPeptide("STY", 79.966331)
 
-        pep.consume_peptide("ASMTK", 1, np.array([0, 3]).astype(np.uint32), np.array([42.010565, 15.994915]).astype(np.float32))
+        pep.consume_peptide("ASMTK", 1, 1, np.array([0, 3]).astype(np.uint32), np.array([42.010565, 15.994915]).astype(np.float32))
         self.assertEqual(pep.get_peptide(), "n[42]AS[80]M[16]TK")
         self.assertEqual(pep.get_peptide(np.array([0, 1], dtype=np.uint32)), "n[42]ASM[16]T[80]K")
 
