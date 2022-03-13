@@ -61,6 +61,11 @@ def build_parser():
                              " while negative masses can be used to indicate a gain.")
     parser.add_argument("--fragment_types", type=str, default="by",
                         help="Fragment ion types to score. Supported: bcyz.")
+    parser.add_argument("--max_fragment_charge", type=int, default=5,
+                        help="Max fragment charge to use for calculating theoretical peaks."
+                             " Internally, the max fragment charge will not be allowed to be"
+                             " greater than the PSM charge - 1. However, if a more stringent"
+                             " limit needs to be set, this argument can be used.")
     parser.add_argument("--hit_depth", type=int, default=1,
                         help="Number of PSMS to take from each scan."
                            " Set to negative to always analyze all.")

@@ -52,6 +52,10 @@ def validate_args(arg_ref):
             raise ValueError("The fragment type inputed, {}, is not allowed."
                              " Must be one of: {}".format(frag, allowed_fragments))
 
+    # Check max fragment charge
+    if arg_ref.max_fragment_charge < 1:
+        raise ValueError("The max fragment charge must be greater than or equal to 1")
+
 
 def build_ascore(arg_ref):
     ascore = PyAscore(bin_size=100., n_top=10,
@@ -122,7 +126,9 @@ def main():
                 ascore.score(
                     spectra["mz_values"], 
                     spectra["intensity_values"], 
-                    match["peptide"], n_variable, 1,
+                    match["peptide"], n_variable,
+                    min(args.max_fragment_charge,
+                        match["charge_state"] - 1),
                     const_mod_pos, const_mod_masses
                 )
                 alt_sites = [",".join([str(site) for site in site_list]) 
