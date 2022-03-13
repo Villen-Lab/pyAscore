@@ -120,6 +120,16 @@ def main():
             const_mod_pos, const_mod_masses, n_variable = process_mods(
                 args, match["mod_positions"], match["mod_masses"]
             )
+
+            # Try and figure out PSM charge
+            if match["charge_state"] is not None and match["charge_state"] != 0:
+                psm_charge = match["charge_state"]
+            elif spectra["precursor_charge"] is not None and spectra["precursor_charge"] != 0:
+                psm_charge = spectra["precursor_charge"]
+            else:
+                psm_charge = 2
+            psm_charge = max(psm_charge, 2)
+
             if n_variable > 0:
                 if args.match_save:
                     save_match(spectra, match)
@@ -128,7 +138,7 @@ def main():
                     spectra["intensity_values"], 
                     match["peptide"], n_variable,
                     min(args.max_fragment_charge,
-                        match["charge_state"] - 1),
+                        psm_charge - 1),
                     const_mod_pos, const_mod_masses
                 )
                 alt_sites = [",".join([str(site) for site in site_list]) 
