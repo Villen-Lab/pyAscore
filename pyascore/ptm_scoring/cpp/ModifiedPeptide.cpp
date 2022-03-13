@@ -82,15 +82,16 @@ namespace ptmscoring {
         fragment_scores.clear();
         fragments.clear();
         for (char t : fragment_types){
-            // Only supporting charge 1 for now
-            for (FragmentGraph graph = getFragmentGraph(t, 1);
-                 !graph.isSignatureEnd();
-                 graph.incrSignature()) {
-                for(; !graph.isFragmentEnd();
-                      graph.incrFragment()) {
-                    fragments.push_back(graph.getFragmentMZ());
+            for (size_t charge=1; charge <= max_fragment_charge; charge++) {
+                for (FragmentGraph graph = getFragmentGraph(t, charge);
+                     !graph.isSignatureEnd();
+                     graph.incrSignature()) {
+                    for(; !graph.isFragmentEnd();
+                          graph.incrFragment()) {
+                        fragments.push_back(graph.getFragmentMZ());
+                    }
                 }
-            }
+	    }
         }
         std::sort(fragments.begin(), fragments.end());
     }
@@ -101,13 +102,16 @@ namespace ptmscoring {
         }
     }
 
-    void ModifiedPeptide::consumePeptide (std::string peptide, size_t n_of_mod,
+    void ModifiedPeptide::consumePeptide (std::string peptide,
+		                          size_t n_of_mod,
+					  size_t max_fragment_charge,
                                           const unsigned int * aux_mod_pos,
                                           const float * aux_mod_mass,
                                           size_t n_aux_mods) {
 
         this->peptide = peptide;
         this->n_of_mod = n_of_mod;
+	this->max_fragment_charge = max_fragment_charge;
 
         this->aux_mod_pos.resize(n_aux_mods);
         std::copy(aux_mod_pos, aux_mod_pos + n_aux_mods, this->aux_mod_pos.begin());
@@ -163,6 +167,10 @@ namespace ptmscoring {
 
     size_t ModifiedPeptide::getNumberOfMods () const {
         return n_of_mod;
+    }
+
+    size_t ModifiedPeptide::getMaxFragmentCharge () const {
+        return max_fragment_charge;
     }
 
     size_t ModifiedPeptide::getNumberModifiable () const {

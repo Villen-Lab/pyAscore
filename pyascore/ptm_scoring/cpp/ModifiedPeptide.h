@@ -20,6 +20,7 @@ namespace ptmscoring {
 
         std::string peptide;
         size_t n_of_mod;
+	size_t max_fragment_charge;
         std::vector<unsigned int> aux_mod_pos;
         std::vector<float> aux_mod_mass;
 
@@ -38,6 +39,7 @@ namespace ptmscoring {
             void addNeutralLoss(std::string, float);
 
             void consumePeptide(std::string, size_t, 
+			        size_t = 1,
                                 const unsigned int * = NULL, 
                                 const float * = NULL, 
                                 size_t = 0);
@@ -50,6 +52,7 @@ namespace ptmscoring {
             float getMZError() const;
             std::string getFragmentTypes() const;
             size_t getNumberOfMods() const;
+	    size_t getMaxFragmentCharge() const;
             size_t getNumberModifiable() const;
             size_t getPosOfNthModifiable(size_t) const;
             std::string getBasePeptide() const;

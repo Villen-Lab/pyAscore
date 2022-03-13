@@ -177,7 +177,8 @@ namespace ptmscoring {
         std::vector<size_t> ion_trials(2);
         for (char fragment_type : modified_peptide_ptr->getFragmentTypes()) {
             std::vector<std::vector<float>> ions = modified_peptide_ptr->getSiteDeterminingIons(
-                ref.signature, other.signature, fragment_type, 1
+                ref.signature, other.signature, fragment_type,
+		modified_peptide_ptr->getMaxFragmentCharge()
             );
 
             ion_trials[0] += ions[0].size();

@@ -83,6 +83,7 @@ cdef class PyAscore:
     def score(self, np.ndarray[double, ndim=1, mode="c"] mz_arr not None, 
                     np.ndarray[double, ndim=1, mode="c"] int_arr not None,
                     str peptide, size_t n_of_mod,
+                    size_t max_fragment_charge=1,
                     np.ndarray[unsigned int, ndim=1, mode="c"] aux_mod_pos = None,
                     np.ndarray[float, ndim=1, mode="c"] aux_mod_mass = None):
         """Consume spectra and associated peptide information and score PTM localization
@@ -97,6 +98,8 @@ cdef class PyAscore:
             The peptide string without any modifications or n-terminal markings.
         n_of_mod : int > 0
             Number of unlocalized modifications on the sequence.
+        max_fragment_charge : int > 0
+            Maximum fragment charge to be used for score calculations.
         aux_mod_pos : ndarray of uint32
             Positions of fixed modifications. Most modification positions should start at 1 with 0 being
             reserved for n-terminal modifications, as seems to be the field prefered encoding.
@@ -109,10 +112,11 @@ cdef class PyAscore:
         # Build modified peptide with or without constant mods
         if aux_mod_pos is not None and aux_mod_mass is not None:
             self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod,
+                                                        max_fragment_charge,
                                                         &aux_mod_pos[0], &aux_mod_mass[0],
                                                         aux_mod_pos.size)
         else:
-            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod)
+            self.modified_peptide_ptr[0].consumePeptide(peptide.encode("utf8"), n_of_mod, max_fragment_charge)
         
         # Allow modified peptide to consume peaks from binned spectra
         while (self.binned_spectra_ptr[0].getBin() < self.binned_spectra_ptr[0].getNBins()):

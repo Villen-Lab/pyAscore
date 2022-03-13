@@ -122,7 +122,7 @@ def main():
                 ascore.score(
                     spectra["mz_values"], 
                     spectra["intensity_values"], 
-                    match["peptide"], n_variable,
+                    match["peptide"], n_variable, 1,
                     const_mod_pos, const_mod_masses
                 )
                 alt_sites = [",".join([str(site) for site in site_list]) 

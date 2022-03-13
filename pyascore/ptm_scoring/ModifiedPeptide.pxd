@@ -10,8 +10,8 @@ cdef extern from "cpp/ModifiedPeptide.cpp" namespace "ptmscoring":
     cdef cppclass ModifiedPeptide:
         ModifiedPeptide(string, float, float, string)
         void addNeutralLoss(string, float)
-        void consumePeptide(string, size_t)
-        void consumePeptide(string, size_t, 
+        void consumePeptide(string, size_t, size_t)
+        void consumePeptide(string, size_t, size_t,
                             const unsigned int *, 
                             const float *,
                             size_t)
