@@ -339,7 +339,7 @@ namespace ptmscoring {
     void ModifiedPeptide::FragmentGraph::resetResidueInd () {
         if ( fragment_type == 'b' || fragment_type == 'c' ) {
             residue_ind = 0;
-        } else if ( fragment_type == 'y'  || fragment_type == 'z' ) {
+        } else if ( fragment_type == 'y'  || fragment_type == 'z' || fragment_type == 'Z' ) {
             residue_ind = modified_peptide->residues.size() - 1;
         } else { throw 30; }
     }
@@ -347,7 +347,7 @@ namespace ptmscoring {
     void ModifiedPeptide::FragmentGraph::setResidueInd (size_t new_ind) {
         if ( fragment_type == 'b' || fragment_type == 'c' ) {
             residue_ind = std::min(residue_ind, new_ind);
-        } else if ( fragment_type == 'y' || fragment_type == 'z' ) {
+        } else if ( fragment_type == 'y' || fragment_type == 'z' || fragment_type == 'Z' ) {
             residue_ind = residue_ind == SIZE_MAX ? new_ind : std::max(residue_ind, new_ind);
         } else { throw 30; }
     }
@@ -355,7 +355,7 @@ namespace ptmscoring {
     void ModifiedPeptide::FragmentGraph::incrResidueInd () {
         if ( fragment_type == 'b' || fragment_type == 'c' ) {
             residue_ind++;
-        } else if ( fragment_type == 'y' || fragment_type == 'z' ) {
+        } else if ( fragment_type == 'y' || fragment_type == 'z' || fragment_type == 'Z' ) {
             residue_ind--;
         } else { throw 30; }
     }
@@ -363,7 +363,7 @@ namespace ptmscoring {
     bool ModifiedPeptide::FragmentGraph::isResidueEnd () {
         if ( fragment_type == 'b' || fragment_type == 'c' ) {
             return residue_ind == modified_peptide->residues.size();
-        } else if ( fragment_type == 'y' || fragment_type == 'z' ) {
+        } else if ( fragment_type == 'y' || fragment_type == 'z' || fragment_type == 'Z' ) {
             return residue_ind == SIZE_MAX;
         } else { throw 30; }
     }
@@ -371,7 +371,7 @@ namespace ptmscoring {
     size_t ModifiedPeptide::FragmentGraph::getResidueDistance () {
         if ( fragment_type == 'b' || fragment_type == 'c' ) {
             return residue_ind;
-        } else if ( fragment_type == 'y' || fragment_type == 'z' ) {
+        } else if ( fragment_type == 'y' || fragment_type == 'z' || fragment_type == 'Z' ) {
             return modified_peptide->residues.size() - residue_ind - 1;
         } else { throw 30; }
     }
@@ -512,7 +512,7 @@ namespace ptmscoring {
         bool last_fragment;
         if ( fragment_type == 'b' || fragment_type == 'c' ) {
             last_fragment = residue_ind == modified_peptide->residues.size() - 1;
-        } else if ( fragment_type == 'y' || fragment_type == 'z' ) {
+        } else if ( fragment_type == 'y' || fragment_type == 'z' || fragment_type == 'Z') {
             last_fragment = residue_ind == 0;
         } else { throw 30; }
         return last_fragment && !neutral_loss_iter.hasNext();
@@ -525,7 +525,7 @@ namespace ptmscoring {
     void ModifiedPeptide::FragmentGraph::setSignature (std::vector<size_t> new_signature) {
         if (new_signature.size() != modifiable.size()) {throw 50;}
         
-        if (fragment_type == 'y' || fragment_type == 'z') {
+        if (fragment_type == 'y' || fragment_type == 'z' || fragment_type == 'Z') {
             std::reverse(new_signature.begin(), new_signature.end());
         }
 
@@ -555,7 +555,7 @@ namespace ptmscoring {
         }
 
         // For efficiency's sake, y fragment signatures are always backwards
-        if (fragment_type == 'y' || fragment_type == 'z') {
+        if (fragment_type == 'y' || fragment_type == 'z' || fragment_type == 'Z') {
             std::reverse(signature_vector.begin(), signature_vector.end());
         }
 
@@ -570,6 +570,9 @@ namespace ptmscoring {
         } else if (fragment_type == 'z') {
             fragment_mz += 18.010565; // Gain of H2O
             fragment_mz -= 17.026549; // Loss of NH3
+        } else if (fragment_type == 'Z') {
+            fragment_mz += 18.010565; // Gain of H2O
+            fragment_mz -= 16.018724; // Loss of NH2
         } else if (fragment_type == 'c') {
             fragment_mz += 17.026549; // Gain of NH3
         }
