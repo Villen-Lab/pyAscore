@@ -99,7 +99,7 @@ optional arguments:
                         indicate a gain.
   --fragment_types FRAGMENT_TYPES
                         Fragment ion types to score. Supported: bcyzZ. The
-                        special character Z indicates a z+1 fragment.
+                        special character Z indicates a z+H fragment.
   --max_fragment_charge MAX_FRAGMENT_CHARGE
                         Max fragment charge to use for calculating theoretical
                         peaks. Internally, the max fragment charge will not be

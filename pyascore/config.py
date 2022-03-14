@@ -61,7 +61,7 @@ def build_parser():
                              " while negative masses can be used to indicate a gain.")
     parser.add_argument("--fragment_types", type=str, default="by",
                         help="Fragment ion types to score. Supported: bcyzZ."
-                             " The special character Z indicates a z+1 fragment.")
+                             " The special character Z indicates a z+H fragment.")
     parser.add_argument("--max_fragment_charge", type=int, default=5,
                         help="Max fragment charge to use for calculating theoretical peaks."
                              " Internally, the max fragment charge will not be allowed to be"
