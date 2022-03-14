@@ -173,6 +173,19 @@ class TestPyModifiedPeptide(unittest.TestCase):
             z_graph.incr_signature()
             test(z_graph, c, np.array([129.07897, 230.12665, 361.16714, 528.16550]))
 
+            # Test z fragments
+            z_graph = pep.get_fragment_graph("Z", c)
+            # First signature all the way through
+            test(z_graph, c, np.array([130.086795, 311.100805, 442.141295, 529.173325]))
+            self.assertTrue(y_graph.is_fragment_end())
+            # Second signature, picking up from common node
+            z_graph.incr_signature()
+            test(z_graph, c, np.array([231.134475, 362.174965, 529.173325]))
+            # Second signature, from beginning
+            z_graph.reset_iterator()
+            z_graph.incr_signature()
+            test(z_graph, c, np.array([130.086795, 231.134475, 362.174965, 529.173325]))
+
     def test_fragment_incr_terminal(self):
         pep = PyModifiedPeptide("nKc", 42.010565)
 
@@ -279,6 +292,19 @@ class TestPyModifiedPeptide(unittest.TestCase):
             z_graph.reset_iterator()
             z_graph.incr_signature()
             test(z_graph, c, np.array([129.07897, 230.12665, 377.16206, 544.16042]))
+
+            # Test Z fragments
+            z_graph = pep.get_fragment_graph("Z", c)
+            # First signature all the way through
+            test(z_graph, c, np.array([130.086795, 311.100805, 458.136215, 545.168245]))
+            self.assertTrue(z_graph.is_fragment_end())
+            # Second signature, picking up from common node
+            z_graph.incr_signature()
+            test(z_graph, c, np.array([231.134475, 378.169885, 545.168245]))
+            # Second signature, from beginning
+            z_graph.reset_iterator()
+            z_graph.incr_signature()
+            test(z_graph, c, np.array([130.086795, 231.134475, 378.169885, 545.168245]))
 
     def test_fragment_incr_nl(self):
         pep = PyModifiedPeptide("STY", 79.966331)
