@@ -46,7 +46,7 @@ def validate_args(arg_ref):
                              " Must be one of: {}".format(aa, allowed_residues))
 
     # Check fragment types
-    allowed_fragments = "cbyz"
+    allowed_fragments = "cbyzZ"
     for frag in arg_ref.fragment_types:
         if frag not in allowed_fragments:
             raise ValueError("The fragment type inputed, {}, is not allowed."
