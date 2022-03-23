@@ -22,7 +22,7 @@ copyright = '2022, Anthony S. Barente'
 author = 'Anthony S. Barente'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2'
+release = '0.6'
 
 
 # -- General configuration ---------------------------------------------------
@@ -33,6 +33,8 @@ master_doc = 'index'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
+    'numpydoc',
     'recommonmark',
     'sphinxarg.ext',
     'sphinx_rtd_theme'

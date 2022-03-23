@@ -39,6 +39,8 @@ cdef class PyAscore:
     mz_error : float
         The error in daltons to match theoretical peaks to consumed spectral peaks. The option to use PPM
         will likely be included in the future. (Defaults to 0.5)
+    fragment_types : str
+        The theoretical fragment types to score.
 
     Attributes
     ----------
@@ -71,11 +73,29 @@ cdef class PyAscore:
         self.ascore_ptr = new Ascore()
 
     def __dealloc__(self):
+        """Explicitly delete internal Cython pointers"""
         del self.binned_spectra_ptr
         del self.modified_peptide_ptr
         del self.ascore_ptr
 
     def add_neutral_loss(self, str group, float mass):
+        """Add a neutral loss ion to any fragment containing specified amino acids
+
+        For every fragment ion containing one of the amino acids defined in `group`,
+        the algorithm will search for a secondary neutral loss peak to also score.
+        Neutral losses can be specified for any amino acid using its one letter code,
+        i.e STY, and can be placed on a modified amino acid (variable or otherwise)
+        by using a lowercase letter, i.e. sty.
+
+        Parameters
+        ----------
+        group : str
+            Amino acids that should allow the neutral loss specified with their single
+            letter code, i.e. STY for Ser, Thr, and Tyr.
+        mass : float
+            Absolute mass of the neutral loss. Negative values will cause the algorithm
+            to look for higher mass peaks.
+        """
         self.modified_peptide_ptr[0].addNeutralLoss(group.encode("utf8"), mass)
 
     @cython.boundscheck(False)
@@ -132,6 +152,13 @@ cdef class PyAscore:
         self.ascore_ptr[0].score(self.binned_spectra_ptr[0], self.modified_peptide_ptr[0])
 
     def _score_cont_to_pyobj(self, ScoreContainer cont):
+        """Internal function to convert C++ ScoreContainer to native python dict
+        
+        Returns
+        -------
+        dict
+            Python dictionary with attributes: signature, counts, scores, weighted_score, total_fragments
+        """
         cdef size_t i
         pyobj = {}
 
@@ -154,6 +181,13 @@ cdef class PyAscore:
         return pyobj
 
     def _pyobj_to_score_cont(self, dict pyobj):
+        """Internal function to convert native python dict to C++ ScoreContainer
+        
+        Returns
+        -------
+        ScoreContainer
+            C++ object which can be transfered to internal algorithms
+        """
         cdef size_t i, nitems
         cdef ScoreContainer cont
 
@@ -188,7 +222,7 @@ cdef class PyAscore:
         Returns
         -------
         float
-            The ambiguity score (ascore) between 2 localizations
+            Relative evidence for localization in first argument vs the second argument
         """
         cdef ScoreContainer ref_score_cont = self._pyobj_to_score_cont(ref_score)
         cdef ScoreContainer other_score_cont = self._pyobj_to_score_cont(other_score)

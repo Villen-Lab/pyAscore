@@ -643,8 +643,8 @@ class IdentificationParser:
     that their masses will be trunctated. This class will attempt to normalize
     modifications so that all can be interpreted similarly.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     id_file_name : str
         Path to file containing PSMs
     spec_file_format : str

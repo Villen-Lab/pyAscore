@@ -12,8 +12,8 @@ This allows the algorithm to tackle both high and low resolution MS/MS spectra, 
 The pyAscore package was also built without any assumptions on modification mass, and thus can be used to localize any feasible post-translational modification.
 All algorithm components are implemented in C++, wrapped with Cython, and acessible by Python API or command line interface depending on pipeline needs.
 
-If you would like to see benchmarking experiments, check out this link:
-[Benchmark](https://github.com/AnthonyOfSeattle/pyAscore/tree/benchmark/experiments)
+For more information, check out our
+[documentation](https://pyascore.readthedocs.io).
 
 ## Getting Started
 
