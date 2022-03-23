@@ -115,3 +115,4 @@ going to our command line interface page.
 
    self
    cli.rst
+   api/index.rst
