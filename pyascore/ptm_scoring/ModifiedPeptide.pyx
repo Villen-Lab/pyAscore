@@ -177,13 +177,15 @@ cdef class PyFragmentGraph:
         A PyModifiedPeptide instance which has consumed at least one peptide
     fragment_type : char
         The type of fragment graph to create, e.g. 'b'.
-    charge_state : integer > 0
+    charge_state : int > 0
         The charge state of all fragments
 
     Attributes
     ----------
-    fragment_type
-    charge_state
+    fragment_type : char
+        The current type of fragment returned by the graph
+    charge_state : int
+        The current charge state for fragments returned from the graph
     """
     cdef ModifiedPeptide.FragmentGraph * fragment_graph_ptr
 
@@ -250,6 +252,7 @@ cdef class PyFragmentGraph:
         Returns
         -------
         ndarray of uint64
+            Array with one position per modifiable amino acid and a 1 if modified and 0 if not.
         """
         cdef vector[size_t] signature_vector = self.fragment_graph_ptr[0].getSignature()
         signature_array = np.zeros(signature_vector.size(), dtype=np.uint64)
@@ -260,7 +263,7 @@ cdef class PyFragmentGraph:
         return signature_array
 
     def get_fragment_mz(self):
-        """Return the size of the current fragment in MZ.
+        """Return the size of the current fragment in m/z.
 
         Returns
         -------
