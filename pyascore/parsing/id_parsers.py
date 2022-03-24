@@ -19,8 +19,6 @@ COMMON_MODS = {"n": 42.010565,
                "Y": 79.966331,
                "C": 57.021464}
 
-CONSTANT_MODS = {"C": 57.021464}
-
 class MassCorrector:
     """
     A class to provide modification mass correction
@@ -234,12 +232,15 @@ class IDExtractor:
     ----------
     score_string : str
         Specific string describing the score to extract from a record.
+    static_mods : dict
+        Dictionary of static mods to be used by some subclasses.
     """
-    def __init__(self, score_string=None):
+    def __init__(self, score_string=None, static_mods={}):
         self._match_list = None
         self._match = None
         self.score_string = score_string
         self.entry = None
+        self.static_mods = static_mods
 
     def _get_score(self):
         """Returns values requested via score_string if present
@@ -528,6 +529,9 @@ class PercolatorTXTExtractor(IDExtractor):
                 re.search("(?<=\[)[^A-z]+(?=\])", n_term_mod.group()).group()
             )
             pos.append(0)
+        elif "n" in self.static_mods:
+            mass.append(self.static_mods["n"])
+            pos.append(0)
 
         # Extract the rest of the sequence
         residues = [res.group() for res in re.finditer("[A-Z](\[[^A-z]+\])?", self._match["sequence"])]
@@ -536,8 +540,8 @@ class PercolatorTXTExtractor(IDExtractor):
             if extracted_mod is not None:
                 mass.append(STD_AA_MASS[res[0]] + float(extracted_mod.group()))
                 pos.append(ind)
-            elif res[0] in CONSTANT_MODS:
-                mass.append(STD_AA_MASS[res[0]] + CONSTANT_MODS[res[0]])
+            elif res[0] in self.static_mods:
+                mass.append(STD_AA_MASS[res[0]] + self.static_mods[res[0]])
                 pos.append(ind)
         return np.array(pos, dtype=np.int32), np.array(mass, dtype=np.float32)
 
@@ -616,6 +620,9 @@ class MokapotTXTExtractor(IDExtractor):
                 re.search("(?<=\[)[^A-z]+(?=\])", n_term_mod.group()).group()
             )
             pos.append(0)
+        elif "n" in self.static_mods:
+            mass.append(self.static_mods["n"])
+            pos.append(0)
 
         # Extract the rest of the sequence
         residues = [res.group() for res in re.finditer("[A-Z](\[[^A-z]+\])?", seq)]
@@ -624,9 +631,10 @@ class MokapotTXTExtractor(IDExtractor):
             if extracted_mod is not None:
                 mass.append(STD_AA_MASS[res[0]] + float(extracted_mod.group()))
                 pos.append(ind)
-            elif res[0] in CONSTANT_MODS:
-                mass.append(STD_AA_MASS[res[0]] + CONSTANT_MODS[res[0]])
+            elif res[0] in self.static_mods:
+                mass.append(STD_AA_MASS[res[0]] + self.static_mods[res[0]])
                 pos.append(ind)
+
         return np.array(pos, dtype=np.int32), np.array(mass, dtype=np.float32)
 
 
@@ -660,17 +668,20 @@ class IdentificationParser:
         Whether a lower score is better than a higher score
     score_func : callable
         Transformation for scores
+    static_mods : dict
+        Dictionary of static mods to be used by some extractors.
     spec_file_name : str
         Currently not used
     """
     def __init__(self,
                  id_file_name, 
                  id_file_format,
-                 mass_corrector=MassCorrector(), 
+                 mass_corrector=MassCorrector(),
                  score_string=None,
                  score_threshold=None,
                  score_lower_better=True,
                  score_func=None,
+                 static_mods={"C": 57.021464},
                  spec_file_name=None):
 
         # Define a bridge to ID file handling classes
@@ -682,10 +693,10 @@ class IdentificationParser:
             self._extractor = PepXMLExtractor(score_string)
         elif id_file_format == "percolatorTXT":
             self._reader = PercolatorTXT(id_file_name)
-            self._extractor = PercolatorTXTExtractor()
+            self._extractor = PercolatorTXTExtractor(score_string, static_mods)
         elif id_file_format == "mokapotTXT":
             self._reader = MokapotTXT(id_file_name)
-            self._extractor = MokapotTXTExtractor() 
+            self._extractor = MokapotTXTExtractor(score_string, static_mods)
         else:
             raise ValueError("{} not supported at this time."
                              " Must be on of: mzIdentML, pepXML,"
