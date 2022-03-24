@@ -72,15 +72,21 @@ def build_ascore(arg_ref):
     return ascore
 
 
-def process_mods(arg_ref, positions, masses):
+def process_mods(arg_ref, sequence, positions, masses):
     variable_mod_count = 0
     const_pos, const_masses = [], []
     for pos, mass in zip(positions, masses):
-        if np.isclose(arg_ref.mod_mass, mass,
-                      rtol=1e-6, atol=arg_ref.mod_correction_tol):
+        shift = 1 if arg_ref.zero_based else 0
+        if pos + shift == 0:
+            aa = "n"
+        else:
+            aa = sequence[pos - 1 + shift]
+
+        matches_variable = np.isclose(arg_ref.mod_mass, mass,
+                                      rtol=1e-6, atol=arg_ref.mod_correction_tol)
+        if matches_variable and aa in arg_ref.residues:
             variable_mod_count += 1
         else:
-            shift = 1 if arg_ref.zero_based else 0
             const_pos.append(pos + shift)
             const_masses.append(mass)
 
@@ -118,7 +124,7 @@ def main():
                 break
             spectra = spectra_map[match["scan"]]
             const_mod_pos, const_mod_masses, n_variable = process_mods(
-                args, match["mod_positions"], match["mod_masses"]
+                args, match["peptide"], match["mod_positions"], match["mod_masses"]
             )
 
             # Try and figure out PSM charge
