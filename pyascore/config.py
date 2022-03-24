@@ -84,7 +84,7 @@ def build_parser():
                         help="The type of file supplied for identifications."
                              " One of pepXML, mzIdentML, percolatorTXT, or mokapotTXT. Default: pepXML.")
     parser.add_argument("spec_file", type=str,
-                        help="MS Spectra file supplied as MzML.")
+                        help="MS Spectra file.")
     parser.add_argument("ident_file", type=str,
                         help="Results of database search.")
     parser.add_argument("out_file", type=str,
