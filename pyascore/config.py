@@ -59,6 +59,11 @@ def build_parser():
                              " Should have one mass per group."
                              " Positive masses indicate a loss, e.g. '18.0153' for water loss,"
                              " while negative masses can be used to indicate a gain.")
+    parser.add_argument("--static_mod_groups", type=str, default="C",
+                        help="Comma separated clusters of amino acids"
+                             " which will be read in with a constant modification.")
+    parser.add_argument("--static_mod_masses", type=str, default="57.021464",
+                        help="Comma separated masses for each of the static_mod_groups.")
     parser.add_argument("--fragment_types", type=str, default="by",
                         help="Fragment ion types to score. Supported: bcyzZ."
                              " The special character Z indicates a z+H fragment.")

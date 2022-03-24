@@ -22,16 +22,24 @@ def parse_spectra(arg_ref):
 def parse_identifications(arg_ref):
     print("{} -- Reading identifications from: {}".format(get_time_stamp(), arg_ref.ident_file))
 
+    # Update static modifications
+    static_mods = {}
+    for aa_group, mass in zip(arg_ref.static_mod_groups.split(","),
+                              arg_ref.static_mod_masses.split(",")):
+        static_mods.update({aa : float(mass) for aa in aa_group})
+
     # Build mass corrector
     mods = COMMON_MODS.copy()
     mods.update({aa : arg_ref.mod_mass for aa in arg_ref.residues})
+    mods.update(static_mods)
     mass_corrector = MassCorrector(mod_mass_dict=mods)
-    
+
     # Parse
     id_parser = iter(
         sorted(IdentificationParser(arg_ref.ident_file,
                                     arg_ref.ident_file_type,
-                                    mass_corrector).to_list(),
+                                    mass_corrector,
+                                    static_mods=static_mods).to_list(),
                key=lambda spec: spec["scan"])
     )
     return id_parser
