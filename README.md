@@ -49,8 +49,11 @@ usage: pyAscore [-h] [--match_save] [--residues RESIDUES]
                 [--zero_based ZERO_BASED]
                 [--neutral_loss_groups NEUTRAL_LOSS_GROUPS]
                 [--neutral_loss_masses NEUTRAL_LOSS_MASSES]
-                [--fragment_types FRAGMENT_TYPES] [--hit_depth HIT_DEPTH]
-                [--parameter_file PARAMETER_FILE]
+                [--static_mod_groups STATIC_MOD_GROUPS]
+                [--static_mod_masses STATIC_MOD_MASSES]
+                [--fragment_types FRAGMENT_TYPES]
+                [--max_fragment_charge MAX_FRAGMENT_CHARGE]
+                [--hit_depth HIT_DEPTH] [--parameter_file PARAMETER_FILE]
                 [--spec_file_type SPEC_FILE_TYPE]
                 [--ident_file_type IDENT_FILE_TYPE]
                 spec_file ident_file out_file
@@ -97,6 +100,12 @@ optional arguments:
                         Positive masses indicate a loss, e.g. '18.0153' for
                         water loss, while negative masses can be used to
                         indicate a gain.
+  --static_mod_groups STATIC_MOD_GROUPS
+                        Comma separated clusters of amino acids which will be
+                        read in with a constant modification.
+  --static_mod_masses STATIC_MOD_MASSES
+                        Comma separated masses for each of the
+                        static_mod_groups.
   --fragment_types FRAGMENT_TYPES
                         Fragment ion types to score. Supported: bcyzZ. The
                         special character Z indicates a z+H fragment.
@@ -106,7 +115,6 @@ optional arguments:
                         allowed to be greater than the PSM charge - 1.
                         However, if a more stringent limit needs to be set,
                         this argument can be used.
-
   --hit_depth HIT_DEPTH
                         Number of PSMS to take from each scan. Set to negative
                         to always analyze all.
@@ -115,7 +123,7 @@ optional arguments:
                         STY'.
   --spec_file_type SPEC_FILE_TYPE
                         The type of file supplied for spectra. One of mzML or
-                        mzXML. Default: mzXML.
+                        mzXML. Default: mzML.
   --ident_file_type IDENT_FILE_TYPE
                         The type of file supplied for identifications. One of
                         pepXML, mzIdentML, percolatorTXT, or mokapotTXT.
