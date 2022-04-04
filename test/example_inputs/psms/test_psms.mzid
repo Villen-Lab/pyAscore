@@ -314,7 +314,7 @@
             <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.312209994"/>
           </SpectrumIdentificationItem>
         </SpectrumIdentificationResult>
-        <SpectrumIdentificationResult id="SIR_1" spectrumID="14760-14760">
+        <SpectrumIdentificationResult id="SIR_1" spectrumID="scan=14760">
           <SpectrumIdentificationItem id="SII_2" rank="1" chargeState="3" peptide_ref="PEP_1" experimentalMassToCharge="846.306457519531" calculatedMassToCharge="846.310852050781" passThreshold="true">
             <PeptideEvidenceRef peptideEvidence_ref="PE_2"/>
             <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="4.48925829"/>
@@ -326,7 +326,7 @@
             <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.306879014"/>
           </SpectrumIdentificationItem>
         </SpectrumIdentificationResult>
-        <SpectrumIdentificationResult id="SIR_2" spectrumID="20462-20462">
+        <SpectrumIdentificationResult id="SIR_2" spectrumID="controllerType=0 controllerNumber=1 scan=20462">
           <SpectrumIdentificationItem id="SII_4" rank="1" chargeState="3" peptide_ref="PEP_2" experimentalMassToCharge="858.378601074219" calculatedMassToCharge="858.374389648438" passThreshold="true">
             <PeptideEvidenceRef peptideEvidence_ref="PE_4"/>
             <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.30343485"/>
@@ -352,7 +352,7 @@
             <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.752956986"/>
           </SpectrumIdentificationItem>
         </SpectrumIdentificationResult>
-        <SpectrumIdentificationResult id="SIR_4" spectrumID="18330-18330">
+        <SpectrumIdentificationResult id="SIR_4" spectrumID="scan=18330">
           <SpectrumIdentificationItem id="SII_8" rank="1" chargeState="3" peptide_ref="PEP_4" experimentalMassToCharge="871.696166992188" calculatedMassToCharge="871.695617675781" passThreshold="true">
             <PeptideEvidenceRef peptideEvidence_ref="PE_10"/>
             <PeptideEvidenceRef peptideEvidence_ref="PE_11"/>
@@ -368,7 +368,7 @@
             <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.0404415987"/>
           </SpectrumIdentificationItem>
         </SpectrumIdentificationResult>
-        <SpectrumIdentificationResult id="SIR_5" spectrumID="35669-35669">
+        <SpectrumIdentificationResult id="SIR_5" spectrumID="controllerType=0 controllerNumber=1 scan=35669">
           <SpectrumIdentificationItem id="SII_10" rank="1" chargeState="3" peptide_ref="PEP_5" experimentalMassToCharge="885.028625488281" calculatedMassToCharge="885.028503417969" passThreshold="true">
             <PeptideEvidenceRef peptideEvidence_ref="PE_16"/>
             <cvParam cvRef="MS" accession="MS:1001155" name="SEQUEST:xcorr" value="3.87117219"/>
@@ -400,7 +400,7 @@
             <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.239544004"/>
           </SpectrumIdentificationItem>
         </SpectrumIdentificationResult>
-        <SpectrumIdentificationResult id="SIR_7" spectrumID="31328-31328">
+        <SpectrumIdentificationResult id="SIR_7" spectrumID="scan=31328">
           <SpectrumIdentificationItem id="SII_14" rank="1" chargeState="3" peptide_ref="PEP_8" experimentalMassToCharge="1078.43017578125" calculatedMassToCharge="1078.42919921875" passThreshold="true">
             <PeptideEvidenceRef peptideEvidence_ref="PE_28"/>
             <PeptideEvidenceRef peptideEvidence_ref="PE_29"/>
@@ -416,7 +416,7 @@
             <cvParam cvRef="MS" accession="MS:1001156" name="SEQUEST:deltacn" value="0.615577996"/>
           </SpectrumIdentificationItem>
         </SpectrumIdentificationResult>
-        <SpectrumIdentificationResult id="SIR_8" spectrumID="21996-21996">
+        <SpectrumIdentificationResult id="SIR_8" spectrumID="controllerType=0 controllerNumber=1 scan=21996">
           <SpectrumIdentificationItem id="SII_16" rank="1" chargeState="3" peptide_ref="PEP_9" experimentalMassToCharge="1116.095703125" calculatedMassToCharge="1115.762817382813" passThreshold="true">
             <PeptideEvidenceRef peptideEvidence_ref="PE_34"/>
             <PeptideEvidenceRef peptideEvidence_ref="PE_35"/>

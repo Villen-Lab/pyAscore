@@ -305,7 +305,14 @@ class MzIdentMLExtractor(IDExtractor):
             Scan number for PSM
         """
         try:
-            return int(re.search("[0-9]+", self.entry["spectrumID"]).group())
+            # Specific search
+            scan_search = re.search("(?<=scan=)([0-9]+)", self.entry["spectrumID"])
+
+            # If specific search fails, do liberal first number search
+            if scan_search is None:
+                scan_search = re.search("[0-9]+", self.entry["spectrumID"])
+
+            return int(scan_search.group())
         except KeyError:
             return -1
 
