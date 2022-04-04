@@ -95,9 +95,10 @@ class MassCorrector:
             return (res,), (pos,), (mod_mass,)
 
         else:
+            pred_mod_mass = mass - STD_AA_MASS.get(res, 0.)
             warnings.warn("Unrecognized mod on {} at position {} with mass: {}"
-                          " Using uncorrected mass.".format(res, pos, mass))
-            return (res,), (pos,), (mass,)
+                          " Using uncorrected mass.".format(res, pos, pred_mod_mass))
+            return (res,), (pos,), (pred_mod_mass,)
 
     def correct_multiple(self, peptide, positions, masses):
         """Run the correction function on a list of mods for a single peptide
@@ -305,7 +306,14 @@ class MzIdentMLExtractor(IDExtractor):
             Scan number for PSM
         """
         try:
-            return int(re.search("[0-9]+", self.entry["spectrumID"]).group())
+            # Specific search
+            scan_search = re.search("(?<=scan=)([0-9]+)", self.entry["spectrumID"])
+
+            # If specific search fails, do liberal first number search
+            if scan_search is None:
+                scan_search = re.search("[0-9]+", self.entry["spectrumID"])
+
+            return int(scan_search.group())
         except KeyError:
             return -1
 
@@ -362,8 +370,15 @@ class MzIdentMLExtractor(IDExtractor):
             mass = np.zeros(len(mod_list), dtype=np.float32)
             for ind, mod in enumerate(mod_list):
                 pos[ind] = int(mod["location"])
-                aa = mod["residues"][0]
-                mass[ind] = STD_AA_MASS[aa] + float(mod["monoisotopicMassDelta"])
+                
+                # Sometimes the amino acid is already available, sometimes not
+                if "residues" in mod:
+                    aa = mod["residues"][0]
+                else:
+                    aa = ("n" + self._get_peptide() + "c")[pos[ind]]
+                
+                mass[ind] = STD_AA_MASS.get(aa, 0.) + float(mod["monoisotopicMassDelta"])
+
             return pos, mass
 
         except KeyError:
