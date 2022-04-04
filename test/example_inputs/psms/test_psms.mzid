@@ -132,7 +132,7 @@
     </Peptide>
     <Peptide id="PEP_1">
       <PeptideSequence>KMSDDEDDDEEEYGKEEHEK</PeptideSequence>
-      <Modification location="3" residues="S" monoisotopicMassDelta="79.97">
+      <Modification location="3" monoisotopicMassDelta="79.97">
         <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
       </Modification>
     </Peptide>
@@ -144,7 +144,7 @@
     </Peptide>
     <Peptide id="PEP_3">
       <PeptideSequence>GKEELAEAEIIKDSPDSPEPPNK</PeptideSequence>
-      <Modification location="17" residues="S" monoisotopicMassDelta="79.97">
+      <Modification location="17" monoisotopicMassDelta="79.97">
         <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
       </Modification>
     </Peptide>
@@ -156,7 +156,7 @@
     </Peptide>
     <Peptide id="PEP_5">
       <PeptideSequence>VEEESTGDPFGFDSDDESLPVSSK</PeptideSequence>
-      <Modification location="14" residues="S" monoisotopicMassDelta="79.97">
+      <Modification location="14" monoisotopicMassDelta="79.97">
         <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
       </Modification>
     </Peptide>
@@ -165,7 +165,7 @@
       <Modification location="4" residues="T" monoisotopicMassDelta="79.97">
         <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
       </Modification>
-      <Modification location="19" residues="S" monoisotopicMassDelta="79.97">
+      <Modification location="19" monoisotopicMassDelta="79.97">
         <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
       </Modification>
     </Peptide>
@@ -177,7 +177,7 @@
     </Peptide>
     <Peptide id="PEP_8">
       <PeptideSequence>EGHSLEMENENLVENGADSDEDDNSFLK</PeptideSequence>
-      <Modification location="7" residues="M" monoisotopicMassDelta="15.99">
+      <Modification location="7" monoisotopicMassDelta="15.99">
         <cvParam cvRef="MS" accession="MS:1001460" name="unknown modification" value=""/>
       </Modification>
       <Modification location="19" residues="S" monoisotopicMassDelta="79.97">
