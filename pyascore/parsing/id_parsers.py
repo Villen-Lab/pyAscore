@@ -352,7 +352,7 @@ class MzIdentMLExtractor(IDExtractor):
             Peptide sequence without modifications
         """
         try:
-            return self._match["PeptideEvidenceRef"][0]["PeptideSequence"]
+            return self._match["PeptideSequence"]
         except KeyError:
             return ""
 

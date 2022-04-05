@@ -103,7 +103,9 @@ class MzMLExtractor(SpectraExtractor):
             Tuple with fragment m/z array (0) and intensity array (1)
         """
         try:
-            return self.scan["m/z array"], self.scan["intensity array"]
+            mzs = self.scan["m/z array"].astype(np.float64)
+            intensities = self.scan["intensity array"].astype(np.float64)
+            return mzs, intensities
         except:
             return np.array([], dtype=np.float64), np.array([], dtype=np.float64)
 
@@ -163,7 +165,9 @@ class MzXMLExtractor(SpectraExtractor):
             Tuple with fragment m/z array (0) and intensity array (1)
         """
         try:
-            return self.scan["m/z array"], self.scan["intensity array"]
+            mzs = self.scan["m/z array"].astype(np.float64)
+            intensities = self.scan["intensity array"].astype(np.float64)
+            return mzs, intensities
         except:
             return np.array([], dtype=np.float64), np.array([], dtype=np.float64)
 
