@@ -223,6 +223,10 @@ cdef class PyFragmentGraph:
         """
         return self.fragment_graph_ptr[0].isSignatureEnd()
 
+    def reset_fragment(self):
+        """Resets iterator to the first position of the current signature."""
+        return self.fragment_graph_ptr[0].resetFragment()
+
     def incr_fragment(self):
         """Increment to next fragment for current signature."""
         return self.fragment_graph_ptr[0].incrFragment()

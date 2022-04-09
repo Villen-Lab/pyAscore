@@ -133,6 +133,8 @@ class TestPyModifiedPeptide(unittest.TestCase):
             b_graph.reset_iterator()
             b_graph.incr_signature()
             test(b_graph, c, np.array([71.03711, 158.06914 , 289.10963, 470.12364]))
+            b_graph.reset_fragment()
+            test(b_graph, c, np.array([71.03711, 158.06914 , 289.10963, 470.12364]))
 
             # Test c fragments
             c_graph = pep.get_fragment_graph("c", c)
@@ -145,6 +147,8 @@ class TestPyModifiedPeptide(unittest.TestCase):
             # Second signature, from beginning
             c_graph.reset_iterator()
             c_graph.incr_signature()
+            test(c_graph, c, np.array([88.06365, 175.09568, 306.13617, 487.15019]))
+            c_graph.reset_fragment()
             test(c_graph, c, np.array([88.06365, 175.09568, 306.13617, 487.15019]))
 
             # Test y fragments
@@ -159,6 +163,8 @@ class TestPyModifiedPeptide(unittest.TestCase):
             y_graph.reset_iterator()
             y_graph.incr_signature()
             test(y_graph, c, np.array([146.105525, 247.15320, 378.19369, 545.192056]))
+            y_graph.reset_fragment()
+            test(y_graph, c, np.array([146.105525, 247.15320, 378.19369, 545.192056]))
 
             # Test z fragments
             z_graph = pep.get_fragment_graph("z", c)
@@ -172,8 +178,10 @@ class TestPyModifiedPeptide(unittest.TestCase):
             z_graph.reset_iterator()
             z_graph.incr_signature()
             test(z_graph, c, np.array([129.07897, 230.12665, 361.16714, 528.16550]))
+            z_graph.reset_fragment()
+            test(z_graph, c, np.array([129.07897, 230.12665, 361.16714, 528.16550]))
 
-            # Test z fragments
+            # Test Z fragments
             z_graph = pep.get_fragment_graph("Z", c)
             # First signature all the way through
             test(z_graph, c, np.array([130.086795, 311.100805, 442.141295, 529.173325]))
@@ -184,6 +192,8 @@ class TestPyModifiedPeptide(unittest.TestCase):
             # Second signature, from beginning
             z_graph.reset_iterator()
             z_graph.incr_signature()
+            test(z_graph, c, np.array([130.086795, 231.134475, 362.174965, 529.173325]))
+            z_graph.reset_fragment()
             test(z_graph, c, np.array([130.086795, 231.134475, 362.174965, 529.173325]))
 
     def test_fragment_incr_terminal(self):
