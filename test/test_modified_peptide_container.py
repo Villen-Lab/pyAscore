@@ -104,7 +104,36 @@ class TestPyModifiedPeptide(unittest.TestCase):
         true_z_masses = [130.08680, 277.15521, 406.19780, 493.22983, 580.26186,
                          747.26022, 914.25858, 1001.29061, 1072.32772]
         test(z_graph, true_z_masses)
-        
+
+    def test_iterator(self):
+        pep = PyModifiedPeptide("STY", 79.966331)
+
+        # Test mode == "all"
+        pep.consume_peptide("ASMTK", 1)
+        b_graph = pep.get_fragment_graph("b", 1)
+        true_sig_list = [[1, 0], [0, 1]]
+        true_frag_list = [np.array([71.03711 , 238.03547, 369.07596, 470.12364]),
+                          np.array([71.03711, 158.06914 , 289.10963, 470.12364])]
+        for graph, true_sig, true_frags in zip(b_graph.iter_permutations(), true_sig_list, true_frag_list):
+            self.assertTrue(np.all(graph.get_signature() == true_sig))
+            for (pred_frag, label), mass in zip(graph.iter_fragments(), true_frags):
+                self.assertTrue(
+                    np.isclose(pred_frag, mass + 1.007825, rtol=1e-6, atol=0)
+                )
+
+        # Test mode == "reduced"
+        pep.consume_peptide("ASMTK", 1)
+        b_graph = pep.get_fragment_graph("b", 1, mode="reduced")
+        true_sig_list = [[1, 0], [0, 1]]
+        true_frag_list = [np.array([71.03711 , 238.03547, 369.07596, 470.12364]),
+                          np.array([158.06914 , 289.10963, 470.12364])]
+        for graph, true_sig, true_frags in zip(b_graph.iter_permutations(), true_sig_list, true_frag_list):
+            self.assertTrue(np.all(graph.get_signature() == true_sig))
+            for (pred_frag, label), mass in zip(graph.iter_fragments(), true_frags):
+                self.assertTrue(
+                    np.isclose(pred_frag, mass + 1.007825, rtol=1e-6, atol=0)
+                )
+
     def test_fragment_incr(self):
         pep = PyModifiedPeptide("STY", 79.966331)
         
