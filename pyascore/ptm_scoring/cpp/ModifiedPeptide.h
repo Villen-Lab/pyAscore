@@ -100,6 +100,7 @@ namespace ptmscoring {
             void resetIterator();
             void incrSignature();
             bool isSignatureEnd();
+	    void resetFragment();
             void incrFragment();
             bool isFragmentEnd();
             bool isLoss();

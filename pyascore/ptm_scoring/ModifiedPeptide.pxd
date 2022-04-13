@@ -28,6 +28,7 @@ cdef extern from "cpp/ModifiedPeptide.cpp" namespace "ptmscoring":
             void resetIterator();
             void incrSignature();
             bint isSignatureEnd();
+            void resetFragment();
             void incrFragment();
             bint isFragmentEnd();
 

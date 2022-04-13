@@ -97,7 +97,7 @@ cdef class PyModifiedPeptide:
 
         return self.modified_peptide_ptr[0].getPeptide(signature_vector).decode("utf8")
 
-    def get_fragment_graph(self, str fragment_type, size_t charge_state):
+    def get_fragment_graph(self, str fragment_type, size_t charge_state, str mode = "all"):
         """Builds a PyFragmentGraph object which references the current PyModifiedPeptide object
 
         Parameters
@@ -112,7 +112,7 @@ cdef class PyModifiedPeptide:
         PyFragmentGraph
             The fragment graph of specified type and charge state.
         """
-        return PyFragmentGraph(self, fragment_type.encode("utf8")[0], charge_state)
+        return PyFragmentGraph(self, fragment_type.encode("utf8")[0], charge_state, mode)
 
     def get_site_determining_ions(self, np.ndarray[unsigned int, ndim=1, mode="c"] sig_1,
                                         np.ndarray[unsigned int, ndim=1, mode="c"] sig_2,
@@ -187,9 +187,12 @@ cdef class PyFragmentGraph:
     charge_state : int
         The current charge state for fragments returned from the graph
     """
+    cdef str mode
     cdef ModifiedPeptide.FragmentGraph * fragment_graph_ptr
 
-    def __cinit__(self, PyModifiedPeptide peptide, char fragment_type, size_t charge_state):
+    def __cinit__(self, PyModifiedPeptide peptide, char fragment_type, size_t charge_state, str mode = "all"):
+        assert mode in ("all", "reduced")
+        self.mode = mode
         self.fragment_graph_ptr = new ModifiedPeptide.FragmentGraph(
             peptide.modified_peptide_ptr, fragment_type, charge_state
         )
@@ -199,7 +202,8 @@ cdef class PyFragmentGraph:
 
     @property
     def fragment_type(self):
-        return self.fragment_graph_ptr[0].getFragmentType()
+        cdef bytes frag_type = self.fragment_graph_ptr[0].getFragmentType()
+        return frag_type.decode('utf-8')
 
     @property
     def charge_state(self):
@@ -222,6 +226,10 @@ cdef class PyFragmentGraph:
             Is this the last signature?
         """
         return self.fragment_graph_ptr[0].isSignatureEnd()
+
+    def reset_fragment(self):
+        """Resets iterator to the first position of the current signature."""
+        return self.fragment_graph_ptr[0].resetFragment()
 
     def incr_fragment(self):
         """Increment to next fragment for current signature."""
@@ -289,3 +297,33 @@ cdef class PyFragmentGraph:
         """
         return self.fragment_graph_ptr[0].getFragmentSeq().decode('utf8')
 
+    def iter_permutations(self):
+        """Iterate through remaining signatures and return fragment graph ready for iteration.
+
+        If mode == 'all', reset fragments to the first position before returning graph.
+
+        Yields
+        ------
+        PyFragmentGraph
+            reference to current graph
+        """
+        while not self.is_signature_end():
+            yield self
+  
+            self.incr_signature()
+            if self.mode == "all":
+              self.reset_fragment()
+
+    def iter_fragments(self):
+        """Iterate through remaining fragments of current signature.
+        
+        Yields
+        ------
+        (float, string)
+            pair of fragment mz and fragment label
+        """
+        while not self.is_fragment_end():
+            label = self.fragment_type + str(self.get_fragment_size())
+            result = (self.get_fragment_mz(), label)
+            self.incr_fragment()
+            yield result

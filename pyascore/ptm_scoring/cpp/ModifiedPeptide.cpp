@@ -408,21 +408,7 @@ namespace ptmscoring {
     }
 
     void ModifiedPeptide::FragmentGraph::resetIterator () {
-        // Intialize running state trackers
-        // Makes sure enough space is available and
-        // clears away any old data.
-        size_t peptide_size = modified_peptide->peptide.size();
-        running_sum.reserve(peptide_size);
-        running_sum.clear();
-
-        running_sequence.reserve(peptide_size);
-        running_sequence.clear();
-
-        running_loss_count.reserve(peptide_size);
-        running_loss_count.clear();
-        neutral_loss_stack.clear();
-        neutral_loss_iter.reset(neutral_loss_stack, 2);
-
+	// First reset signature, then reset fragment
         modifiable.clear();
         signature.clear();
 
@@ -439,10 +425,7 @@ namespace ptmscoring {
             }
         }
 
-        // Reset to first step
-        resetResidueInd();
-        calculateFragment();
-        updateLosses();
+	resetFragment();
     }
 
     void ModifiedPeptide::FragmentGraph::incrSignature () {
@@ -490,6 +473,28 @@ namespace ptmscoring {
 
     bool ModifiedPeptide::FragmentGraph::isSignatureEnd () {
         return n_mods_outstanding > 0;
+    }
+
+    void ModifiedPeptide::FragmentGraph::resetFragment () {
+        // Intialize running state trackers
+        // Makes sure enough space is available and
+        // clears away any old data.
+        size_t peptide_size = modified_peptide->peptide.size();
+        running_sum.reserve(peptide_size);
+        running_sum.clear();
+
+        running_sequence.reserve(peptide_size);
+        running_sequence.clear();
+
+        running_loss_count.reserve(peptide_size);
+        running_loss_count.clear();
+        neutral_loss_stack.clear();
+        neutral_loss_iter.reset(neutral_loss_stack, 2);
+
+        // Reset to first step
+        resetResidueInd();
+        calculateFragment();
+        updateLosses();
     }
 
     void ModifiedPeptide::FragmentGraph::incrFragment () {
