@@ -22,7 +22,7 @@ copyright = '2022, Anthony S. Barente'
 author = 'Anthony S. Barente'
 
 # The full version, including alpha/beta/rc tags
-release = '0.6'
+release = '0.7'
 
 
 # -- General configuration ---------------------------------------------------
