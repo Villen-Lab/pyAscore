@@ -1,4 +1,0 @@
-sphinx-argparse
-sphinx-rtd-theme
-recommonmark
-numpydoc
