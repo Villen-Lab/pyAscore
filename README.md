@@ -3,6 +3,7 @@
 ![Linux Build](https://github.com/AnthonyOfSeattle/pyAscore/actions/workflows/linux-build.yml/badge.svg)
 [![Windows Build](https://github.com/AnthonyOfSeattle/pyAscore/actions/workflows/windows-build.yml/badge.svg)](https://github.com/AnthonyOfSeattle/pyAscore/actions/workflows/windows-build.yml)
 [![Documentation Status](https://readthedocs.org/projects/pyascore/badge/?version=latest)](https://pyascore.readthedocs.io/en/latest/?badge=latest)
+[![PyPI](https://img.shields.io/pypi/v/pyascore?color=green)](https://pypi.org/project/pyascore/)
 
 ## Intro
 
@@ -17,12 +18,12 @@ For more information, check out our
 
 ## Getting Started
 
-### Install from Github
+### Install from PyPI
 
-If you just want to use the pyAscore package, and don't want to contribute, you can get the most up to date version straight from this repository with pip.
+If you just want to use the pyAscore package, and don't want to contribute, you can get the most up to date version using pip.
 
 ```
-pip install git+https://github.com/AnthonyOfSeattle/pyAscore.git
+pip install pyascore
 ```
 
 ### Installing from a local clone

@@ -58,11 +58,11 @@ pyAscore also depends on several Python packages:
 - `tqdm <https://github.com/tqdm/tqdm>`_
 
 If you just want to use the pyAscore package, and don't want to contribute,
-you can get the most up to date version straight from this repository with pip.
+you can get the most up to date version using pip.
 
 .. code-block:: bash
 
-   $ pip install git+https://github.com/AnthonyOfSeattle/pyAscore.git
+   $ pip install pyascore
 
 If you would like to contribute, first fork the main repository, and then follow
 the following steps to compile and test.
