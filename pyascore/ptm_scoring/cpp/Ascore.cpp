@@ -43,7 +43,7 @@ namespace ptmscoring {
             //peptide_scores_.front().weighted_score = std::numeric_limits<float>::infinity();
             for (size_t ind = 0; ind < modified_peptide_ptr->getNumberOfMods(); ind++){
                 ascore_containers_.push_back({
-                    ind, {}, {}, {-1}
+                    ind, {}, {}, {std::numeric_limits<float>::infinity()}
                 });
             }
             return true;
