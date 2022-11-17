@@ -38,9 +38,6 @@ namespace ptmscoring {
     bool Ascore::isUnambiguous () {
 
         if (modified_peptide_ptr->getNumberOfMods() >= modified_peptide_ptr->getNumberModifiable()){
-            //peptide_scores_.push_back( {} );
-            //peptide_scores_.front().signature.resize(modified_peptide_ptr->getNumberOfMods(), 1);
-            //peptide_scores_.front().weighted_score = std::numeric_limits<float>::infinity();
             for (size_t ind = 0; ind < modified_peptide_ptr->getNumberOfMods(); ind++){
                 ascore_containers_.push_back({
                     ind, {}, {}, {std::numeric_limits<float>::infinity()}
