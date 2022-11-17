@@ -132,10 +132,10 @@ namespace ptmscoring {
         for(; it < fragments.end(); it++) {
             ppm_low = *it - mz_error;
             ppm_high = *it + mz_error;
-            if (mz > ppm_low and mz < ppm_high) {
-                if (!fragment_scores.count(*it) or std::get<1>(fragment_scores.at(*it)) > rank) {
-                    fragment_scores[*it] = {mz, rank}; // The theoretical mz needs to be the key
-                }
+            if ((mz > ppm_low) && (mz < ppm_high)) {
+		    if ((!fragment_scores.count(*it)) || (std::get<1>(fragment_scores.at(*it)) > rank)) {
+			    fragment_scores[*it] = {mz, rank}; // The theoretical mz needs to be the key
+		    }
             } else if (mz < ppm_low) {break;}
         }
 
@@ -183,7 +183,7 @@ namespace ptmscoring {
 
     size_t ModifiedPeptide::getPosOfNthModifiable (size_t n) const {
         for (size_t ind = 0; ind < residues.size(); ind++) {
-            if (residues.at(ind).size() > 1 and n == 0) {
+            if ((residues.at(ind).size() > 1) && (n == 0)) {
                 return ind;
             } else if (residues.at(ind).size() > 1) {
                 n--;
@@ -436,7 +436,7 @@ namespace ptmscoring {
         n_mods_outstanding = 1;
         size_t final_index = modified_peptide->residues.size();
         for (std::vector<size_t>::iterator it = --modifiable.end();
-             it >= modifiable.begin() and n_mods_outstanding; 
+             it >= modifiable.begin() && n_mods_outstanding; 
              it--) {
             if ( signature.at(*it) > 0 ) {
                 final_index = *it;
@@ -499,7 +499,7 @@ namespace ptmscoring {
 
     void ModifiedPeptide::FragmentGraph::incrFragment () {
         // Don't increment if fragment end or signature end
-        if (isSignatureEnd() or isFragmentEnd()) {throw 40;}
+        if (isSignatureEnd() || isFragmentEnd()) {throw 40;}
 
         // Only increment residue if more losses are not available
         if ( neutral_loss_iter.hasNext() ) {

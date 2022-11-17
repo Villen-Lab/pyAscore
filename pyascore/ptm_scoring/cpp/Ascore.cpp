@@ -38,9 +38,6 @@ namespace ptmscoring {
     bool Ascore::isUnambiguous () {
 
         if (modified_peptide_ptr->getNumberOfMods() >= modified_peptide_ptr->getNumberModifiable()){
-            peptide_scores_.push_back( {} );
-            peptide_scores_.front().signature.resize(modified_peptide_ptr->getNumberOfMods(), 1);
-            peptide_scores_.front().weighted_score = std::numeric_limits<float>::infinity();
             for (size_t ind = 0; ind < modified_peptide_ptr->getNumberOfMods(); ind++){
                 ascore_containers_.push_back({
                     ind, {}, {}, {std::numeric_limits<float>::infinity()}
@@ -185,7 +182,7 @@ namespace ptmscoring {
 
             ion_trials[0] += ions[0].size();
             for (float mz : ions[0]){
-                if (modified_peptide_ptr->hasMatch(mz) and
+                if (modified_peptide_ptr->hasMatch(mz) &&
                     std::get<1>(modified_peptide_ptr->getMatch(mz)) <= max_score_depth){
                     ion_counts[0]++;
                 }
@@ -193,7 +190,7 @@ namespace ptmscoring {
 
             ion_trials[1] += ions[1].size();
             for (float mz : ions[1]){
-                if (modified_peptide_ptr->hasMatch(mz) and
+                if (modified_peptide_ptr->hasMatch(mz) &&
                     std::get<1>(modified_peptide_ptr->getMatch(mz)) <= max_score_depth){
                     ion_counts[1]++;
                 }
@@ -230,11 +227,11 @@ namespace ptmscoring {
             std::vector<size_t>::iterator best_it = best_score.signature.begin();
             std::vector<size_t>::iterator comp_it = competing_score.signature.begin();
             for (; best_it < best_score.signature.end(); best_it++, comp_it++) {
-                if (*best_it and *comp_it) {
+                if (*best_it && *comp_it) {
                     same_count++;
-                } else if (*best_it and not *comp_it) {
+                } else if (*best_it && (!*comp_it)) {
                     ascore_ind = same_count;
-                } else if (not *best_it and *comp_it) {
+                } else if ((! *best_it) && *comp_it) {
                     comp_sig_ind = comp_it - competing_score.signature.begin();
                 }
             }
@@ -264,9 +261,10 @@ namespace ptmscoring {
         resetInternalState();
 
         // Score pipeline
-        if ( not isUnambiguous() ){
-            accumulateCounts();
-            calculateFullScores();
+	accumulateCounts();
+        calculateFullScores();
+	    
+        if ( !isUnambiguous() ){
             sortScores();
             calculateAscores();
         }
