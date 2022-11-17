@@ -132,8 +132,8 @@ namespace ptmscoring {
         for(; it < fragments.end(); it++) {
             ppm_low = *it - mz_error;
             ppm_high = *it + mz_error;
-            if ((mz > ppm_low) and (mz < ppm_high)) {
-		    if ((!fragment_scores.count(*it) or std::get<1>(fragment_scores.at(*it)) > rank)) {
+            if ((mz > ppm_low) && (mz < ppm_high)) {
+		    if ((!fragment_scores.count(*it) || std::get<1>(fragment_scores.at(*it)) > rank)) {
 			    fragment_scores[*it] = {mz, rank}; // The theoretical mz needs to be the key
 		    }
             } else if (mz < ppm_low) {break;}
