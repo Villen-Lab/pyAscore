@@ -31,7 +31,7 @@ pip install pyascore
 If you would like to contribute, first fork the main repository, and then follow the following steps to compile and test.
 
 ```
-git clone https://github.com/YOUR-USERNAME/pyAscore.git
+git clone https://github.com/[USERNAME]/pyAscore.git
 cd pyAscore
 python setup.py build_ext --inplace
 python -m unittest 

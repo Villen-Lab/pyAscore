@@ -69,7 +69,7 @@ the following steps to compile and test.
 
 .. code-block:: bash
 
-   $ git clone https://github.com/AnthonyOfSeattle/pyAscore.git
+   $ git clone https://github.com/[USERNAME]/pyAscore.git
    $ cd pyAscore
    $ python setup.py build_ext --inplace
    $ python -m unittest 
