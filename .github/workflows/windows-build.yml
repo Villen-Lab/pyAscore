@@ -34,7 +34,6 @@ jobs:
         architecture: x64
     - name: Install in place
       run: |
-        $env:PYASCORE_COMPILE_ARGS = '/std:c++latest'
         python -m pip install --upgrade pip
         pip install -e .
     - name: Run python unittest
