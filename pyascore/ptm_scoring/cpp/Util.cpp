@@ -65,7 +65,7 @@ namespace ptmscoring {
         } else if (successes == 0) { return 0.; }
 
         size_t starting_k = successes;
-        while(cache.count(bit_concat(starting_k, trials)) == 0 and starting_k < trials + 1) {
+        while((cache.count(bit_concat(starting_k, trials)) == 0) && (starting_k < trials + 1)) {
             starting_k++;
         }
 
