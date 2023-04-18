@@ -1,6 +1,7 @@
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 from os import path, environ
+from sys import platform
 
 import numpy as np
 
@@ -8,7 +9,7 @@ extra_compile_args=[]
 if "PYASCORE_COMPILE_ARGS" in environ:
     extra_compile_args=environ["PYASCORE_COMPILE_ARGS"].split()
 
-if os.platform == "darwin":
+if platform == "darwin":
     extra_compile_args.append('-std=c++11')
 
 SRC_DIR = "pyascore"
