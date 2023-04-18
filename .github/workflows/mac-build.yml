@@ -1,5 +1,5 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-name: testing-on-mac
+name: Mac-Build
 run-name: ${{ github.actor }} is testing commands with sample data
 on: 
   push:
