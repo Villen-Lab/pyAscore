@@ -8,6 +8,9 @@ extra_compile_args=[]
 if "PYASCORE_COMPILE_ARGS" in environ:
     extra_compile_args=environ["PYASCORE_COMPILE_ARGS"].split()
 
+if os.platform == "darwin":
+    extra_compile_args.append('-std=c++11')
+
 SRC_DIR = "pyascore"
 EXT = [
     Extension(SRC_DIR + ".ptm_scoring",

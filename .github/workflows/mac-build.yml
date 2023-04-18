@@ -1,0 +1,23 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+name: testing-on-mac
+run-name: ${{ github.actor }} is testing commands with sample data
+on: 
+  push:
+jobs:
+  check-code-finishes:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Set up Clang
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: latest
+          platform: x64
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e .
+      - name: Run python unittest
+        run:
+          python -m unittest
