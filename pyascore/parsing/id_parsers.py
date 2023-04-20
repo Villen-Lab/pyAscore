@@ -701,16 +701,16 @@ class IdentificationParser:
 
         # Define a bridge to ID file handling classes
         if id_file_format == "mzIdentML":
-            self._reader = MzIdentML(id_file_name)
+            self._reader = MzIdentML(id_file_name, queue_size=32767)
             self._extractor = MzIdentMLExtractor(score_string)
         elif id_file_format == "pepXML":
-            self._reader = PepXML(id_file_name)
+            self._reader = PepXML(id_file_name, queue_size=32767)
             self._extractor = PepXMLExtractor(score_string)
         elif id_file_format == "percolatorTXT":
-            self._reader = PercolatorTXT(id_file_name)
+            self._reader = PercolatorTXT(id_file_name, queue_size=32767)
             self._extractor = PercolatorTXTExtractor(score_string, static_mods)
         elif id_file_format == "mokapotTXT":
-            self._reader = MokapotTXT(id_file_name)
+            self._reader = MokapotTXT(id_file_name, queue_size=32767)
             self._extractor = MokapotTXTExtractor(score_string, static_mods)
         else:
             raise ValueError("{} not supported at this time."
