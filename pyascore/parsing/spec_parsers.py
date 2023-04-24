@@ -204,10 +204,10 @@ class SpectraParser:
 
         # Define a bridge to spectra file handling classes
         if spec_file_format == "mzML":
-            self._reader = MzML(spec_file_name)
+            self._reader = MzML(spec_file_name, queue_size=32767)
             self._extractor = MzMLExtractor()
         elif spec_file_format == "mzXML":
-            self._reader = MzXML(spec_file_name)
+            self._reader = MzXML(spec_file_name, queue_size=32767)
             self._extractor = MzXMLExtractor()
         else:
             raise ValueError("{} not supported at this time."
