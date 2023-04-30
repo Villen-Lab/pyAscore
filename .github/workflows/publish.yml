@@ -10,7 +10,7 @@ on:
 jobs:
   deploy-src:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
 
@@ -34,7 +34,7 @@ jobs:
 
   deploy-linux-wheel:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
       matrix:
