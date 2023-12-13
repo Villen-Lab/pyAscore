@@ -707,10 +707,10 @@ class IdentificationParser:
             self._reader = PepXML(id_file_name, queue_size=32767)
             self._extractor = PepXMLExtractor(score_string)
         elif id_file_format == "percolatorTXT":
-            self._reader = PercolatorTXT(id_file_name, queue_size=32767)
+            self._reader = PercolatorTXT(id_file_name)
             self._extractor = PercolatorTXTExtractor(score_string, static_mods)
         elif id_file_format == "mokapotTXT":
-            self._reader = MokapotTXT(id_file_name, queue_size=32767)
+            self._reader = MokapotTXT(id_file_name)
             self._extractor = MokapotTXTExtractor(score_string, static_mods)
         else:
             raise ValueError("{} not supported at this time."
